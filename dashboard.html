@@ -2,122 +2,203 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0f13" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Dashboard Review SHC 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.19/index.min.css" rel="stylesheet" />
   <style>
+    /* ========== CSS VARIABLES ========== */
     :root {
-      --bg: #0f0f13;
-      --sidebar: #1a1a22;
+      --bg: #0a0a0f;
+      --surface: #14141c;
+      --surface-2: #1e1e2a;
       --card: #232330;
-      --border: #2e2e3d;
+      --border: #2a2a3a;
+      --border-light: #353545;
       --accent: #7c6bff;
+      --accent-light: #9b8eff;
+      --accent-dark: #5a4ae6;
+      --accent-glow: rgba(124, 107, 255, 0.25);
       --text: #f0eeff;
-      --muted: #9390ad;
-      --star-1: #ff5c5c;
-      --star-2: #ff9a3c;
-      --star-3: #6dcf81;
+      --text-secondary: #b8b5d0;
+      --muted: #7a7794;
+      --star-1: #ff4757;
+      --star-2: #ff9f43;
+      --star-3: #2ed573;
       --star-4: #7c6bff;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    * {
+    /* ========== GLOBAL RESETS ========== */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+    html {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      min-height: 100dvh;
       font-size: 14px;
       overflow-x: hidden;
       width: 100%;
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
 
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ========== DASHBOARD LAYOUT ========== */
     .dashboard {
       display: flex;
       min-height: 100vh;
+      min-height: 100dvh;
       width: 100%;
     }
 
-    /* ========== SIDEBAR - Desktop ========== */
+    /* ========== SIDEBAR - DESKTOP ========== */
     .sidebar {
-      width: 220px;
-      background: var(--sidebar);
+      width: 260px;
+      background: var(--surface);
       border-right: 1px solid var(--border);
-      padding: 16px;
+      padding: 20px 12px;
       position: fixed;
       height: 100vh;
+      height: 100dvh;
       overflow-y: auto;
-      z-index: 10;
-      transition: transform 0.3s ease;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
     }
 
-    .sidebar-title {
+    .sidebar-header {
+      padding: 8px 8px 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-logo {
+      font-size: 18px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-subtitle {
       font-size: 11px;
-      font-weight: 700;
       color: var(--muted);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .div-btn {
-      display: block;
-      width: 100%;
-      padding: 11px 12px;
-      margin-bottom: 6px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 13px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s;
       font-weight: 500;
     }
 
+    .sidebar-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0 8px;
+    }
+
+    .div-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 4px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      font-family: inherit;
+      position: relative;
+    }
+
     .div-btn:hover {
-      background: rgba(124, 107, 255, 0.1);
-      border-color: var(--accent);
+      background: rgba(124, 107, 255, 0.08);
+      color: var(--text);
+    }
+
+    .div-btn:active {
+      transform: scale(0.98);
     }
 
     .div-btn.active {
       background: var(--accent);
       border-color: var(--accent);
+      color: white;
       font-weight: 600;
+      box-shadow: 0 4px 12px var(--accent-glow);
     }
 
-    /* ========== HAMBURGER MENU BUTTON ========== */
+    .div-btn.active:hover {
+      background: var(--accent-dark);
+    }
+
+    .div-btn-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ========== MOBILE HAMBURGER ========== */
     .menu-toggle {
       display: none;
       position: fixed;
-      top: 14px;
-      left: 14px;
-      z-index: 30;
-      width: 46px;
-      height: 46px;
+      top: calc(12px + var(--safe-top));
+      left: 12px;
+      z-index: 1100;
+      width: 48px;
+      height: 48px;
       background: var(--accent);
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       color: white;
-      font-size: 22px;
+      font-size: 20px;
       cursor: pointer;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.4);
-      transition: all 0.2s;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      transition: all 0.2s ease;
     }
 
     .menu-toggle:active {
-      transform: scale(0.95);
+      transform: scale(0.92);
     }
 
-    /* ========== OVERLAY untuk mobile menu ========== */
     .overlay {
       display: none;
       position: fixed;
@@ -125,8 +206,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 9;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 999;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
@@ -138,100 +221,116 @@
 
     /* ========== MAIN CONTENT ========== */
     .main {
-      margin-left: 220px;
+      margin-left: 260px;
       flex: 1;
-      padding: 20px;
-      width: calc(100% - 220px);
+      padding: 24px;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+      min-height: 100dvh;
     }
 
     .header {
-      margin-bottom: 20px;
-      padding-top: 10px;
+      margin-bottom: 24px;
+      padding-top: 8px;
     }
 
     .header h1 {
       font-size: 22px;
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 6px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.3px;
     }
 
     .header p {
       color: var(--muted);
       font-size: 13px;
+      margin-top: 8px;
+      line-height: 1.5;
     }
 
-    /* ========== LOADING STATE ========== */
-    .loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 20px;
-      gap: 16px;
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading p {
+    .stat-label {
+      font-size: 11px;
       color: var(--muted);
-      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-      font-size: 15px;
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent-light);
+      margin-top: 4px;
     }
 
     /* ========== CANDIDATE GRID ========== */
     .candidate-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
     }
 
-    /* ========== CARD ========== */
+    /* ========== CANDIDATE CARD ========== */
     .card {
-      background: var(--card);
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
+      border-radius: var(--radius-lg);
+      padding: 16px;
       display: flex;
-      gap: 12px;
+      gap: 14px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      opacity: 0;
+      transition: opacity 0.25s ease;
     }
 
     .card:hover {
       border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(124, 107, 255, 0.15);
+    }
+
+    .card:hover::before {
+      opacity: 1;
     }
 
     .card:active {
-      transform: scale(0.98);
+      transform: scale(0.985);
     }
 
     .card-photo {
-      width: 65px;
-      height: 85px;
-      border-radius: 8px;
+      width: 70px;
+      height: 90px;
+      border-radius: var(--radius-md);
       object-fit: cover;
       flex-shrink: 0;
-      background: linear-gradient(135deg, #1a1a22 0%, #2e2e3d 100%);
+      background: var(--card);
       border: 1px solid var(--border);
     }
 
@@ -240,7 +339,9 @@
       align-items: center;
       justify-content: center;
       color: var(--muted);
-      font-size: 28px;
+      font-size: 32px;
+      background: var(--card);
+      border: 1px solid var(--border);
     }
 
     .card-info {
@@ -251,142 +352,203 @@
     .card-name {
       font-size: 15px;
       font-weight: 700;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      letter-spacing: -0.2px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
     }
 
     .card-class {
       font-size: 12px;
-      color: var(--accent);
-      margin-bottom: 6px;
+      color: var(--accent-light);
       font-weight: 600;
+      background: rgba(124, 107, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
     }
 
     .card-divisi {
       font-size: 11px;
       color: var(--muted);
-      margin-bottom: 10px;
+      line-height: 1.4;
     }
 
     .rating-list {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
+      margin-top: 10px;
     }
 
     .rating-item {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 6px;
-      padding: 7px;
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      border: 1px solid var(--border);
     }
 
     .rating-header {
       display: flex;
       align-items: center;
-      gap: 7px;
-      margin-bottom: 3px;
+      gap: 8px;
+      margin-bottom: 4px;
     }
 
     .rating-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
       border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
+      letter-spacing: 0.5px;
     }
 
     .rating-badge[data-rating="1"] {
-      background: rgba(255, 92, 92, 0.2);
+      background: rgba(255, 71, 87, 0.15);
       color: var(--star-1);
     }
 
     .rating-badge[data-rating="2"] {
-      background: rgba(255, 154, 60, 0.2);
+      background: rgba(255, 159, 67, 0.15);
       color: var(--star-2);
     }
 
     .rating-badge[data-rating="3"] {
-      background: rgba(109, 207, 129, 0.2);
+      background: rgba(46, 213, 115, 0.15);
       color: var(--star-3);
     }
 
     .rating-badge[data-rating="4"] {
-      background: rgba(124, 107, 255, 0.2);
+      background: rgba(124, 107, 255, 0.15);
       color: var(--star-4);
     }
 
     .rating-div {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
-      color: var(--text);
+      color: var(--text-secondary);
     }
 
     .rating-reason {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.45;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
-    /* ========== MODAL - Mobile Optimized ========== */
+    /* ========== LOADING & EMPTY STATES ========== */
+    .loading, .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading p, .empty p {
+      font-size: 14px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.7;
+    }
+
+    /* ========== MODAL ========== */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 100;
+      height: 100dvh;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2000;
       display: none;
-      align-items: flex-end;
+      align-items: center;
       justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .modal-overlay.active {
       display: flex;
+      opacity: 1;
     }
 
     .modal-content {
-      background: var(--sidebar);
+      background: var(--surface);
       width: 100%;
-      max-width: 600px;
-      max-height: 90vh;
-      border-radius: 20px 20px 0 0;
+      max-width: 680px;
+      max-height: 85vh;
+      max-height: 85dvh;
+      border-radius: var(--radius-lg);
       display: flex;
       flex-direction: column;
-      animation: slideUp 0.3s ease;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: var(--shadow-lg);
+      animation: modalSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      border: 1px solid var(--border-light);
     }
 
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(-12px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
     }
 
     .modal-header {
-      padding: 18px;
+      padding: 20px;
       border-bottom: 1px solid var(--border);
       display: flex;
-      align-items: center;
-      gap: 14px;
-      position: sticky;
-      top: 0;
-      background: var(--sidebar);
-      border-radius: 20px 20px 0 0;
-      z-index: 1;
+      align-items: flex-start;
+      gap: 16px;
+      flex-shrink: 0;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
     }
 
     .modal-close {
       margin-left: auto;
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: 1px solid var(--border);
       background: var(--card);
@@ -396,24 +558,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
     }
 
     .modal-close:hover {
       background: var(--accent);
       border-color: var(--accent);
-    }
-
-    .modal-close:active {
-      transform: scale(0.9);
+      transform: rotate(90deg);
     }
 
     .modal-photo {
-      width: 65px;
-      height: 85px;
-      border-radius: 8px;
+      width: 72px;
+      height: 92px;
+      border-radius: var(--radius-md);
       object-fit: cover;
-      background: linear-gradient(135deg, #1a1a22 0%, #2e2e3d 100%);
+      background: var(--card);
+      flex-shrink: 0;
       border: 1px solid var(--border);
     }
 
@@ -421,30 +582,39 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 36px;
       color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+
+    .modal-info {
+      flex: 1;
+      min-width: 0;
     }
 
     .modal-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 3px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -0.3px;
     }
 
     .modal-subtitle {
       font-size: 13px;
-      color: var(--accent);
+      color: var(--accent-light);
+      margin-top: 4px;
       font-weight: 600;
     }
 
     .modal-body {
-      padding: 18px;
+      padding: 20px;
       overflow-y: auto;
       flex: 1;
     }
 
     .modal-section {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .modal-section:last-child {
@@ -452,36 +622,41 @@
     }
 
     .modal-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--muted);
-      margin-bottom: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      letter-spacing: 0.6px;
     }
 
     .modal-divisi-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
     }
 
     .modal-divisi-tag {
-      background: rgba(124, 107, 255, 0.15);
-      color: var(--accent);
-      padding: 6px 12px;
-      border-radius: 6px;
+      background: rgba(124, 107, 255, 0.12);
+      color: var(--accent-light);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
       font-size: 12px;
       font-weight: 600;
-      border: 1px solid rgba(124, 107, 255, 0.3);
+      border: 1px solid rgba(124, 107, 255, 0.2);
     }
 
     .modal-rating-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 10px;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s ease;
+    }
+
+    .modal-rating-card:hover {
+      border-color: var(--border-light);
     }
 
     .modal-rating-card:last-child {
@@ -491,127 +666,161 @@
     .modal-rating-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .modal-rating-badge {
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       padding: 4px 10px;
       border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
+      letter-spacing: 0.5px;
     }
 
     .modal-rating-badge[data-rating="1"] {
-      background: rgba(255, 92, 92, 0.2);
+      background: rgba(255, 71, 87, 0.15);
       color: var(--star-1);
     }
 
     .modal-rating-badge[data-rating="2"] {
-      background: rgba(255, 154, 60, 0.2);
+      background: rgba(255, 159, 67, 0.15);
       color: var(--star-2);
     }
 
     .modal-rating-badge[data-rating="3"] {
-      background: rgba(109, 207, 129, 0.2);
+      background: rgba(46, 213, 115, 0.15);
       color: var(--star-3);
     }
 
     .modal-rating-badge[data-rating="4"] {
-      background: rgba(124, 107, 255, 0.2);
+      background: rgba(124, 107, 255, 0.15);
       color: var(--star-4);
     }
 
     .modal-rating-div {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text);
     }
 
     .modal-rating-reason {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
     }
 
-    /* ========== RESPONSIVE - MOBILE ========== */
+    /* ========== MOBILE RESPONSIVE ========== */
     @media (max-width: 768px) {
-      /* Show hamburger button */
       .menu-toggle {
-        display: flex;
+        display: flex !important;
       }
 
-      /* Hide sidebar by default, slide from left */
       .sidebar {
+        width: 85vw;
+        max-width: 320px;
         transform: translateX(-100%);
-        width: 260px;
-        z-index: 20;
+        box-shadow: none;
+        padding-top: calc(60px + var(--safe-top));
       }
 
       .sidebar.open {
         transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5);
       }
 
-      /* Main content full width */
       .main {
         margin-left: 0;
         width: 100%;
         padding: 16px;
+        padding-top: calc(64px + var(--safe-top));
+        padding-bottom: calc(16px + var(--safe-bottom));
       }
 
       .header {
-        padding-top: 50px;
         margin-bottom: 16px;
+        padding-top: 0;
       }
 
       .header h1 {
-        font-size: 18px;
+        font-size: 20px;
+        line-height: 1.2;
       }
 
       .header p {
         font-size: 12px;
+        margin-top: 6px;
       }
 
-      /* Grid single column */
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .stat-card {
+        padding: 12px;
+      }
+
+      .stat-label {
+        font-size: 10px;
+      }
+
+      .stat-value {
+        font-size: 20px;
+      }
+
       .candidate-grid {
         grid-template-columns: 1fr;
         gap: 12px;
       }
 
-      /* Adjust card */
       .card {
-        padding: 12px;
+        padding: 14px;
+        gap: 12px;
       }
 
       .card-photo {
-        width: 55px;
-        height: 75px;
+        width: 64px;
+        height: 82px;
       }
 
       .card-name {
         font-size: 14px;
       }
 
-      .card-class {
-        font-size: 11px;
+      .modal-overlay {
+        padding: 0;
+        align-items: flex-end;
       }
 
-      .card-divisi {
-        font-size: 10px;
-      }
-
-      /* Modal adjustments */
       .modal-content {
-        border-radius: 16px 16px 0 0;
-        max-height: 85vh;
+        max-width: 100%;
+        max-height: 92vh;
+        max-height: 92dvh;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        animation: modalSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: var(--safe-bottom);
+      }
+
+      @keyframes modalSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .modal-header {
-        padding: 16px;
-        border-radius: 16px 16px 0 0;
+        padding: 18px 16px;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       }
 
       .modal-body {
@@ -619,124 +828,153 @@
       }
 
       .modal-photo {
-        width: 55px;
-        height: 75px;
+        width: 60px;
+        height: 78px;
       }
 
       .modal-title {
-        font-size: 16px;
+        font-size: 17px;
       }
 
-      .modal-subtitle {
-        font-size: 12px;
+      .modal-close {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
       }
     }
 
     @media (max-width: 480px) {
-      .header h1 {
-        font-size: 16px;
-      }
-
-      .header p {
-        font-size: 11px;
-      }
-
-      .card {
-        padding: 10px;
-      }
-
-      .card-photo {
-        width: 50px;
-        height: 70px;
-      }
-
-      .card-name {
+      html {
         font-size: 13px;
       }
 
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .card {
+        padding: 12px;
+      }
+
+      .card-photo {
+        width: 56px;
+        height: 72px;
+      }
+
       .rating-badge {
-        font-size: 9px;
-        padding: 2px 5px;
-      }
-
-      .rating-div {
-        font-size: 9px;
-      }
-
-      .rating-reason {
-        font-size: 9px;
+        font-size: 10px;
+        padding: 2px 6px;
       }
 
       .modal-header {
-        padding: 14px;
+        padding: 16px 14px;
+        gap: 12px;
       }
 
       .modal-body {
         padding: 14px;
       }
 
-      .modal-photo {
-        width: 50px;
-        height: 70px;
+      .modal-rating-card {
+        padding: 12px;
       }
+    }
 
-      .modal-title {
-        font-size: 15px;
-      }
+    /* ========== ACCESSIBILITY ========== */
+    button:focus-visible,
+    .div-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
 
-      .modal-rating-badge {
-        font-size: 12px;
-      }
+    /* ========== SCROLLBAR ========== */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
 
-      .modal-rating-div {
-        font-size: 12px;
-      }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-      .modal-rating-reason {
-        font-size: 11px;
-      }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--border-light);
     }
   </style>
 </head>
 <body>
-  <!-- Hamburger Menu Button -->
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-  
-  <!-- Overlay untuk menutup menu saat klik di luar -->
+  <!-- MOBILE HAMBURGER -->
+  <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- OVERLAY -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <div class="dashboard">
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">SHC 2026</div>
+        <div class="sidebar-subtitle">Dashboard Review</div>
+      </div>
       <div class="sidebar-title">Filter Divisi</div>
       <div id="divisionList"></div>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN -->
     <main class="main">
       <div class="header">
-        <h1>📊 Review Kandidat SHC 2026</h1>
-        <p>Klik kartu untuk lihat detail lengkap</p>
+        <h1>📊 Review Kandidat</h1>
+        <p>Klik kartu untuk melihat detail rating & komentar dari guru</p>
+      </div>
+      <div class="stats-bar" id="statsBar" style="display: none;">
+        <div class="stat-card">
+          <div class="stat-label">Total Kandidat</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sudah Review</div>
+          <div class="stat-value" id="statReviewed">0</div>
+        </div>
       </div>
       <div id="content">
         <div class="loading">
           <div class="spinner"></div>
-          <p>Memuat data...</p>
+          <p>Memuat data kandidat...</p>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- MODAL DETAIL -->
-  <div class="modal-overlay" id="detailModal" onclick="closeModal(event)">
+  <!-- DETAIL MODAL -->
+  <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
         <div id="modalPhoto"></div>
-        <div style="flex: 1;">
+        <div class="modal-info">
           <div class="modal-title" id="modalName">—</div>
           <div class="modal-subtitle" id="modalClass">—</div>
         </div>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Tutup modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
       <div class="modal-body">
         <div class="modal-section">
@@ -744,7 +982,7 @@
           <div class="modal-divisi-list" id="modalDivisi"></div>
         </div>
         <div class="modal-section">
-          <div class="modal-label">📝 Rating & Alasan</div>
+          <div class="modal-label">📝 Rating & Alasan dari Guru</div>
           <div id="modalRatings"></div>
         </div>
       </div>
@@ -752,54 +990,66 @@
   </div>
 
   <script>
+    // ========== STATE ==========
     var currentDivisi = 'all';
     var allCandidatesData = [];
 
-    // ========== MOBILE MENU TOGGLE ==========
+    // ========== MENU TOGGLE ==========
     function toggleMenu() {
       var sidebar = document.getElementById('sidebar');
       var overlay = document.getElementById('overlay');
-      
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('show');
-      
-      // Prevent body scroll when menu is open
-      if (sidebar.classList.contains('open')) {
-        document.body.style.overflow = 'hidden';
-      } else {
+      var isOpen = sidebar.classList.contains('open');
+
+      if (isOpen) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
         document.body.style.overflow = '';
+      } else {
+        sidebar.classList.add('open');
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
       }
     }
 
-    // ========== LOAD ON PAGE READY ==========
+    // ========== INIT ==========
     window.addEventListener('load', function() {
       loadDivisions();
       loadCandidates('all');
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          var modal = document.getElementById('detailModal');
+          var sidebar = document.getElementById('sidebar');
+          if (modal.classList.contains('active')) {
+            closeModal();
+          } else if (sidebar.classList.contains('open')) {
+            toggleMenu();
+          }
+        }
+      });
     });
 
-    // ========== LOAD DIVISIONS LIST ==========
+    // ========== LOAD DIVISIONS ==========
     function loadDivisions() {
       google.script.run
-        .withSuccessHandler(function(divisions) {
+        .withSuccessHandler(function(divs) {
           var list = document.getElementById('divisionList');
           list.innerHTML = '';
-          
-          divisions.forEach(function(div) {
+
+          divs.forEach(function(d) {
             var btn = document.createElement('button');
-            btn.className = 'div-btn' + (div.id === 'all' ? ' active' : '');
-            btn.textContent = div.name;
+            btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
+            btn.innerHTML = '<span class="div-btn-icon">' + (d.name.split(' ')[0] || '📋') + '</span> ' + (d.name.split(' ').slice(1).join(' ') || d.name);
+            btn.setAttribute('data-id', d.id);
             btn.onclick = function() {
-              // Update active state
               document.querySelectorAll('.div-btn').forEach(function(b) {
                 b.classList.remove('active');
               });
               btn.classList.add('active');
-              
-              // Load data
-              currentDivisi = div.id;
-              loadCandidates(div.id);
-              
-              // Close menu on mobile after selection
+
+              currentDivisi = d.id;
+              loadCandidates(d.id);
+
               if (window.innerWidth <= 768) {
                 toggleMenu();
               }
@@ -810,22 +1060,33 @@
         .getDashboardDivisions();
     }
 
-    // ========== LOAD CANDIDATES DATA ==========
+    // ========== LOAD CANDIDATES ==========
     function loadCandidates(divisi) {
       var content = document.getElementById('content');
-      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
+      var statsBar = document.getElementById('statsBar');
+
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data kandidat...</p></div>';
+      statsBar.style.display = 'none';
 
       google.script.run
-        .withSuccessHandler(function(response) {
-          if (!response.success) {
-            content.innerHTML = '<div class="empty">⚠️ ' + response.error + '</div>';
+        .withSuccessHandler(function(res) {
+          if (!res.success) {
+            content.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>' + escHtml(res.error) + '</p></div>';
             return;
           }
 
-          allCandidatesData = response.data || [];
+          allCandidatesData = res.data || [];
+
+          // Update stats
+          document.getElementById('statTotal').textContent = allCandidatesData.length;
+          var reviewedCount = allCandidatesData.filter(function(c) {
+            return Object.keys(c.ratings || {}).length > 0;
+          }).length;
+          document.getElementById('statReviewed').textContent = reviewedCount;
+          statsBar.style.display = 'grid';
 
           if (allCandidatesData.length === 0) {
-            content.innerHTML = '<div class="empty">📭 Tidak ada data kandidat</div>';
+            content.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>Tidak ada data kandidat</p></div>';
             return;
           }
 
@@ -834,44 +1095,42 @@
         .getDashboardData(divisi);
     }
 
-    // ========== RENDER CANDIDATES CARDS ==========
+    // ========== RENDER CANDIDATES ==========
     function renderCandidates(candidates) {
       var content = document.getElementById('content');
       var html = '<div class="candidate-grid">';
 
-      candidates.forEach(function(candidate, index) {
-        // ========== FOTO URL CONVERSION (STABLE) ==========
-        var fotoUrl = convertDriveUrl(candidate.foto);
+      candidates.forEach(function(c, idx) {
+        var fotoUrl = convertDriveUrl(c.foto);
         var fotoHtml = fotoUrl
-          ? '<img class="card-photo" src="' + fotoUrl + '" alt="Foto" onerror="this.outerHTML=\'<div class=\\\'card-photo placeholder\\\'>👤</div>\';">'
+          ? '<img class="card-photo" src="' + fotoUrl + '" alt="Foto ' + escHtml(c.nama) + '" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'card-photo placeholder\\\'>👤</div>\';" crossorigin="anonymous">'
           : '<div class="card-photo placeholder">👤</div>';
 
-        // ========== RATINGS LIST ==========
         var ratingsHtml = '';
-        Object.values(candidate.ratings).forEach(function(rating) {
+        Object.values(c.ratings).forEach(function(r) {
           ratingsHtml += '<div class="rating-item">';
           ratingsHtml += '<div class="rating-header">';
-          ratingsHtml += '<span class="rating-badge" data-rating="' + rating.rating + '">★' + rating.rating + '</span>';
-          ratingsHtml += '<span class="rating-div">' + escapeHtml(rating.divName) + '</span>';
+          ratingsHtml += '<span class="rating-badge" data-rating="' + r.rating + '">★ ' + r.rating + '</span>';
+          ratingsHtml += '<span class="rating-div">' + escHtml(r.divName) + '</span>';
           ratingsHtml += '</div>';
-          if (rating.alasan) {
-            ratingsHtml += '<div class="rating-reason">' + escapeHtml(rating.alasan) + '</div>';
+          if (r.alasan) {
+            ratingsHtml += '<div class="rating-reason">' + escHtml(r.alasan) + '</div>';
           }
           ratingsHtml += '</div>';
         });
 
-        // ========== DIVISI TEXT ==========
-        var divisiText = candidate.divisiDilamar
-          .map(function(d) { return capitalize(d); })
-          .join(', ');
+        var divText = c.divisiDilamar.map(function(d) {
+          return capitalize(d);
+        }).join(', ');
 
-        // ========== BUILD CARD HTML ==========
-        html += '<div class="card" onclick="openModal(' + index + ')">';
+        html += '<div class="card" onclick="openModal(' + idx + ')">';
         html += fotoHtml;
         html += '<div class="card-info">';
-        html += '<div class="card-name">' + escapeHtml(candidate.nama) + '</div>';
-        html += '<div class="card-class">Kelas ' + escapeHtml(candidate.kelas) + '</div>';
-        html += '<div class="card-divisi">🎯 ' + divisiText + '</div>';
+        html += '<div class="card-name">' + escHtml(c.nama) + '</div>';
+        html += '<div class="card-meta">';
+        html += '<span class="card-class">Kelas ' + escHtml(c.kelas) + '</span>';
+        html += '</div>';
+        html += '<div class="card-divisi">🎯 ' + divText + '</div>';
         html += '<div class="rating-list">' + ratingsHtml + '</div>';
         html += '</div></div>';
       });
@@ -880,89 +1139,66 @@
       content.innerHTML = html;
     }
 
-    // ========== OPEN MODAL DETAIL ==========
-    function openModal(index) {
-      var candidate = allCandidatesData[index];
-      if (!candidate) return;
+    // ========== OPEN MODAL ==========
+    function openModal(idx) {
+      var c = allCandidatesData[idx];
+      if (!c) return;
 
-      // ========== FOTO URL ==========
-      var fotoUrl = convertDriveUrl(candidate.foto);
+      var fotoUrl = convertDriveUrl(c.foto);
       var fotoHtml = fotoUrl
-        ? '<img class="modal-photo" src="' + fotoUrl + '" alt="Foto" onerror="this.outerHTML=\'<div class=\\\'modal-photo placeholder\\\'>👤</div>\';">'
+        ? '<img class="modal-photo" src="' + fotoUrl + '" alt="Foto ' + escHtml(c.nama) + '" onerror="this.outerHTML=\'<div class=\\\'modal-photo placeholder\\\'>👤</div>\';" crossorigin="anonymous">'
         : '<div class="modal-photo placeholder">👤</div>';
 
       document.getElementById('modalPhoto').innerHTML = fotoHtml;
-      document.getElementById('modalName').textContent = candidate.nama;
-      document.getElementById('modalClass').textContent = 'Kelas ' + candidate.kelas;
+      document.getElementById('modalName').textContent = c.nama;
+      document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
 
-      // ========== DIVISI TAGS ==========
-      var divisiHtml = candidate.divisiDilamar
-        .map(function(d) {
+      document.getElementById('modalDivisi').innerHTML =
+        c.divisiDilamar.map(function(d) {
           return '<span class="modal-divisi-tag">' + capitalize(d) + '</span>';
-        })
-        .join('');
-      document.getElementById('modalDivisi').innerHTML = divisiHtml;
+        }).join('');
 
-      // ========== RATINGS LIST ==========
       var ratingsHtml = '';
-      Object.values(candidate.ratings).forEach(function(rating) {
+      Object.values(c.ratings).forEach(function(r) {
         ratingsHtml += '<div class="modal-rating-card">';
         ratingsHtml += '<div class="modal-rating-header">';
-        ratingsHtml += '<span class="modal-rating-badge" data-rating="' + rating.rating + '">★' + rating.rating + '</span>';
-        ratingsHtml += '<span class="modal-rating-div">' + escapeHtml(rating.divName) + '</span>';
+        ratingsHtml += '<span class="modal-rating-badge" data-rating="' + r.rating + '">★ ' + r.rating + '</span>';
+        ratingsHtml += '<span class="modal-rating-div">' + escHtml(r.divName) + '</span>';
         ratingsHtml += '</div>';
-        ratingsHtml += '<div class="modal-rating-reason">' + escapeHtml(rating.alasan || 'Tidak ada alasan') + '</div>';
+        ratingsHtml += '<div class="modal-rating-reason">' + escHtml(r.alasan || 'Tidak ada alasan') + '</div>';
         ratingsHtml += '</div>';
       });
       document.getElementById('modalRatings').innerHTML = ratingsHtml;
 
-      // ========== SHOW MODAL ==========
-      document.getElementById('detailModal').classList.add('active');
+      var modal = document.getElementById('detailModal');
+      modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
     // ========== CLOSE MODAL ==========
-    function closeModal(event) {
-      // Only close if clicking overlay (not content inside)
-      if (event && event.target !== event.currentTarget) return;
-
-      document.getElementById('detailModal').classList.remove('active');
+    function closeModal() {
+      var modal = document.getElementById('detailModal');
+      modal.classList.remove('active');
       document.body.style.overflow = '';
     }
 
-    // ========== CONVERT GOOGLE DRIVE URL (STABLE) ==========
+    function closeModalOnBackdrop(event) {
+      if (event.target === event.currentTarget) {
+        closeModal();
+      }
+    }
+
+    // ========== UTILS ==========
     function convertDriveUrl(url) {
       if (!url || url.indexOf('drive.google.com') === -1) return '';
-
-      // Extract file ID from various Google Drive URL formats
-      var fileId = null;
-
-      // Format 1: /d/{fileId}/
-      var match1 = url.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
-      if (match1) fileId = match1[1];
-
-      // Format 2: id={fileId}
-      if (!fileId) {
-        var match2 = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
-        if (match2) fileId = match2[1];
-      }
-
-      // Format 3: /file/d/{fileId}
-      if (!fileId) {
-        var match3 = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
-        if (match3) fileId = match3[1];
-      }
-
-      // Return stable Google User Content URL
+      var fileId = url.match(/[-\w]{25,}/);
       if (fileId) {
-        return 'https://lh3.googleusercontent.com/d/' + fileId + '=s1000';
+        return 'https://lh3.googleusercontent.com/d/' + fileId[0];
       }
-
       return '';
     }
 
-    // ========== ESCAPE HTML ==========
-    function escapeHtml(str) {
+    function escHtml(str) {
       if (!str) return '';
       return String(str)
         .replace(/&/g, '&amp;')
@@ -972,7 +1208,6 @@
         .replace(/'/g, '&#39;');
     }
 
-    // ========== CAPITALIZE ==========
     function capitalize(str) {
       if (!str) return '';
       return str.charAt(0).toUpperCase() + str.slice(1);
