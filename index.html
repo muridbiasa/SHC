@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review Kandidat SHC 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f0f13; --card-bg: #1a1a22; --card-border: #2e2e3d;
+      --accent: #7c6bff; --accent-soft: #2a2545;
+      --text-primary: #f0eeff; --text-muted: #9390ad;
+      --star-1: #ff5c5c; --star-2: #ff9a3c; --star-3: #6dcf81; --star-4: #7c6bff;
+      --radius: 16px; --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; padding: 0 0 40px; }
+    .container { max-width: 520px; margin: 0 auto; padding: 20px 16px; }
+    
+    .header { background: linear-gradient(135deg, #1a1a22 0%, #12111c 100%); border-bottom: 1px solid var(--card-border); padding: 20px 16px 16px; position: sticky; top: 0; z-index: 100; margin: -20px -16px 20px; }
+    .header-top { display: flex; align-items: center; gap: 10px; }
+    .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+    .header-title { font-size: 15px; font-weight: 700; }
+    
+    .selector-screen { text-align: center; padding: 40px 0; }
+    .selector-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .selector-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+    .division-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .division-btn { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 14px 10px; color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .division-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+    
+    .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 0; gap: 16px; }
+    .spinner { width: 44px; height: 44px; border: 3px solid rgba(124,107,255,0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .progress-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .progress-bar-bg { flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #b094ff); transition: width 0.3s; }
+    .progress-text { font-size: 12px; color: var(--text-muted); min-width: 60px; text-align: right; }
+    
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); animation: fadeSlideUp 0.35s ease; }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    .card-photo-wrap { position: relative; width: 100%; aspect-ratio: 3/4; background: #111118; overflow: hidden; }
+    .card-photo { width: 100%; height: 100%; object-fit: cover; }
+    .card-photo-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--text-muted); font-size: 13px; }
+    .card-body { padding: 18px; }
+    .candidate-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .candidate-class { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 14px; }
+    .section-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; font-weight: 700; }
+    
+    .qa-section { margin-top: 16px; border-top: 1px solid var(--card-border); padding-top: 16px; }
+    .question-item { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 14px; margin-bottom: 12px; border-left: 3px solid var(--accent); }
+    .q-label { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; line-height: 1.4; }
+    .q-answer { font-size: 14px; color: var(--text-primary); line-height: 1.6; white-space: pre-wrap; }
+    .toggle-answers { width: 100%; padding: 10px; background: rgba(124,107,255,0.1); border: 1px solid rgba(124,107,255,0.3); border-radius: 8px; color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 12px; display: none; }
+    .toggle-answers:hover { background: rgba(124,107,255,0.2); }
+    .answers-container { display: none; }
+    .answers-container.show { display: block; }
+    
+    .rating-section { margin-bottom: 16px; text-align: center; }
+    .star-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .star-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 4px; border-radius: 12px; border: 2px solid var(--card-border); background: transparent; cursor: pointer; transition: all 0.18s; }
+    .star-btn:active { transform: scale(0.93); }
+    .star-btn.selected[data-rating="1"] { border-color: var(--star-1); background: rgba(255,92,92,0.12); }
+    .star-btn.selected[data-rating="2"] { border-color: var(--star-2); background: rgba(255,154,60,0.12); }
+    .star-btn.selected[data-rating="3"] { border-color: var(--star-3); background: rgba(109,207,129,0.12); }
+    .star-btn.selected[data-rating="4"] { border-color: var(--star-4); background: rgba(124,107,255,0.12); }
+    .star-emoji { font-size: 22px; }
+    .star-label { font-size: 10px; font-weight: 700; color: var(--text-muted); }
+    .star-num { font-size: 16px; font-weight: 800; }
+    .star-btn[data-rating="1"] .star-num { color: var(--star-1); }
+    .star-btn[data-rating="2"] .star-num { color: var(--star-2); }
+    .star-btn[data-rating="3"] .star-num { color: var(--star-3); }
+    .star-btn[data-rating="4"] .star-num { color: var(--star-4); }
+    
+    /* COMMENT SECTION STYLES */
+    .comment-section { margin-bottom: 20px; display: none; animation: fadeSlideUp 0.2s; }
+    .comment-section.visible { display: block; }
+    .comment-label { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
+    .comment-label span { color: var(--accent); }
+    .catatan-input { width: 100%; background: rgba(255,255,255,0.04); border: 1.5px solid var(--card-border); border-radius: 10px; color: var(--text-primary); font-family: inherit; font-size: 14px; padding: 12px 14px; resize: vertical; min-height: 80px; transition: all 0.3s; }
+    .catatan-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,107,255,0.1); }
+    .catatan-input.invalid { border-color: var(--star-1); }
+    
+    .char-counter { font-size: 12px; margin-top: 6px; text-align: right; transition: color 0.3s; }
+    .char-counter.warning { color: var(--star-1); }
+    .char-counter.ok { color: var(--star-3); }
+
+    .error-msg { color: var(--star-1); font-size: 12px; margin-top: 4px; display: none; }
+    .error-msg.show { display: block; }
+    
+    /* BUTTONS */
+    .save-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent), #9b8aff); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .save-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
+    .save-btn:not(:disabled):active { transform: scale(0.97); }
+    .save-btn .btn-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+    .save-btn.loading .btn-spinner { display: block; }
+    .save-btn.loading .btn-text { display: none; }
+    .skip-btn { width: 100%; margin-top: 10px; padding: 12px; background: transparent; border: 1.5px solid var(--card-border); border-radius: 12px; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; }
+    .skip-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .back-btn { width: 100%; margin-top: 16px; padding: 12px; background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 12px; color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer; }
+    .back-btn:hover { border-color: var(--accent); }
+    
+    /* STATES */
+    .done-state, .empty-state { text-align: center; padding: 60px 20px; }
+    .done-icon { font-size: 64px; margin-bottom: 16px; }
+    .done-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .done-sub { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+    
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #2a2a38; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text-primary); box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 999; transition: transform 0.3s, opacity 0.3s; opacity: 0; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success { border-color: rgba(109,207,129,0.4); }
+    .toast.error { border-color: rgba(255,92,92,0.4); color: var(--star-1); }
+    
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-top">
+        <div class="logo-dot"></div>
+        <span class="header-title">Review Kandidat SHC 2026</span>
+      </div>
+    </div>
+
+    <div id="selectorScreen" class="selector-screen">
+      <h1 class="selector-title">Pilih Divisi</h1>
+      <p class="selector-sub">Pilih divisi yang ingin kamu review</p>
+      <div class="division-grid" id="divisionGrid"></div>
+    </div>
+
+    <div id="loadingScreen" class="loading hidden">
+      <div class="spinner"></div>
+      <p style="color:var(--text-muted); font-size:14px;">Memuat data kandidat...</p>
+    </div>
+
+    <div id="ratingScreen" class="hidden">
+      <div class="progress-wrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+        <span class="progress-text" id="progressText">—</span>
+      </div>
+
+      <div class="card">
+        <div class="card-photo-wrap" id="photoContainer">
+          <div class="card-photo-placeholder">Memuat foto...</div>
+        </div>
+        <div class="card-body">
+          <div class="candidate-name" id="nama">—</div>
+          <div class="candidate-class" id="kelas">—</div>
+          
+          <div class="qa-section" id="qaPreview"></div>
+          
+          <button class="toggle-answers" id="toggleAnswers" onclick="toggleAnswers()">📄 Lihat Jawaban Lengkap</button>
+          <div class="answers-container" id="allAnswers"></div>
+
+          <div class="rating-section">
+            <div class="section-label" style="margin-bottom:10px;">Beri Rating</div>
+            <div class="star-grid">
+              <button class="star-btn" data-rating="1" onclick="selectRating(1)"><span class="star-emoji">😞</span><span class="star-num">1</span><span class="star-label">Jelek</span></button>
+              <button class="star-btn" data-rating="2" onclick="selectRating(2)"><span class="star-emoji">🤔</span><span class="star-num">2</span><span class="star-label">Ragu</span></button>
+              <button class="star-btn" data-rating="3" onclick="selectRating(3)"><span class="star-emoji">👍</span><span class="star-num">3</span><span class="star-label">Bagus</span></button>
+              <button class="star-btn" data-rating="4" onclick="selectRating(4)"><span class="star-emoji">🌟</span><span class="star-num">4</span><span class="star-label">Lolos</span></button>
+            </div>
+          </div>
+
+          <!-- BAGIAN KOMENTAR BARU -->
+          <div class="comment-section" id="commentSection">
+            <div class="comment-label">📝 Alasan / Masukan <span>(WAJIB min. 100 karakter)</span></div>
+            <textarea class="catatan-input" id="catatanInput" placeholder="Tuliskan alasan kenapa kamu memberi rating ini..." oninput="checkCommentLength()"></textarea>
+            <div class="char-counter warning" id="charCounter">0 / 100 karakter</div>
+            <div class="error-msg" id="catatanError">Minimal 100 karakter untuk menyimpan rating.</div>
+          </div>
+
+          <button class="save-btn" id="saveBtn" disabled onclick="simpanRating()">
+            <span class="btn-spinner"></span><span class="btn-text">Lengkapi Rating & Komentar ⭐</span>
+          </button>
+          <button class="skip-btn" onclick="skipKandidat()">Lewati untuk sekarang →</button>
+        </div>
+      </div>
+      <button class="back-btn" onclick="kembaliKePilihDivisi()">← Ganti Divisi</button>
+    </div>
+
+    <div id="doneScreen" class="done-state hidden">
+      <div class="done-icon">🎉</div>
+      <h2 class="done-title">Semua Selesai!</h2>
+      <p class="done-sub">Semua kandidat divisi <strong id="doneDivisi">—</strong> sudah direview.</p>
+      <button class="save-btn" onclick="kembaliKePilihDivisi()" style="margin-top:20px; max-width:200px;">Pilih Divisi Lain</button>
+    </div>
+
+    <div id="emptyScreen" class="empty-state hidden">
+      <div class="done-icon">📭</div>
+      <h2 class="done-title">Data Kosong</h2>
+      <p class="done-sub">Tidak ada kandidat yang belum direview untuk divisi ini.</p>
+      <button class="save-btn" onclick="kembaliKePilihDivisi()" style="margin-top:20px; max-width:200px;">Pilih Divisi Lain</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    var state = { divisi: "", kandidatList: [], currentIndex: 0, selectedRating: 0, totalAll: 0, totalReviewed: 0, totalPending: 0 };
+    
+    var QUESTIONS = [
+      "Cap Waktu", "Nama Lengkap", "Kelas", "Tanggal Lahir", "Nomor HP",
+      "Apa tujuanmu mengikuti pendaftaran kepanitiaan SHC ini?",
+      "Sebutkan kekurangan serta kelebihanmu dalam hal sikap maupun sifat!",
+      "Bila terdapat seseorang yang memiliki pendapat yang berbeda denganmu, bagaimana tanggapanmu?",
+      "Adakah pengalaman dalam berorganisasi? Jika sudah pernah sebutkanlah!",
+      "Pernahkah melakukan sesuatu kesalahan selama bekerja sama dengan orang lain? Bagaimana caramu mempertanggungjawabkan kesalahan tersebut?",
+      "Apa solusimu apabila jadwal pribadimu bertabrakan dengan jadwal SHC nantinya? Jelaskan!",
+      "Apakah orang tua atau wali sudah memberikan perizinan untuk mengikuti kepanitiaan ini? Adakah batasan jam malam dari orang tua? Sebutkan!",
+      "Pilihlah divisi yang Anda inginkan (minimal 1, maksimal 3 divisi). Tugas divisi KLIK AKU",
+      "Manakah divisi yang lebih kamu prioritaskan diantara semua divisi yang kamu pilih? Mengapa?",
+      "Sebutkan skill yang bisa mendukung kamu untuk bergabung dengan divisi yang kamu inginkan! (Sebutkan setiap divisi apabila memilih divisi lebih dari 1)",
+      "Silahkan download lembar pernyataan KLIK AKU, lalu isi dengan tanda tangan yang telah discan, pastikan telah terisi semua lalu upload kembali dengan format yang sama!",
+      "Foto 3x4",
+      "Mengapa anda memilih 3 jobdesc tersebut?",
+      "Apakah kamu bersedia menginap di sekolah apabila masih banyak persiapan yang perlu dilakukan?",
+      "UPLOAD DI SINI!"
+    ];
+
+    var PREVIEW_QUESTIONS = [5, 6, 7, 8]; 
+
+    window.addEventListener("load", function() { loadDivisionList(); });
+
+    function loadDivisionList() {
+      google.script.run.withSuccessHandler(renderDivisionSelector).withFailureHandler(showError).getDivisions();
+    }
+
+    function renderDivisionSelector(divisions) {
+      var grid = document.getElementById("divisionGrid");
+      grid.innerHTML = "";
+      divisions.forEach(function(d) {
+        var btn = document.createElement("button");
+        btn.className = "division-btn";
+        btn.textContent = d.name;
+        btn.onclick = function() { pilihDivisi(d.id, d.name); };
+        grid.appendChild(btn);
+      });
+      showScreen("selectorScreen");
+    }
+
+    function pilihDivisi(id, name) {
+      state.divisi = id;
+      state.kandidatList = [];
+      state.currentIndex = 0;
+      showScreen("loadingScreen");
+      
+      google.script.run.withSuccessHandler(function(result) {
+        if (!result.success) { showError(result.error); return; }
+        state.kandidatList = result.data || [];
+        state.totalAll = result.totalAll || 0;
+        state.totalReviewed = result.totalReviewed || 0;
+        state.totalPending = result.totalPending || 0;
+        
+        if (state.kandidatList.length === 0) {
+          document.getElementById("doneDivisi").textContent = name;
+          showScreen("emptyScreen");
+        } else {
+          updateProgress();
+          renderKandidat(0);
+          showScreen("ratingScreen");
+        }
+      }).withFailureHandler(showError).getDataByDivisi(id);
+    }
+
+    function showScreen(screenId) {
+      ["selectorScreen","loadingScreen","ratingScreen","doneScreen","emptyScreen"].forEach(function(id) {
+        document.getElementById(id).classList.add("hidden");
+      });
+      document.getElementById(screenId).classList.remove("hidden");
+    }
+
+    function kembaliKePilihDivisi() {
+      state.divisi = "";
+      state.kandidatList = [];
+      showScreen("selectorScreen");
+    }
+
+    function updateProgress() {
+      var reviewed = state.totalReviewed + state.currentIndex;
+      var all = state.totalAll;
+      var pct = all > 0 ? Math.round((reviewed / all) * 100) : 0;
+      document.getElementById("progressFill").style.width = pct + "%";
+      document.getElementById("progressText").textContent = reviewed + "/" + all + " ✓";
+    }
+
+    function renderKandidat(idx) {
+      var k = state.kandidatList[idx];
+      if (!k) { showDone(); return; }
+      
+      if (!k.answers) k.answers = {};
+      
+      state.selectedRating = 0;
+      document.getElementById("nama").textContent = k.nama || "-";
+      document.getElementById("kelas").textContent = "Kelas " + (k.kelas || "-");
+      
+      var photoContainer = document.getElementById("photoContainer");
+      if (k.foto && (k.foto.indexOf("drive.google.com") !== -1 || k.foto.indexOf("lh3.googleusercontent.com") !== -1)) {
+        var imgUrl = k.foto;
+        if (imgUrl.indexOf("/open?id=") !== -1) {
+          var id = imgUrl.split("id=")[1].split("&")[0];
+          imgUrl = "https://lh3.googleusercontent.com/d/" + id;
+        } else if (imgUrl.indexOf("/file/d/") !== -1) {
+          var id = imgUrl.split("/file/d/")[1].split("/")[0];
+          imgUrl = "https://lh3.googleusercontent.com/d/" + id;
+        }
+        photoContainer.innerHTML = '<img class="card-photo" src="' + escHtml(imgUrl) + '" alt="Foto" onerror="this.parentElement.innerHTML=\'<div class=\\\'card-photo-placeholder\\\'>Foto tidak tersedia</div>\'">';
+      } else {
+        photoContainer.innerHTML = '<div class="card-photo-placeholder">Foto tidak tersedia</div>';
+      }
+      
+      var previewHtml = '';
+      PREVIEW_QUESTIONS.forEach(function(qIdx) {
+        if (QUESTIONS[qIdx] && k.answers[qIdx] && k.answers[qIdx] !== "-" && k.answers[qIdx] !== "") {
+          previewHtml += '<div class="question-item">';
+          previewHtml += '<div class="q-label">' + escHtml(QUESTIONS[qIdx]) + '</div>';
+          previewHtml += '<div class="q-answer">' + escHtml(k.answers[qIdx]) + '</div>';
+          previewHtml += '</div>';
+        }
+      });
+      document.getElementById("qaPreview").innerHTML = previewHtml;
+      
+      var allHtml = '';
+      var hasMoreAnswers = false;
+      for (var i = 0; i < QUESTIONS.length; i++) {
+        if (PREVIEW_QUESTIONS.indexOf(i) !== -1) continue;
+        if (i === 0 || i === 1 || i === 2 || i === 3 || i === 4 || i === 16 || i === 19) continue;
+        
+        if (QUESTIONS[i] && k.answers[i] && k.answers[i] !== "-" && k.answers[i] !== "") {
+          allHtml += '<div class="question-item">';
+          allHtml += '<div class="q-label">' + escHtml(QUESTIONS[i]) + '</div>';
+          allHtml += '<div class="q-answer">' + escHtml(k.answers[i]) + '</div>';
+          allHtml += '</div>';
+          hasMoreAnswers = true;
+        }
+      }
+      document.getElementById("allAnswers").innerHTML = allHtml;
+      document.getElementById("toggleAnswers").style.display = hasMoreAnswers ? "block" : "none";
+      document.getElementById("allAnswers").classList.remove("show");
+      document.getElementById("toggleAnswers").textContent = "📄 Lihat Jawaban Lengkap";
+      
+      // Reset UI
+      document.querySelectorAll(".star-btn").forEach(function(btn) { btn.classList.remove("selected"); });
+      document.getElementById("commentSection").classList.remove("visible");
+      document.getElementById("catatanInput").value = "";
+      document.getElementById("charCounter").textContent = "0 / 100 karakter";
+      document.getElementById("charCounter").className = "char-counter warning";
+      document.getElementById("catatanInput").classList.remove("invalid");
+      document.getElementById("catatanError").classList.remove("show");
+      document.getElementById("saveBtn").disabled = true;
+      document.getElementById("saveBtn").querySelector(".btn-text").textContent = "Lengkapi Rating & Komentar ⭐";
+      
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleAnswers() {
+      var container = document.getElementById("allAnswers");
+      container.classList.toggle("show");
+      var btn = document.getElementById("toggleAnswers");
+      btn.textContent = container.classList.contains("show") ? "🔼 Sembunyikan Jawaban" : "📄 Lihat Jawaban Lengkap";
+    }
+
+    function selectRating(val) {
+      state.selectedRating = val;
+      document.querySelectorAll(".star-btn").forEach(function(btn) { btn.classList.remove("selected"); });
+      document.querySelector('.star-btn[data-rating="' + val + '"]').classList.add("selected");
+      
+      // Tampilkan kolom komentar untuk SEMUA rating
+      document.getElementById("commentSection").classList.add("visible");
+      
+      // Update tombol text
+      checkCommentLength();
+    }
+
+    function checkCommentLength() {
+      if (!state.selectedRating) return;
+      
+      var val = document.getElementById("catatanInput").value;
+      var len = val.length;
+      var counter = document.getElementById("charCounter");
+      var input = document.getElementById("catatanInput");
+      var saveBtn = document.getElementById("saveBtn");
+      var error = document.getElementById("catatanError");
+      
+      counter.textContent = len + " / 100 karakter";
+      
+      if (len >= 100) {
+        counter.className = "char-counter ok";
+        input.classList.remove("invalid");
+        error.classList.remove("show");
+        saveBtn.disabled = false;
+        saveBtn.querySelector(".btn-text").textContent = "Simpan Rating ★" + state.selectedRating;
+      } else {
+        counter.className = "char-counter warning";
+        input.classList.add("invalid");
+        error.classList.add("show");
+        saveBtn.disabled = true;
+        saveBtn.querySelector(".btn-text").textContent = "Tulisan kurang (" + (100 - len) + " lagi)";
+      }
+    }
+
+    function skipKandidat() {
+      state.currentIndex++;
+      if (state.currentIndex >= state.kandidatList.length) { showDone(); }
+      else { updateProgress(); renderKandidat(state.currentIndex); }
+    }
+
+    function simpanRating() {
+      if (state.selectedRating === 0) return;
+      var k = state.kandidatList[state.currentIndex];
+      if (!k) return;
+      
+      var catatan = document.getElementById("catatanInput").value.trim();
+      // Double check just in case
+      if (catatan.length < 100) { showToast("Alasan minimal 100 karakter!", "error"); return; }
+      
+      var btn = document.getElementById("saveBtn");
+      btn.classList.add("loading");
+      btn.disabled = true;
+      
+      google.script.run.withSuccessHandler(function(res) {
+        btn.classList.remove("loading");
+        if (!res.success) { showToast("Gagal: " + res.message, "error"); btn.disabled = false; return; }
+        
+        showToast("Rating ★" + state.selectedRating + " tersimpan! ✓", "success");
+        state.totalReviewed++;
+        state.currentIndex++;
+        
+        setTimeout(function() {
+          if (state.currentIndex >= state.kandidatList.length) { showDone(); }
+          else { updateProgress(); renderKandidat(state.currentIndex); }
+        }, 700);
+      }).withFailureHandler(function(err) {
+        btn.classList.remove("loading");
+        btn.disabled = false;
+        showToast("Error: " + err.message, "error");
+      }).saveRating({ rowIndex: k.rowIndex, rating: state.selectedRating, catatan: catatan, divisi: state.divisi });
+    }
+
+    function showDone() {
+      document.getElementById("doneDivisi").textContent = capitalizeFirst(state.divisi);
+      showScreen("doneScreen");
+    }
+
+    function showError(msg) {
+      document.getElementById("emptyScreen").innerHTML = '<div class="done-icon">⚠️</div><h2 class="done-title">Error</h2><p class="done-sub">' + escHtml(msg) + '</p><button class="save-btn" onclick="kembaliKePilihDivisi()" style="margin-top:20px; max-width:200px;">Kembali</button>';
+      showScreen("emptyScreen");
+    }
+
+    function showToast(msg, type) {
+      var t = document.getElementById("toast");
+      t.textContent = msg;
+      t.className = "toast " + (type || "");
+      t.classList.add("show");
+      setTimeout(function() { t.classList.remove("show"); }, 2500);
+    }
+
+    function escHtml(str) {
+      if (!str) return "";
+      return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+    }
+
+    function capitalizeFirst(str) {
+      if (!str) return "";
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  </script>
+</body>
+</html>

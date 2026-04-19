@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Dashboard Review SHC 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --sidebar: #1a1a22;
+      --card: #232330;
+      --border: #2e2e3d;
+      --accent: #7c6bff;
+      --text: #f0eeff;
+      --muted: #9390ad;
+      --star-1: #ff5c5c;
+      --star-2: #ff9a3c;
+      --star-3: #6dcf81;
+      --star-4: #7c6bff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    .dashboard {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* ========== SIDEBAR - Desktop ========== */
+    .sidebar {
+      width: 220px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      padding: 16px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 10;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .div-btn {
+      display: block;
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 6px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .div-btn:hover {
+      background: rgba(124, 107, 255, 0.1);
+      border-color: var(--accent);
+    }
+
+    .div-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ========== HAMBURGER MENU BUTTON ========== */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 30;
+      width: 46px;
+      height: 46px;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.4);
+      transition: all 0.2s;
+    }
+
+    .menu-toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* ========== OVERLAY untuk mobile menu ========== */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 9;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.show {
+      display: block;
+      opacity: 1;
+    }
+
+    /* ========== MAIN CONTENT ========== */
+    .main {
+      margin-left: 220px;
+      flex: 1;
+      padding: 20px;
+      width: calc(100% - 220px);
+    }
+
+    .header {
+      margin-bottom: 20px;
+      padding-top: 10px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ========== LOADING STATE ========== */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      gap: 16px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ========== CANDIDATE GRID ========== */
+    .candidate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+
+    /* ========== CARD ========== */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.15);
+    }
+
+    .card:active {
+      transform: scale(0.98);
+    }
+
+    .card-photo {
+      width: 65px;
+      height: 85px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #1a1a22 0%, #2e2e3d 100%);
+      border: 1px solid var(--border);
+    }
+
+    .card-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 28px;
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-class {
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .card-divisi {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .rating-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .rating-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 6px;
+      padding: 7px;
+    }
+
+    .rating-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 3px;
+    }
+
+    .rating-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .rating-badge[data-rating="1"] {
+      background: rgba(255, 92, 92, 0.2);
+      color: var(--star-1);
+    }
+
+    .rating-badge[data-rating="2"] {
+      background: rgba(255, 154, 60, 0.2);
+      color: var(--star-2);
+    }
+
+    .rating-badge[data-rating="3"] {
+      background: rgba(109, 207, 129, 0.2);
+      color: var(--star-3);
+    }
+
+    .rating-badge[data-rating="4"] {
+      background: rgba(124, 107, 255, 0.2);
+      color: var(--star-4);
+    }
+
+    .rating-div {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .rating-reason {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ========== MODAL - Mobile Optimized ========== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--sidebar);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.3s ease;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      background: var(--sidebar);
+      border-radius: 20px 20px 0 0;
+      z-index: 1;
+    }
+
+    .modal-close {
+      margin-left: auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .modal-close:active {
+      transform: scale(0.9);
+    }
+
+    .modal-photo {
+      width: 65px;
+      height: 85px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #1a1a22 0%, #2e2e3d 100%);
+      border: 1px solid var(--border);
+    }
+
+    .modal-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--muted);
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 18px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-divisi-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .modal-divisi-tag {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(124, 107, 255, 0.3);
+    }
+
+    .modal-rating-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .modal-rating-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-rating-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .modal-rating-badge {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .modal-rating-badge[data-rating="1"] {
+      background: rgba(255, 92, 92, 0.2);
+      color: var(--star-1);
+    }
+
+    .modal-rating-badge[data-rating="2"] {
+      background: rgba(255, 154, 60, 0.2);
+      color: var(--star-2);
+    }
+
+    .modal-rating-badge[data-rating="3"] {
+      background: rgba(109, 207, 129, 0.2);
+      color: var(--star-3);
+    }
+
+    .modal-rating-badge[data-rating="4"] {
+      background: rgba(124, 107, 255, 0.2);
+      color: var(--star-4);
+    }
+
+    .modal-rating-div {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .modal-rating-reason {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ========== RESPONSIVE - MOBILE ========== */
+    @media (max-width: 768px) {
+      /* Show hamburger button */
+      .menu-toggle {
+        display: flex;
+      }
+
+      /* Hide sidebar by default, slide from left */
+      .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+        z-index: 20;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      /* Main content full width */
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 16px;
+      }
+
+      .header {
+        padding-top: 50px;
+        margin-bottom: 16px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .header p {
+        font-size: 12px;
+      }
+
+      /* Grid single column */
+      .candidate-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      /* Adjust card */
+      .card {
+        padding: 12px;
+      }
+
+      .card-photo {
+        width: 55px;
+        height: 75px;
+      }
+
+      .card-name {
+        font-size: 14px;
+      }
+
+      .card-class {
+        font-size: 11px;
+      }
+
+      .card-divisi {
+        font-size: 10px;
+      }
+
+      /* Modal adjustments */
+      .modal-content {
+        border-radius: 16px 16px 0 0;
+        max-height: 85vh;
+      }
+
+      .modal-header {
+        padding: 16px;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .modal-body {
+        padding: 16px;
+      }
+
+      .modal-photo {
+        width: 55px;
+        height: 75px;
+      }
+
+      .modal-title {
+        font-size: 16px;
+      }
+
+      .modal-subtitle {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 16px;
+      }
+
+      .header p {
+        font-size: 11px;
+      }
+
+      .card {
+        padding: 10px;
+      }
+
+      .card-photo {
+        width: 50px;
+        height: 70px;
+      }
+
+      .card-name {
+        font-size: 13px;
+      }
+
+      .rating-badge {
+        font-size: 9px;
+        padding: 2px 5px;
+      }
+
+      .rating-div {
+        font-size: 9px;
+      }
+
+      .rating-reason {
+        font-size: 9px;
+      }
+
+      .modal-header {
+        padding: 14px;
+      }
+
+      .modal-body {
+        padding: 14px;
+      }
+
+      .modal-photo {
+        width: 50px;
+        height: 70px;
+      }
+
+      .modal-title {
+        font-size: 15px;
+      }
+
+      .modal-rating-badge {
+        font-size: 12px;
+      }
+
+      .modal-rating-div {
+        font-size: 12px;
+      }
+
+      .modal-rating-reason {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hamburger Menu Button -->
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  
+  <!-- Overlay untuk menutup menu saat klik di luar -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="dashboard">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title">Filter Divisi</div>
+      <div id="divisionList"></div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="header">
+        <h1>📊 Review Kandidat SHC 2026</h1>
+        <p>Klik kartu untuk lihat detail lengkap</p>
+      </div>
+      <div id="content">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Memuat data...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL DETAIL -->
+  <div class="modal-overlay" id="detailModal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div id="modalPhoto"></div>
+        <div style="flex: 1;">
+          <div class="modal-title" id="modalName">—</div>
+          <div class="modal-subtitle" id="modalClass">—</div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-label">🎯 Divisi Dilamar</div>
+          <div class="modal-divisi-list" id="modalDivisi"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-label">📝 Rating & Alasan</div>
+          <div id="modalRatings"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var currentDivisi = 'all';
+    var allCandidatesData = [];
+
+    // ========== MOBILE MENU TOGGLE ==========
+    function toggleMenu() {
+      var sidebar = document.getElementById('sidebar');
+      var overlay = document.getElementById('overlay');
+      
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      
+      // Prevent body scroll when menu is open
+      if (sidebar.classList.contains('open')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+
+    // ========== LOAD ON PAGE READY ==========
+    window.addEventListener('load', function() {
+      loadDivisions();
+      loadCandidates('all');
+    });
+
+    // ========== LOAD DIVISIONS LIST ==========
+    function loadDivisions() {
+      google.script.run
+        .withSuccessHandler(function(divisions) {
+          var list = document.getElementById('divisionList');
+          list.innerHTML = '';
+          
+          divisions.forEach(function(div) {
+            var btn = document.createElement('button');
+            btn.className = 'div-btn' + (div.id === 'all' ? ' active' : '');
+            btn.textContent = div.name;
+            btn.onclick = function() {
+              // Update active state
+              document.querySelectorAll('.div-btn').forEach(function(b) {
+                b.classList.remove('active');
+              });
+              btn.classList.add('active');
+              
+              // Load data
+              currentDivisi = div.id;
+              loadCandidates(div.id);
+              
+              // Close menu on mobile after selection
+              if (window.innerWidth <= 768) {
+                toggleMenu();
+              }
+            };
+            list.appendChild(btn);
+          });
+        })
+        .getDashboardDivisions();
+    }
+
+    // ========== LOAD CANDIDATES DATA ==========
+    function loadCandidates(divisi) {
+      var content = document.getElementById('content');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (!response.success) {
+            content.innerHTML = '<div class="empty">⚠️ ' + response.error + '</div>';
+            return;
+          }
+
+          allCandidatesData = response.data || [];
+
+          if (allCandidatesData.length === 0) {
+            content.innerHTML = '<div class="empty">📭 Tidak ada data kandidat</div>';
+            return;
+          }
+
+          renderCandidates(allCandidatesData);
+        })
+        .getDashboardData(divisi);
+    }
+
+    // ========== RENDER CANDIDATES CARDS ==========
+    function renderCandidates(candidates) {
+      var content = document.getElementById('content');
+      var html = '<div class="candidate-grid">';
+
+      candidates.forEach(function(candidate, index) {
+        // ========== FOTO URL CONVERSION (STABLE) ==========
+        var fotoUrl = convertDriveUrl(candidate.foto);
+        var fotoHtml = fotoUrl
+          ? '<img class="card-photo" src="' + fotoUrl + '" alt="Foto" onerror="this.outerHTML=\'<div class=\\\'card-photo placeholder\\\'>👤</div>\';">'
+          : '<div class="card-photo placeholder">👤</div>';
+
+        // ========== RATINGS LIST ==========
+        var ratingsHtml = '';
+        Object.values(candidate.ratings).forEach(function(rating) {
+          ratingsHtml += '<div class="rating-item">';
+          ratingsHtml += '<div class="rating-header">';
+          ratingsHtml += '<span class="rating-badge" data-rating="' + rating.rating + '">★' + rating.rating + '</span>';
+          ratingsHtml += '<span class="rating-div">' + escapeHtml(rating.divName) + '</span>';
+          ratingsHtml += '</div>';
+          if (rating.alasan) {
+            ratingsHtml += '<div class="rating-reason">' + escapeHtml(rating.alasan) + '</div>';
+          }
+          ratingsHtml += '</div>';
+        });
+
+        // ========== DIVISI TEXT ==========
+        var divisiText = candidate.divisiDilamar
+          .map(function(d) { return capitalize(d); })
+          .join(', ');
+
+        // ========== BUILD CARD HTML ==========
+        html += '<div class="card" onclick="openModal(' + index + ')">';
+        html += fotoHtml;
+        html += '<div class="card-info">';
+        html += '<div class="card-name">' + escapeHtml(candidate.nama) + '</div>';
+        html += '<div class="card-class">Kelas ' + escapeHtml(candidate.kelas) + '</div>';
+        html += '<div class="card-divisi">🎯 ' + divisiText + '</div>';
+        html += '<div class="rating-list">' + ratingsHtml + '</div>';
+        html += '</div></div>';
+      });
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    // ========== OPEN MODAL DETAIL ==========
+    function openModal(index) {
+      var candidate = allCandidatesData[index];
+      if (!candidate) return;
+
+      // ========== FOTO URL ==========
+      var fotoUrl = convertDriveUrl(candidate.foto);
+      var fotoHtml = fotoUrl
+        ? '<img class="modal-photo" src="' + fotoUrl + '" alt="Foto" onerror="this.outerHTML=\'<div class=\\\'modal-photo placeholder\\\'>👤</div>\';">'
+        : '<div class="modal-photo placeholder">👤</div>';
+
+      document.getElementById('modalPhoto').innerHTML = fotoHtml;
+      document.getElementById('modalName').textContent = candidate.nama;
+      document.getElementById('modalClass').textContent = 'Kelas ' + candidate.kelas;
+
+      // ========== DIVISI TAGS ==========
+      var divisiHtml = candidate.divisiDilamar
+        .map(function(d) {
+          return '<span class="modal-divisi-tag">' + capitalize(d) + '</span>';
+        })
+        .join('');
+      document.getElementById('modalDivisi').innerHTML = divisiHtml;
+
+      // ========== RATINGS LIST ==========
+      var ratingsHtml = '';
+      Object.values(candidate.ratings).forEach(function(rating) {
+        ratingsHtml += '<div class="modal-rating-card">';
+        ratingsHtml += '<div class="modal-rating-header">';
+        ratingsHtml += '<span class="modal-rating-badge" data-rating="' + rating.rating + '">★' + rating.rating + '</span>';
+        ratingsHtml += '<span class="modal-rating-div">' + escapeHtml(rating.divName) + '</span>';
+        ratingsHtml += '</div>';
+        ratingsHtml += '<div class="modal-rating-reason">' + escapeHtml(rating.alasan || 'Tidak ada alasan') + '</div>';
+        ratingsHtml += '</div>';
+      });
+      document.getElementById('modalRatings').innerHTML = ratingsHtml;
+
+      // ========== SHOW MODAL ==========
+      document.getElementById('detailModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // ========== CLOSE MODAL ==========
+    function closeModal(event) {
+      // Only close if clicking overlay (not content inside)
+      if (event && event.target !== event.currentTarget) return;
+
+      document.getElementById('detailModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // ========== CONVERT GOOGLE DRIVE URL (STABLE) ==========
+    function convertDriveUrl(url) {
+      if (!url || url.indexOf('drive.google.com') === -1) return '';
+
+      // Extract file ID from various Google Drive URL formats
+      var fileId = null;
+
+      // Format 1: /d/{fileId}/
+      var match1 = url.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
+      if (match1) fileId = match1[1];
+
+      // Format 2: id={fileId}
+      if (!fileId) {
+        var match2 = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
+        if (match2) fileId = match2[1];
+      }
+
+      // Format 3: /file/d/{fileId}
+      if (!fileId) {
+        var match3 = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+        if (match3) fileId = match3[1];
+      }
+
+      // Return stable Google User Content URL
+      if (fileId) {
+        return 'https://lh3.googleusercontent.com/d/' + fileId + '=s1000';
+      }
+
+      return '';
+    }
+
+    // ========== ESCAPE HTML ==========
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // ========== CAPITALIZE ==========
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  </script>
+</body>
+</html>
