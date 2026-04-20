@@ -15,7 +15,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; }
     
-    .container { max-width: 600px; margin: 0 auto; }
+    .container { max-width: 700px; margin: 0 auto; }
     .header { text-align: center; margin-bottom: 24px; }
     .header h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
     .header p { font-size: 13px; color: var(--muted); }
@@ -42,16 +42,26 @@
     .info-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
     .info-text { font-size: 14px; line-height: 1.5; }
     
+    /* Questions Section */
+    .questions-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+    .questions-title { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .question-item { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .question-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .question-number { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .question-text { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+    .question-answer { font-size: 13px; color: var(--muted); line-height: 1.5; padding: 8px 12px; background: var(--surface); border-radius: 6px; }
+    .question-answer.empty { font-style: italic; color: var(--muted); opacity: 0.7; }
+    
     .rating-section { margin-top: 20px; }
     .rating-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; text-align: center; }
     .rating-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .rating-btn { background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .rating-btn { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
     .rating-btn.selected { border-color: var(--accent); background: rgba(124, 107, 255, 0.1); }
     .rating-btn:active { transform: scale(0.96); }
     .rating-stars { font-size: 18px; margin-bottom: 4px; }
     .rating-label { font-size: 12px; font-weight: 600; }
     
-    .comment-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; color: var(--text); font-family: inherit; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 8px; }
+    .comment-box { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; color: var(--text); font-family: inherit; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 8px; }
     .comment-box:focus { outline: none; border-color: var(--accent); }
     .char-count { text-align: right; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
     .char-count.valid { color: var(--success); }
@@ -72,6 +82,11 @@
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { border-left: 4px solid var(--success); color: var(--success); }
     .toast.error { border-left: 4px solid var(--error); color: var(--error); }
+
+    @media (max-width: 640px) {
+      .rating-grid { grid-template-columns: 1fr; }
+      .btn-group { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -100,6 +115,33 @@
   <script>
     // ⚠️ GANTI DENGAN URL WEB APP APPS SCRIPT KAMU
     const API_BASE = "https://script.google.com/macros/s/AKfycbwamPmLwc_INw6u4bj2shO8RIXbcrHiuoUvhwPCBNhFG0VNCoilqZV1jUfh9EmeDusO/exec";
+
+    // DAFTAR PERTANYAAN LENGKAP (sesuai dengan Code.gs)
+    const QUESTIONS = [
+      "Cap Waktu",
+      "Nama Lengkap",
+      "Kelas",
+      "Tanggal Lahir",
+      "Nomor HP",
+      "Apa tujuanmu mengikuti pendaftaran kepanitiaan SHC ini?",
+      "Sebutkan kekurangan serta kelebihanmu dalam hal sikap maupun sifat!",
+      "Bila terdapat seseorang yang memiliki pendapat yang berbeda denganmu, bagaimana tanggapanmu?",
+      "Adakah pengalaman dalam berorganisasi? Jika sudah pernah sebutkanlah!",
+      "Pernahkah melakukan sesuatu kesalahan selama bekerja sama dengan orang lain? Bagaimana caramu mempertanggungjawabkan kesalahan tersebut?",
+      "Apa solusimu apabila jadwal pribadimu bertabrakan dengan jadwal SHC nantinya? Jelaskan!",
+      "Apakah orang tua atau wali sudah memberikan perizinan untuk mengikuti kepanitiaan ini? Adakah batasan jam malam dari orang tua? Sebutkan!",
+      "Pilihlah divisi yang Anda inginkan (minimal 1, maksimal 3 divisi). Tugas divisi KLIK AKU",
+      "Manakah divisi yang lebih kamu prioritaskan diantara semua divisi yang kamu pilih? Mengapa?",
+      "Sebutkan skill yang bisa mendukung kamu untuk bergabung dengan divisi yang kamu inginkan! (Sebutkan setiap divisi apabila memilih divisi lebih dari 1)",
+      "Silahkan download lembar pernyataan KLIK AKU, lalu isi dengan tanda tangan yang telah discan, pastikan telah terisi semua lalu upload kembali dengan format yang sama!",
+      "Foto 3x4",
+      "Mengapa anda memilih 3 jobdesc tersebut?",
+      "Apakah kamu bersedia menginap di sekolah apabila masih banyak persiapan yang perlu dilakukan?",
+      "UPLOAD DI SINI!"
+    ];
+
+    // INDEX PERTANYAAN YANG INGIN DITAMPILKAN (skip yang tidak penting)
+    const QUESTIONS_TO_SHOW = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18];
 
     let currentDivisi = null;
     let candidates = [];
@@ -179,6 +221,19 @@
       document.getElementById('progressText').textContent = `${currentIndex + 1}/${candidates.length} Kandidat`;
       document.getElementById('progressFill').style.width = `${progress}%`;
 
+      // Render Questions
+      let questionsHtml = '';
+      QUESTIONS_TO_SHOW.forEach((qIndex, idx) => {
+        const answer = c.answers[qIndex] || '-';
+        questionsHtml += `
+          <div class="question-item">
+            <div class="question-number">Pertanyaan ${idx + 1}</div>
+            <div class="question-text">${QUESTIONS[qIndex]}</div>
+            <div class="question-answer ${answer === '-' ? 'empty' : ''}">${answer}</div>
+          </div>
+        `;
+      });
+
       container.innerHTML = `
         ${fotoUrl ? `<img src="${fotoUrl}" class="candidate-photo" alt="Foto" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'candidate-photo placeholder\\'>👤</div>'">` : '<div class="candidate-photo placeholder">👤</div>'}
         
@@ -187,9 +242,9 @@
           <div class="info-text"><b>Nama:</b> ${c.nama}<br><b>Kelas:</b> ${c.kelas}<br><b>Prioritas:</b> ${c.prioritas || '-'}</div>
         </div>
 
-        <div class="info-box">
-          <div class="info-title">📄 Jawaban Singkat</div>
-          <div class="info-text">🎯 <b>Tujuan:</b> ${c.answers[5] || '-'}<br>💡 <b>Kelebihan/Kekurangan:</b> ${c.answers[6] || '-'}</div>
+        <div class="questions-section">
+          <div class="questions-title">📄 Jawaban Lengkap Kandidat</div>
+          ${questionsHtml}
         </div>
 
         <div class="rating-section">
