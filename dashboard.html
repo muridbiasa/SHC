@@ -2,364 +2,955 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#7c6bff">
   <title>Dashboard Review SHC 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f13; --card-bg: #1a1a22; --card-border: #2e2e3d;
-      --accent: #7c6bff; --accent-soft: #2a2545;
-      --text-primary: #f0eeff; --text-muted: #9390ad;
-      --star-1: #ff5c5c; --star-2: #ff9a3c; --star-3: #6dcf81; --star-4: #7c6bff;
-      --radius: 16px; --shadow: 0 8px 32px rgba(0,0,0,0.4);
+      --bg: #0a0a0f;
+      --surface: #14141c;
+      --surface-2: #1e1e2a;
+      --card: #232330;
+      --border: #2a2a3a;
+      --accent: #7c6bff;
+      --accent-light: #9b8eff;
+      --text: #f0eeff;
+      --text-secondary: #b8b5d0;
+      --muted: #7a7794;
+      --star-1: #ff4757;
+      --star-2: #ff9f43;
+      --star-3: #2ed573;
+      --star-4: #7c6bff;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; }
-    
-    /* LAYOUT */
-    .app-container { display: flex; min-height: 100vh; }
-    
-    /* SIDEBAR */
-    .sidebar { width: 280px; background: var(--card-bg); border-right: 1px solid var(--card-border); padding: 24px 16px; overflow-y: auto; }
-    .sidebar-header { margin-bottom: 24px; }
-    .sidebar-title { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
-    .sidebar-sub { font-size: 12px; color: var(--text-muted); }
-    .divisi-list { display: flex; flex-direction: column; gap: 6px; }
-    .divisi-item { background: transparent; border: none; border-radius: 10px; padding: 12px 14px; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; transition: all 0.2s; }
-    .divisi-item:hover { background: rgba(124,107,255,0.1); color: var(--text-primary); }
-    .divisi-item.active { background: var(--accent-soft); color: var(--accent); border-left: 3px solid var(--accent); }
-    
-    /* MAIN CONTENT */
-    .main-content { flex: 1; padding: 24px; overflow-y: auto; }
-    .header { margin-bottom: 24px; }
-    .header-title { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
-    .header-sub { font-size: 14px; color: var(--text-muted); }
-    
-    .stats-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; flex: 1; min-width: 140px; }
-    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .stat-value { font-size: 28px; font-weight: 800; color: var(--accent); }
-    
-    .kandidat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-    .kandidat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: all 0.2s; animation: fadeIn 0.3s; }
-    .kandidat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    
-    .card-photo-wrap { width: 100%; aspect-ratio: 3/4; background: #111118; overflow: hidden; }
-    .card-photo { width: 100%; height: 100%; object-fit: cover; }
-    .card-photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }
-    
-    .card-body { padding: 16px; }
-    .kandidat-nama { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .kandidat-kelas { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
-    .kandidat-divisi { font-size: 12px; color: var(--accent); margin-bottom: 8px; }
-    
-    .rating-preview { display: flex; gap: 4px; align-items: center; }
-    .rating-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
-    .rating-badge[data-rating="1"] { background: rgba(255,92,92,0.15); color: var(--star-1); }
-    .rating-badge[data-rating="2"] { background: rgba(255,154,60,0.15); color: var(--star-2); }
-    .rating-badge[data-rating="3"] { background: rgba(109,207,129,0.15); color: var(--star-3); }
-    .rating-badge[data-rating="4"] { background: rgba(124,107,255,0.15); color: var(--star-4); }
-    
-    /* MODAL */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
-    .modal-content { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
-    .modal-header { position: sticky; top: 0; background: var(--card-bg); border-bottom: 1px solid var(--card-border); padding: 20px; z-index: 10; }
-    .modal-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.05); border: none; color: var(--text-muted); cursor: pointer; font-size: 20px; }
-    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
-    .modal-body { padding: 20px; }
-    .modal-foto { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 12px; margin-bottom: 16px; }
-    .modal-nama { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
-    .modal-kelas { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
-    .section-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; font-weight: 700; }
-    .rating-list { display: flex; flex-direction: column; gap: 12px; }
-    .rating-item { background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent); border-radius: 10px; padding: 14px; }
-    .rating-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .rating-divisi { font-size: 14px; font-weight: 700; }
-    .rating-value { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 700; }
-    .rating-value[data-rating="1"] { background: rgba(255,92,92,0.2); color: var(--star-1); }
-    .rating-value[data-rating="2"] { background: rgba(255,154,60,0.2); color: var(--star-2); }
-    .rating-value[data-rating="3"] { background: rgba(109,207,129,0.2); color: var(--star-3); }
-    .rating-value[data-rating="4"] { background: rgba(124,107,255,0.2); color: var(--star-4); }
-    .rating-alasan { font-size: 14px; color: var(--text-primary); line-height: 1.6; white-space: pre-wrap; }
-    
-    .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 16px; }
-    .spinner { width: 44px; height: 44px; border: 3px solid rgba(124,107,255,0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    
-    .empty-state { text-align: center; padding: 60px 20px; }
-    .empty-icon { font-size: 64px; margin-bottom: 16px; }
-    .empty-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-    .empty-sub { color: var(--text-muted); font-size: 14px; }
-    
-    .hidden { display: none !important; }
-    
-    /* MOBILE */
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; font-size: 14px; }
+    body { background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
+
+    /* Dashboard Layout */
+    .dashboard { display: flex; min-height: 100dvh; }
+
+    /* Sidebar - Desktop */
+    .sidebar {
+      width: 280px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: calc(20px + var(--safe-top)) 16px 20px;
+      position: fixed;
+      height: 100dvh;
+      overflow-y: auto;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 8px 12px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-logo {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .sidebar-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+      padding: 0 12px;
+    }
+
+    .division-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .division-btn:hover {
+      background: rgba(124, 107, 255, 0.1);
+      color: var(--text);
+    }
+
+    .division-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.3);
+    }
+
+    .division-icon {
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: 280px;
+      flex: 1;
+      padding: calc(20px + var(--safe-top)) 24px calc(20px + var(--safe-bottom));
+      min-height: 100dvh;
+    }
+
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent-light);
+    }
+
+    /* Candidate Grid */
+    .candidate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    .candidate-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .candidate-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(124, 107, 255, 0.15);
+    }
+
+    .candidate-card:active {
+      transform: scale(0.98);
+    }
+
+    .card-header {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .card-photo {
+      width: 70px;
+      height: 90px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      background: var(--card);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .card-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--muted);
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-name {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-class {
+      display: inline-block;
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--accent-light);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-divisions {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .ratings-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .rating-badge {
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .rating-badge[data-rating="1"] {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1);
+    }
+
+    .rating-badge[data-rating="2"] {
+      background: rgba(255, 159, 67, 0.15);
+      color: var(--star-2);
+    }
+
+    .rating-badge[data-rating="3"] {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3);
+    }
+
+    .rating-badge[data-rating="4"] {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--star-4);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100dvh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      width: 100%;
+      max-width: 700px;
+      max-height: 90dvh;
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .modal-photo {
+      width: 80px;
+      height: 100px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      background: var(--card);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .modal-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: var(--muted);
+    }
+
+    .modal-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .modal-name {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .modal-class {
+      display: inline-block;
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--accent-light);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .modal-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+      background: var(--star-1);
+      border-color: var(--star-1);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-section {
+      margin-bottom: 24px;
+    }
+
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .modal-divisions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .division-tag {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--accent-light);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .rating-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .rating-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .rating-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .rating-card-badge {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rating-card-badge[data-rating="1"] {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1);
+    }
+
+    .rating-card-badge[data-rating="2"] {
+      background: rgba(255, 159, 67, 0.15);
+      color: var(--star-2);
+    }
+
+    .rating-card-badge[data-rating="3"] {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3);
+    }
+
+    .rating-card-badge[data-rating="4"] {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--star-4);
+    }
+
+    .rating-card-reason {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    /* Loading & Empty States */
+    .loading, .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    /* Hamburger Menu - Mobile */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: calc(12px + var(--safe-top));
+      left: 12px;
+      z-index: 1100;
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(124, 107, 255, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .menu-toggle:active {
+      transform: scale(0.92);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    /* Mobile Responsive */
     @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .main-content { padding: 16px; }
-      .kandidat-grid { grid-template-columns: 1fr; }
+      .menu-toggle {
+        display: flex;
+      }
+
+      .sidebar {
+        width: 85vw;
+        max-width: 320px;
+        transform: translateX(-100%);
+        padding-top: calc(70px + var(--safe-top));
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom));
+      }
+
+      .header h1 {
+        font-size: 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .candidate-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal-content {
+        max-height: 95dvh;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        margin-bottom: var(--safe-bottom);
+      }
+
+      .modal-header {
+        padding: 16px;
+      }
+
+      .modal-body {
+        padding: 16px;
+      }
+
+      .modal-photo {
+        width: 70px;
+        height: 90px;
+      }
+
+      .modal-name {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+  <!-- Hamburger Menu Button -->
+  <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
+  
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <div class="sidebar-title">📊 Dashboard Review</div>
-        <div class="sidebar-sub">Filter berdasarkan divisi</div>
+        <div class="sidebar-logo">SHC 2026</div>
+        <div class="sidebar-subtitle">Dashboard Review</div>
       </div>
-      <div class="divisi-list" id="divisiList">
-        <!-- Divisi buttons akan di-render di sini -->
-      </div>
-    </div>
+      <div class="sidebar-title">Filter Divisi</div>
+      <div id="divisionList"></div>
+    </aside>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
+    <!-- Main Content -->
+    <main class="main">
       <div class="header">
-        <div class="header-title" id="headerTitle">Dashboard Review SHC 2026</div>
-        <div class="header-sub" id="headerSub">Kandidat yang sudah direview</div>
+        <h1>📊 Dashboard Review</h1>
+        <p>Monitoring kandidat yang sudah direview</p>
       </div>
 
-      <div class="stats-bar">
+      <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Total Kandidat</div>
-          <div class="stat-value" id="statTotal">-</div>
+          <div class="stat-value" id="statTotal">0</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Sudah Direview</div>
-          <div class="stat-value" id="statReviewed">-</div>
+          <div class="stat-value" id="statReviewed">0</div>
         </div>
       </div>
 
-      <!-- LOADING STATE -->
-      <div id="loadingState" class="loading">
-        <div class="spinner"></div>
-        <div style="color: var(--text-muted); font-size: 14px;">Memuat data...</div>
+      <div id="content">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Memuat data...</p>
+        </div>
       </div>
-
-      <!-- KANDIDAT GRID -->
-      <div id="kandidatGrid" class="kandidat-grid hidden"></div>
-
-      <!-- EMPTY STATE -->
-      <div id="emptyState" class="empty-state hidden">
-        <div class="empty-icon">📭</div>
-        <div class="empty-title">Belum Ada Review</div>
-        <div class="empty-sub">Belum ada kandidat yang sudah direview di divisi ini.</div>
-      </div>
-    </div>
+    </main>
   </div>
 
-  <!-- MODAL DETAIL -->
-  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalPhoto"></div>
+        <div class="modal-info">
+          <h3 class="modal-name" id="modalName">-</h3>
+          <span class="modal-class" id="modalClass">-</span>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
-      <div class="modal-body" id="modalBody">
-        <!-- Content akan di-render di sini -->
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-label">🎯 Divisi Dilamar</div>
+          <div class="modal-divisions" id="modalDivisions"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-label">📝 Rating & Alasan dari Guru</div>
+          <div id="modalRatings"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // ⚠️ PENTING: Ganti URL ini dengan Web App URL dari Apps Script kamu
+    // API Configuration - GANTI DENGAN URL APPS SCRIPT KAMU
     const API_BASE = "https://script.google.com/macros/s/AKfycbwamPmLwc_INw6u4bj2shO8RIXbcrHiuoUvhwPCBNhFG0VNCoilqZV1jUfh9EmeDusO/exec";
-    
+
+    // State
     let currentDivisi = 'all';
-    let allData = [];
+    let allCandidates = [];
 
-    // ===== API HELPER =====
-    async function apiFetch(action, params = {}) {
-      const url = new URL(API_BASE);
-      url.searchParams.append('action', action);
-      Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-          url.searchParams.append(key, params[key]);
-        }
-      });
+    // Division Icons
+    const DIVISION_ICONS = {
+      'all': '🏠',
+      'acara': '🎭',
+      'sekretaris': '📝',
+      'bendahara': '💰',
+      'perlengkapan': '🔧',
+      'keamanan': '🛡️',
+      'konsumsi': '🍽️',
+      'dana': '💵',
+      'promosi': '📢',
+      'dokumentasi': '📷',
+      'dekorasi': '🎨',
+      'desain': '✏️',
+      'art galery': '🖼️',
+      'akomodasi': '🏨',
+      'p3k': '🩹',
+      'mc': '🎤'
+    };
+
+    // Rating Labels
+    const RATING_LABELS = {
+      1: 'Kurang',
+      2: 'Ragu-ragu',
+      3: 'Baik',
+      4: 'Bagus'
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDivisions();
+      loadCandidates('all');
+    });
+
+    // Toggle Mobile Menu
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
       
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Network error');
-      return await response.json();
-    }
-
-    // ===== INIT =====
-    window.addEventListener('load', init);
-
-    async function init() {
-      try {
-        // Load divisi list untuk sidebar
-        const divisiResult = await apiFetch('getDashboardDivisions');
-        if (!divisiResult.success) throw new Error(divisiResult.error);
-        renderDivisiList(divisiResult.data);
-        
-        // Load data awal (semua divisi)
-        await loadDashboardData('all');
-      } catch (err) {
-        showError(err.message);
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      
+      if (sidebar.classList.contains('open')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
       }
     }
 
-    function renderDivisiList(divisions) {
-      const list = document.getElementById('divisiList');
-      list.innerHTML = '';
-      
-      divisions.forEach(div => {
-        const btn = document.createElement('button');
-        btn.className = 'divisi-item';
-        if (div.id === 'all') btn.classList.add('active');
-        btn.textContent = div.name;
-        btn.onclick = () => selectDivisi(div.id, div.name);
-        list.appendChild(btn);
-      });
+    // Load Divisions
+    async function loadDivisions() {
+      try {
+        const response = await fetch(`${API_BASE}?action=getDashboardDivisions`);
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Gagal memuat divisi');
+        }
+
+        renderDivisions(result.data);
+      } catch (error) {
+        console.error('Error loading divisions:', error);
+      }
     }
 
-    async function selectDivisi(divId, divName) {
-      currentDivisi = divId;
+    // Render Divisions
+    function renderDivisions(divisions) {
+      const list = document.getElementById('divisionList');
+      list.innerHTML = divisions.map(div => `
+        <button class="division-btn ${div.id === 'all' ? 'active' : ''}" onclick="selectDivision('${div.id}')">
+          <span class="division-icon">${div.name.split(' ')[0]}</span>
+          <span>${div.name.split(' ').slice(1).join(' ') || div.name}</span>
+        </button>
+      `).join('');
+    }
+
+    // Select Division
+    async function selectDivision(divisi) {
+      currentDivisi = divisi;
       
       // Update active state
-      document.querySelectorAll('.divisi-item').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      
-      // Update header
-      document.getElementById('headerTitle').textContent = divId === 'all' ? 'Semua Kandidat' : divName;
-      
-      // Load data
-      await loadDashboardData(divId === 'all' ? null : divId);
-    }
-
-    async function loadDashboardData(divisi) {
-      showLoading(true);
-      
-      try {
-        const result = await apiFetch('getDashboardData', divisi ? { divisi } : {});
-        if (!result.success) throw new Error(result.error);
-        
-        allData = result.data;
-        renderKandidatGrid(allData);
-        updateStats(allData);
-        
-      } catch (err) {
-        showError(err.message);
-      } finally {
-        showLoading(false);
-      }
-    }
-
-    function renderKandidatGrid(data) {
-      const grid = document.getElementById('kandidatGrid');
-      const emptyState = document.getElementById('emptyState');
-      
-      if (!data || data.length === 0) {
-        grid.classList.add('hidden');
-        emptyState.classList.remove('hidden');
-        return;
-      }
-      
-      emptyState.classList.add('hidden');
-      grid.classList.remove('hidden');
-      grid.innerHTML = '';
-      
-      data.forEach(kandidat => {
-        const card = document.createElement('div');
-        card.className = 'kandidat-card';
-        card.onclick = () => showModal(kandidat);
-        
-        // Hitung rata-rata rating untuk preview
-        const ratings = Object.values(kandidat.ratings);
-        const avgRating = ratings.length > 0 
-          ? Math.round(ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length) 
-          : 0;
-        
-        card.innerHTML = `
-          <div class="card-photo-wrap">
-            ${kandidat.foto 
-              ? `<img class="card-photo" src="${escHtml(kandidat.foto)}" alt="Foto" onerror="this.parentElement.innerHTML='<div class=\\'card-photo-placeholder\\'>Foto tidak tersedia</div>'">` 
-              : '<div class="card-photo-placeholder">Foto tidak tersedia</div>'}
-          </div>
-          <div class="card-body">
-            <div class="kandidat-nama">${escHtml(kandidat.nama)}</div>
-            <div class="kandidat-kelas">Kelas ${escHtml(kandidat.kelas)}</div>
-            <div class="kandidat-divisi">Dilamar: ${kandidat.divisiDilamar.join(', ')}</div>
-            <div class="rating-preview">
-              <span class="rating-badge" data-rating="${avgRating}">⭐ ${avgRating}/4</span>
-              <span style="font-size: 11px; color: var(--text-muted);">(${ratings.length} divisi)</span>
-            </div>
-          </div>
-        `;
-        
-        grid.appendChild(card);
+      document.querySelectorAll('.division-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(divisi)) {
+          btn.classList.add('active');
+        }
       });
+
+      // Close mobile menu
+      if (window.innerWidth <= 768) {
+        toggleMenu();
+      }
+
+      // Load candidates
+      await loadCandidates(divisi);
     }
 
-    function showModal(kandidat) {
-      const modal = document.getElementById('modalOverlay');
-      const body = document.getElementById('modalBody');
-      
-      let ratingsHtml = '';
-      Object.values(kandidat.ratings).forEach(r => {
-        ratingsHtml += `
-          <div class="rating-item">
-            <div class="rating-header">
-              <div class="rating-divisi">${escHtml(r.divName)}</div>
-              <div class="rating-value" data-rating="${r.rating}">⭐ ${r.rating}/4</div>
-            </div>
-            <div class="rating-alasan">${escHtml(r.alasan)}</div>
-          </div>
-        `;
-      });
-      
-      body.innerHTML = `
-        ${kandidat.foto 
-          ? `<img class="modal-foto" src="${escHtml(kandidat.foto)}" alt="Foto" onerror="this.style.display='none'">` 
-          : ''}
-        <div class="modal-nama">${escHtml(kandidat.nama)}</div>
-        <div class="modal-kelas">Kelas ${escHtml(kandidat.kelas)}</div>
-        
-        <div class="section-title">Rating dari Setiap Divisi</div>
-        <div class="rating-list">
-          ${ratingsHtml}
+    // Load Candidates
+    async function loadCandidates(divisi) {
+      const content = document.getElementById('content');
+      content.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Memuat data...</p>
         </div>
       `;
-      
-      modal.classList.add('show');
-    }
 
-    function closeModal(e) {
-      if (!e || e.target.id === 'modalOverlay') {
-        document.getElementById('modalOverlay').classList.remove('show');
+      try {
+        const response = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Gagal memuat data');
+        }
+
+        allCandidates = result.data || [];
+        
+        // Update stats
+        document.getElementById('statTotal').textContent = allCandidates.length;
+        const reviewed = allCandidates.filter(c => Object.keys(c.ratings || {}).length > 0).length;
+        document.getElementById('statReviewed').textContent = reviewed;
+
+        if (allCandidates.length === 0) {
+          content.innerHTML = `
+            <div class="empty">
+              <div class="empty-icon">📭</div>
+              <h3>Belum Ada Review</h3>
+              <p>Belum ada kandidat yang sudah direview di divisi ini.</p>
+            </div>
+          `;
+          return;
+        }
+
+        renderCandidates();
+      } catch (error) {
+        console.error('Error loading candidates:', error);
+        content.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">⚠️</div>
+            <h3>Gagal Memuat Data</h3>
+            <p>${error.message}</p>
+          </div>
+        `;
       }
     }
 
-    function updateStats(data) {
-      document.getElementById('statTotal').textContent = data.length;
-      document.getElementById('statReviewed').textContent = data.length;
-    }
-
-    function showLoading(show) {
-      document.getElementById('loadingState').classList.toggle('hidden', !show);
-      document.getElementById('kandidatGrid').classList.toggle('hidden', show);
-      document.getElementById('emptyState').classList.add('hidden');
-    }
-
-    function showError(msg) {
-      const emptyState = document.getElementById('emptyState');
-      emptyState.innerHTML = `
-        <div class="empty-icon">⚠️</div>
-        <div class="empty-title">Error</div>
-        <div class="empty-sub">${escHtml(msg)}</div>
+    // Render Candidates
+    function renderCandidates() {
+      const content = document.getElementById('content');
+      
+      content.innerHTML = `
+        <div class="candidate-grid">
+          ${allCandidates.map((candidate, idx) => {
+            const fotoUrl = convertDriveUrl(candidate.foto);
+            const ratings = Object.values(candidate.ratings || {});
+            
+            return `
+              <div class="candidate-card" onclick="openModal(${idx})">
+                <div class="card-header">
+                  ${fotoUrl 
+                    ? `<img src="${fotoUrl}" alt="${candidate.nama}" class="card-photo" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
+                    : '<div class="card-photo placeholder">👤</div>'
+                  }
+                  <div class="card-info">
+                    <h3 class="card-name">${candidate.nama}</h3>
+                    <span class="card-class">Kelas ${candidate.kelas}</span>
+                    <div class="card-divisions">
+                      ${candidate.divisiDilamar.map(d => capitalize(d)).join(', ')}
+                    </div>
+                  </div>
+                </div>
+                <div class="ratings-preview">
+                  ${ratings.map(r => `
+                    <span class="rating-badge" data-rating="${r.rating}">
+                      ${getStars(r.rating)} ${RATING_LABELS[r.rating]}
+                    </span>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
       `;
-      emptyState.classList.remove('hidden');
-      document.getElementById('loadingState').classList.add('hidden');
-      document.getElementById('kandidatGrid').classList.add('hidden');
     }
 
-    function escHtml(str) {
+    // Open Modal
+    function openModal(idx) {
+      const candidate = allCandidates[idx];
+      const fotoUrl = convertDriveUrl(candidate.foto);
+      
+      document.getElementById('modalPhoto').innerHTML = fotoUrl 
+        ? `<img src="${fotoUrl}" alt="${candidate.nama}" class="modal-photo" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
+        : '<div class="modal-photo placeholder">👤</div>';
+      
+      document.getElementById('modalName').textContent = candidate.nama;
+      document.getElementById('modalClass').textContent = `Kelas ${candidate.kelas}`;
+      
+      document.getElementById('modalDivisions').innerHTML = candidate.divisiDilamar
+        .map(d => `<span class="division-tag">${capitalize(d)}</span>`)
+        .join('');
+      
+      const ratings = Object.values(candidate.ratings || {});
+      document.getElementById('modalRatings').innerHTML = ratings.map(r => `
+        <div class="rating-card">
+          <div class="rating-card-header">
+            <span class="rating-card-badge" data-rating="${r.rating}">
+              ${getStars(r.rating)} ${RATING_LABELS[r.rating]}
+            </span>
+            <span style="color: var(--text-secondary); font-size: 13px;">${r.divName}</span>
+          </div>
+          <div class="rating-card-reason">${r.alasan || 'Tidak ada alasan'}</div>
+        </div>
+      `).join('');
+      
+      document.getElementById('detailModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close Modal
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnBackdrop(event) {
+      if (event.target === event.currentTarget) {
+        closeModal();
+      }
+    }
+
+    // Helper Functions
+    function getStars(rating) {
+      return '⭐'.repeat(rating);
+    }
+
+    function capitalize(str) {
       if (!str) return '';
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function convertDriveUrl(url) {
+      if (!url || !url.includes('drive.google.com')) return '';
+      const match = url.match(/[-\w]{25,}/);
+      return match ? `https://lh3.googleusercontent.com/d/${match[0]}` : '';
     }
   </script>
 </body>
