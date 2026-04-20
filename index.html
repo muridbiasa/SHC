@@ -1,106 +1,432 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Review Kandidat SHC 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f13; --surface: #1a1a22; --card: #232330;
-      --border: #2e2e3d; --accent: #7c6bff; --text: #f0eeff;
-      --muted: #9390ad; --success: #2ed573; --warning: #ff9f43; --error: #ff4757;
+      --bg: #0f0f13;
+      --surface: #1a1a22;
+      --card: #232330;
+      --border: #2e2e3d;
+      --accent: #7c6bff;
+      --text: #f0eeff;
+      --muted: #9390ad;
+      --success: #2ed573;
+      --warning: #ff9f43;
+      --error: #ff4757;
       --radius: 12px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; }
-    
-    .container { max-width: 700px; margin: 0 auto; }
-    .header { text-align: center; margin-bottom: 24px; }
-    .header h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-    .header p { font-size: 13px; color: var(--muted); }
-    
-    .back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
-    .back-btn:active { transform: scale(0.96); }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
-    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .card:active { transform: scale(0.96); }
-    .card-icon { font-size: 28px; margin-bottom: 8px; }
-    .card-name { font-size: 13px; font-weight: 600; }
-    
-    .progress { background: var(--card); border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center; }
-    .progress-text { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-    .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
-    
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+
+    .back-btn:active {
+      transform: scale(0.96);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card:active {
+      transform: scale(0.96);
+    }
+
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .progress {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
     /* PERBAIKAN FOTO DISINI */
     .candidate-photo {
       width: 100%;
-      height: auto; /* Tinggi otomatis menyesuaikan rasio foto asli */
-      max-height: 350px; /* Batas maksimal agar tidak terlalu panjang di desktop */
-      object-fit: contain; /* PENTING: Menampilkan SELURUH foto tanpa kepotong */
+      height: auto;
+      /* Tinggi otomatis menyesuaikan rasio foto asli */
+      max-height: 350px;
+      /* Batas maksimal agar tidak terlalu panjang di desktop */
+      object-fit: contain;
+      /* PENTING: Menampilkan SELURUH foto tanpa kepotong */
       border-radius: var(--radius);
       margin-bottom: 16px;
       background: var(--card);
       border: 1px solid var(--border);
     }
-    .candidate-photo.placeholder { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--muted); }
-    
-    .info-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
-    .info-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
-    .info-text { font-size: 14px; line-height: 1.5; }
-    
+
+    .candidate-photo.placeholder {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: var(--muted);
+    }
+
+    .info-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .info-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .info-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     /* Questions Section */
-    .questions-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
-    .questions-title { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .question-item { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-    .question-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-    .question-number { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-    .question-text { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
-    .question-answer { font-size: 13px; color: var(--muted); line-height: 1.5; padding: 8px 12px; background: var(--surface); border-radius: 6px; }
-    .question-answer.empty { font-style: italic; color: var(--muted); opacity: 0.7; }
-    
-    .rating-section { margin-top: 20px; }
-    .rating-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; text-align: center; }
-    .rating-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .rating-btn { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
-    .rating-btn.selected { border-color: var(--accent); background: rgba(124, 107, 255, 0.1); }
-    .rating-btn:active { transform: scale(0.96); }
-    .rating-stars { font-size: 18px; margin-bottom: 4px; }
-    .rating-label { font-size: 12px; font-weight: 600; }
-    
-    .comment-box { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; color: var(--text); font-family: inherit; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 8px; }
-    .comment-box:focus { outline: none; border-color: var(--accent); }
-    .char-count { text-align: right; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
-    .char-count.valid { color: var(--success); }
-    .char-count.invalid { color: var(--warning); }
-    
-    .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn { padding: 12px; border: none; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn:active { transform: scale(0.96); }
-    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    
-    .empty { text-align: center; padding: 40px 20px; }
-    .empty-icon { font-size: 48px; margin-bottom: 12px; }
-    .empty-text { color: var(--muted); margin-bottom: 20px; }
-    
-    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border: 1px solid var(--border); padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 9999; }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast.success { border-left: 4px solid var(--success); color: var(--success); }
-    .toast.error { border-left: 4px solid var(--error); color: var(--error); }
+    .questions-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .questions-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .question-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .question-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .question-number {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .question-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .question-answer {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-radius: 6px;
+    }
+
+    .question-answer.empty {
+      font-style: italic;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+
+    .rating-section {
+      margin-top: 20px;
+    }
+
+    .rating-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .rating-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .rating-btn {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rating-btn.selected {
+      border-color: var(--accent);
+      background: rgba(124, 107, 255, 0.1);
+    }
+
+    .rating-btn:active {
+      transform: scale(0.96);
+    }
+
+    .rating-stars {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .rating-label {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .comment-box {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+      margin-bottom: 8px;
+    }
+
+    .comment-box:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .char-count.valid {
+      color: var(--success);
+    }
+
+    .char-count.invalid {
+      color: var(--warning);
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-text {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--success);
+      color: var(--success);
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--error);
+      color: var(--error);
+    }
 
     @media (max-width: 640px) {
-      .rating-grid { grid-template-columns: 1fr; }
-      .btn-group { grid-template-columns: 1fr; }
+      .rating-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-group {
+        grid-template-columns: 1fr;
+      }
+
       /* Khusus mobile, foto boleh lebih panjang */
-      .candidate-photo { max-height: 400px; } 
+      .candidate-photo {
+        max-height: 400px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div id="divisionView">
@@ -109,7 +435,10 @@
         <p>Pilih divisi untuk memulai review</p>
       </div>
       <div class="grid" id="divisionGrid">
-        <div class="empty"><div class="empty-icon">⏳</div><p>Memuat divisi...</p></div>
+        <div class="empty">
+          <div class="empty-icon">⏳</div>
+          <p>Memuat divisi...</p>
+        </div>
       </div>
     </div>
 
@@ -117,7 +446,9 @@
       <button class="back-btn" onclick="backToDivisions()">← Kembali ke Divisi</button>
       <div class="progress">
         <div class="progress-text" id="progressText">0/0 Kandidat</div>
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
       </div>
       <div id="candidateContent"></div>
     </div>
@@ -181,7 +512,7 @@
     }
 
     function renderDivisions(divisions) {
-      const icons = {'acara':'🎭','sekretaris':'📝','bendahara':'💰','perlengkapan':'🔧','keamanan':'🛡️','konsumsi':'🍽️','dana':'💵','promosi':'📢','dokumentasi':'📷','dekorasi':'🎨','desain':'✏️','art galery':'🖼️','akomodasi':'🏨','p3k':'🩹','mc':'🎤'};
+      const icons = { 'acara': '🎭', 'sekretaris': '📝', 'bendahara': '💰', 'perlengkapan': '🔧', 'keamanan': '🛡️', 'konsumsi': '🍽️', 'dana': '💵', 'promosi': '📢', 'dokumentasi': '📷', 'dekorasi': '🎨', 'desain': '✏️', 'art galery': '🖼️', 'akomodasi': '🏨', 'p3k': '🩹', 'mc': '🎤' };
       document.getElementById('divisionGrid').innerHTML = divisions.map(d => `
         <div class="card" onclick="selectDivision('${d.id}', '${d.name}')">
           <div class="card-icon">${icons[d.id] || '📋'}</div>
@@ -312,14 +643,27 @@
       const btn = document.getElementById('saveBtn');
       btn.disabled = true; btn.textContent = '⏳ Menyimpan...';
 
+      const c = candidates[currentIndex];
+
+      // ✅ PENTING: Gunakan URLSearchParams (bukan JSON) agar tidak trigger preflight CORS
+      const params = new URLSearchParams();
+      params.append('action', 'saveRating');
+      params.append('rowIndex', c.rowIndex);
+      params.append('rating', selectedRating);
+      params.append('catatan', comment);
+      params.append('divisi', currentDivisi.id);
+
       try {
-        const res = await fetch(`${API_BASE}?action=saveRating`, {
+        // ✅ PENTING: Jangan set header Content-Type! Browser akan otomatis pakai application/x-www-form-urlencoded
+        const res = await fetch(API_BASE, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ rowIndex: candidates[currentIndex].rowIndex, rating: selectedRating, catatan: comment, divisi: currentDivisi.id })
+          body: params
+          // ❌ JANGAN tambahkan headers: { 'Content-Type': 'application/json' }
         });
+
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
+
         showToast('✅ Rating berhasil disimpan!', 'success');
         setTimeout(() => { currentIndex++; renderCandidate(); }, 1200);
       } catch (e) {
@@ -327,7 +671,6 @@
         btn.disabled = false; btn.textContent = '💾 Simpan';
       }
     }
-
     function showToast(msg, type) {
       const t = document.getElementById('toast');
       t.textContent = msg; t.className = `toast ${type} show`;
@@ -341,4 +684,5 @@
     }
   </script>
 </body>
+
 </html>
