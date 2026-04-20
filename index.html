@@ -2,1049 +2,275 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  <meta name="theme-color" content="#7c6bff">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Review Kandidat SHC 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #14141c;
-      --surface-2: #1e1e2a;
-      --card: #232330;
-      --border: #2a2a3a;
-      --accent: #7c6bff;
-      --accent-light: #9b8eff;
-      --text: #f0eeff;
-      --text-secondary: #b8b5d0;
-      --muted: #7a7794;
-      --star-1: #ff4757;
-      --star-2: #ff9f43;
-      --star-3: #2ed573;
-      --star-4: #7c6bff;
-      --success: #2ed573;
-      --warning: #ffa502;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --bg: #0f0f13; --surface: #1a1a22; --card: #232330;
+      --border: #2e2e3d; --accent: #7c6bff; --text: #f0eeff;
+      --muted: #9390ad; --success: #2ed573; --warning: #ff9f43; --error: #ff4757;
+      --radius: 12px;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; font-size: 14px; }
-    body { background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
-      border-bottom: 1px solid var(--border);
-      padding: calc(12px + var(--safe-top)) 16px 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-content {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .header h1 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-
-    .header p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* Back Button */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(124, 107, 255, 0.15);
-      border: 1px solid var(--accent);
-      color: var(--accent-light);
-      padding: 8px 16px;
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 12px;
-      transition: all 0.2s ease;
-    }
-
-    .back-btn:hover {
-      background: var(--accent);
-      color: white;
-      transform: translateX(-2px);
-    }
-
-    .back-btn:active {
-      transform: scale(0.95);
-    }
-
-    /* Division Selector */
-    .division-selector {
-      padding: 20px 16px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .section-subtitle {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 20px;
-    }
-
-    .division-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-    }
-
-    .division-card {
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .division-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
-      opacity: 0;
-      transition: opacity 0.25s ease;
-    }
-
-    .division-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(124, 107, 255, 0.2);
-    }
-
-    .division-card:hover::before {
-      opacity: 1;
-    }
-
-    .division-card:active {
-      transform: scale(0.96);
-    }
-
-    .division-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-
-    .division-name {
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    /* Progress Bar */
-    .progress-container {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .progress-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    .progress-count {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent-light);
-    }
-
-    .progress-bar {
-      height: 8px;
-      background: var(--card);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
-      transition: width 0.3s ease;
-      border-radius: 4px;
-    }
-
-    /* Candidate Card */
-    .candidate-container {
-      padding: 0 16px 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .candidate-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
-    .candidate-header {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .candidate-photo {
-      width: 100px;
-      height: 130px;
-      border-radius: var(--radius-md);
-      object-fit: cover;
-      background: var(--card);
-      border: 2px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .candidate-photo.placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      color: var(--muted);
-    }
-
-    .candidate-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .candidate-name {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .candidate-class {
-      display: inline-block;
-      background: rgba(124, 107, 255, 0.15);
-      color: var(--accent-light);
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .candidate-priority {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .answers-preview {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .answers-title {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .answer-item {
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .answer-item:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .answer-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-
-    .answer-text {
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--text-secondary);
-    }
-
-    /* Rating Section */
-    .rating-section {
-      background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      margin-top: 20px;
-    }
-
-    .rating-title {
-      font-size: 15px;
-      font-weight: 800;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .rating-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    .rating-options {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .rating-option {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .rating-option:hover {
-      border-color: var(--border);
-      transform: translateY(-2px);
-    }
-
-    .rating-option.selected {
-      border-color: var(--accent);
-      background: rgba(124, 107, 255, 0.1);
-      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.2);
-    }
-
-    .rating-stars {
-      font-size: 20px;
-      margin-bottom: 6px;
-    }
-
-    .rating-label {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .rating-desc {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .rating-option[data-rating="1"].selected { border-color: var(--star-1); }
-    .rating-option[data-rating="2"].selected { border-color: var(--star-2); }
-    .rating-option[data-rating="3"].selected { border-color: var(--star-3); }
-    .rating-option[data-rating="4"].selected { border-color: var(--star-4); }
-
-    /* Comment Section */
-    .comment-section {
-      margin-bottom: 20px;
-    }
-
-    .comment-label {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .comment-required {
-      color: var(--warning);
-    }
-
-    .comment-textarea {
-      width: 100%;
-      min-height: 120px;
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 13px;
-      resize: vertical;
-      transition: border-color 0.2s ease;
-    }
-
-    .comment-textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .comment-textarea.error {
-      border-color: var(--star-1);
-    }
-
-    .char-count {
-      text-align: right;
-      font-size: 12px;
-      margin-top: 6px;
-      font-weight: 600;
-    }
-
-    .char-count.valid {
-      color: var(--success);
-    }
-
-    .char-count.invalid {
-      color: var(--warning);
-    }
-
-    .error-message {
-      color: var(--star-1);
-      font-size: 12px;
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Action Buttons */
-    .action-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .btn {
-      padding: 14px 20px;
-      border: none;
-      border-radius: var(--radius-md);
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn:active {
-      transform: scale(0.96);
-    }
-
-    .btn-secondary {
-      background: var(--card);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      background: var(--surface-2);
-      color: var(--text);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      color: white;
-      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(124, 107, 255, 0.4);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .empty-icon {
-      font-size: 64px;
-      margin-bottom: 16px;
-      opacity: 0.5;
-    }
-
-    .empty-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .empty-text {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 24px;
-    }
-
-    /* Loading */
-    .loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-
-    .spinner {
-      width: 44px;
-      height: 44px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-      margin-bottom: 16px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: calc(20px + var(--safe-bottom));
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      z-index: 9999;
-      opacity: 0;
-      transition: all 0.3s ease;
-      font-weight: 600;
-      font-size: 13px;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .toast.success {
-      border-left: 4px solid var(--success);
-      color: var(--success);
-    }
-
-    .toast.error {
-      border-left: 4px solid var(--star-1);
-      color: var(--star-1);
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 640px) {
-      .division-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .division-card {
-        padding: 16px 12px;
-      }
-
-      .division-icon {
-        font-size: 28px;
-      }
-
-      .division-name {
-        font-size: 13px;
-      }
-
-      .candidate-header {
-        flex-direction: column;
-      }
-
-      .candidate-photo {
-        width: 100%;
-        height: 200px;
-      }
-
-      .rating-options {
-        grid-template-columns: 1fr;
-      }
-
-      .action-buttons {
-        grid-template-columns: 1fr;
-      }
-
-      .btn {
-        padding: 12px 16px;
-      }
-    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; }
+    
+    .container { max-width: 600px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .header p { font-size: 13px; color: var(--muted); }
+    
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
+    .back-btn:active { transform: scale(0.96); }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card:active { transform: scale(0.96); }
+    .card-icon { font-size: 28px; margin-bottom: 8px; }
+    .card-name { font-size: 13px; font-weight: 600; }
+    
+    .progress { background: var(--card); border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center; }
+    .progress-text { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    
+    .candidate-photo { width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius); margin-bottom: 16px; background: var(--card); border: 1px solid var(--border); }
+    .candidate-photo.placeholder { display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--muted); }
+    
+    .info-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+    .info-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+    .info-text { font-size: 14px; line-height: 1.5; }
+    
+    .rating-section { margin-top: 20px; }
+    .rating-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; text-align: center; }
+    .rating-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .rating-btn { background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .rating-btn.selected { border-color: var(--accent); background: rgba(124, 107, 255, 0.1); }
+    .rating-btn:active { transform: scale(0.96); }
+    .rating-stars { font-size: 18px; margin-bottom: 4px; }
+    .rating-label { font-size: 12px; font-weight: 600; }
+    
+    .comment-box { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; color: var(--text); font-family: inherit; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 8px; }
+    .comment-box:focus { outline: none; border-color: var(--accent); }
+    .char-count { text-align: right; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+    .char-count.valid { color: var(--success); }
+    .char-count.invalid { color: var(--warning); }
+    
+    .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { padding: 12px; border: none; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn:active { transform: scale(0.96); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .empty { text-align: center; padding: 40px 20px; }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-text { color: var(--muted); margin-bottom: 20px; }
+    
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border: 1px solid var(--border); padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 9999; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success { border-left: 4px solid var(--success); color: var(--success); }
+    .toast.error { border-left: 4px solid var(--error); color: var(--error); }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <button class="back-btn" onclick="showDivisionSelector()" id="backBtn" style="display: none;">
-        ← Pilih Divisi Lain
-      </button>
-      <h1>📝 Review Kandidat SHC 2026</h1>
-      <p>Beri rating dan komentar untuk setiap kandidat</p>
-    </div>
-  </header>
-
-  <!-- Division Selector -->
-  <div class="division-selector" id="divisionSelector">
-    <h2 class="section-title">Pilih Divisi untuk Review</h2>
-    <p class="section-subtitle">Klik salah satu divisi di bawah untuk memulai review kandidat</p>
-    <div class="division-grid" id="divisionGrid">
-      <div class="loading">
-        <div class="spinner"></div>
-        <p>Memuat divisi...</p>
+  <div class="container">
+    <div id="divisionView">
+      <div class="header">
+        <h1>📝 Review Kandidat SHC 2026</h1>
+        <p>Pilih divisi untuk memulai review</p>
       </div>
+      <div class="grid" id="divisionGrid">
+        <div class="empty"><div class="empty-icon">⏳</div><p>Memuat divisi...</p></div>
+      </div>
+    </div>
+
+    <div id="candidateView" style="display: none;">
+      <button class="back-btn" onclick="backToDivisions()">← Kembali ke Divisi</button>
+      <div class="progress">
+        <div class="progress-text" id="progressText">0/0 Kandidat</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div id="candidateContent"></div>
     </div>
   </div>
-
-  <!-- Candidate Container -->
-  <div class="candidate-container" id="candidateContainer" style="display: none;">
-    <!-- Progress Bar -->
-    <div class="progress-container">
-      <div class="progress-info">
-        <span class="progress-label">Progress Review</span>
-        <span class="progress-count" id="progressCount">0/0</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-      </div>
-    </div>
-
-    <!-- Candidates will be rendered here -->
-    <div id="candidatesList"></div>
-  </div>
-
-  <!-- Toast Notification -->
   <div class="toast" id="toast"></div>
 
   <script>
-    // API Configuration - GANTI DENGAN URL APPS SCRIPT KAMU
+    // ⚠️ GANTI DENGAN URL WEB APP APPS SCRIPT KAMU
     const API_BASE = "https://script.google.com/macros/s/AKfycbwamPmLwc_INw6u4bj2shO8RIXbcrHiuoUvhwPCBNhFG0VNCoilqZV1jUfh9EmeDusO/exec";
 
-    // State
     let currentDivisi = null;
     let candidates = [];
     let currentIndex = 0;
     let selectedRating = null;
 
-    // Rating Configuration
-    const RATING_CONFIG = {
-      1: { stars: '⭐', label: 'KURANG', desc: 'Tidak memenuhi kriteria', color: '#ff4757' },
-      2: { stars: '⭐⭐', label: 'RAGU-RAGU', desc: 'Masih perlu pertimbangan', color: '#ff9f43' },
-      3: { stars: '⭐⭐⭐', label: 'BAIK', desc: 'Memenuhi kriteria', color: '#2ed573' },
-      4: { stars: '⭐⭐⭐⭐', label: 'BAGUS', desc: 'Sangat memenuhi kriteria', color: '#7c6bff' }
+    const RATING_MAP = {
+      1: { stars: '⭐', label: 'KURANG' },
+      2: { stars: '⭐⭐', label: 'RAGU-RAGU' },
+      3: { stars: '⭐⭐⭐', label: 'BAIK' },
+      4: { stars: '⭐⭐⭐⭐', label: 'BAGUS' }
     };
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      loadDivisions();
-    });
+    document.addEventListener('DOMContentLoaded', loadDivisions);
 
-    // Load Divisions
     async function loadDivisions() {
       try {
-        const response = await fetch(`${API_BASE}?action=getDivisions`);
-        const result = await response.json();
-        
-        if (!result.success) {
-          throw new Error(result.error || 'Gagal memuat divisi');
-        }
-
-        renderDivisions(result.data);
-      } catch (error) {
-        console.error('Error loading divisions:', error);
-        showToast('Gagal memuat divisi. Periksa koneksi internet.', 'error');
+        const res = await fetch(`${API_BASE}?action=getDivisions`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error);
+        renderDivisions(data.data);
+      } catch (e) {
+        document.getElementById('divisionGrid').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`;
       }
     }
 
-    // Render Divisions
     function renderDivisions(divisions) {
-      const grid = document.getElementById('divisionGrid');
-      grid.innerHTML = divisions.map(div => `
-        <div class="division-card" onclick="selectDivision('${div.id}', '${div.name}')">
-          <div class="division-icon">${getDivisionIcon(div.id)}</div>
-          <div class="division-name">${div.name}</div>
+      const icons = {'acara':'🎭','sekretaris':'📝','bendahara':'💰','perlengkapan':'🔧','keamanan':'🛡️','konsumsi':'🍽️','dana':'💵','promosi':'📢','dokumentasi':'📷','dekorasi':'🎨','desain':'✏️','art galery':'🖼️','akomodasi':'🏨','p3k':'🩹','mc':'🎤'};
+      document.getElementById('divisionGrid').innerHTML = divisions.map(d => `
+        <div class="card" onclick="selectDivision('${d.id}', '${d.name}')">
+          <div class="card-icon">${icons[d.id] || '📋'}</div>
+          <div class="card-name">${d.name}</div>
         </div>
       `).join('');
     }
 
-    // Get Division Icon
-    function getDivisionIcon(divisi) {
-      const icons = {
-        'acara': '🎭',
-        'sekretaris': '📝',
-        'bendahara': '💰',
-        'perlengkapan': '🔧',
-        'keamanan': '🛡️',
-        'konsumsi': '🍽️',
-        'dana': '💵',
-        'promosi': '📢',
-        'dokumentasi': '📷',
-        'dekorasi': '🎨',
-        'desain': '✏️',
-        'art galery': '🖼️',
-        'akomodasi': '🏨',
-        'p3k': '🩹',
-        'mc': '🎤'
-      };
-      return icons[divisi] || '📋';
+    async function selectDivision(id, name) {
+      currentDivisi = { id, name };
+      document.getElementById('divisionView').style.display = 'none';
+      document.getElementById('candidateView').style.display = 'block';
+      await loadCandidates();
     }
 
-    // Select Division
-    async function selectDivision(divisi, name) {
-      currentDivisi = { id: divisi, name: name };
-      
-      // Show loading
-      document.getElementById('divisionSelector').style.display = 'none';
-      document.getElementById('candidateContainer').style.display = 'block';
-      document.getElementById('backBtn').style.display = 'inline-flex';
-      
-      await loadCandidates(divisi);
-    }
-
-    // Show Division Selector Again
-    function showDivisionSelector() {
-      if (confirm('Yakin ingin kembali ke pilihan divisi? Progress yang belum tersimpan akan hilang.')) {
-        document.getElementById('divisionSelector').style.display = 'block';
-        document.getElementById('candidateContainer').style.display = 'none';
-        document.getElementById('backBtn').style.display = 'none';
+    function backToDivisions() {
+      if (confirm('Kembali ke pilihan divisi? Progress belum tersimpan akan hilang.')) {
+        document.getElementById('divisionView').style.display = 'block';
+        document.getElementById('candidateView').style.display = 'none';
         currentDivisi = null;
         candidates = [];
         currentIndex = 0;
       }
     }
 
-    // Load Candidates
-    async function loadCandidates(divisi) {
+    async function loadCandidates() {
       try {
-        const response = await fetch(`${API_BASE}?action=getDataByDivisi&divisi=${divisi}`);
-        const result = await response.json();
-        
-        if (!result.success) {
-          throw new Error(result.error || 'Gagal memuat kandidat');
-        }
-
-        candidates = result.data || [];
+        const res = await fetch(`${API_BASE}?action=getDataByDivisi&divisi=${currentDivisi.id}`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error);
+        candidates = data.data || [];
         currentIndex = 0;
-
-        if (candidates.length === 0) {
-          showEmptyState();
-        } else {
-          renderCandidate();
-          updateProgress();
-        }
-      } catch (error) {
-        console.error('Error loading candidates:', error);
-        showToast('Gagal memuat kandidat', 'error');
+        renderCandidate();
+      } catch (e) {
+        document.getElementById('candidateContent').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`;
       }
     }
 
-    // Show Empty State
-    function showEmptyState() {
-      const container = document.getElementById('candidatesList');
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">🎉</div>
-          <h3 class="empty-title">Semua Kandidat Sudah Direview!</h3>
-          <p class="empty-text">Divisi ${currentDivisi.name} telah selesai direview.</p>
-          <button class="btn btn-primary" onclick="showDivisionSelector()">
-            Pilih Divisi Lain
-          </button>
-        </div>
-      `;
-    }
-
-    // Render Current Candidate
     function renderCandidate() {
+      const container = document.getElementById('candidateContent');
       if (currentIndex >= candidates.length) {
-        showEmptyState();
+        container.innerHTML = `<div class="empty"><div class="empty-icon">🎉</div><p class="empty-text">Semua kandidat di <b>${currentDivisi.name}</b> sudah direview!</p><button class="btn btn-primary" onclick="backToDivisions()">Pilih Divisi Lain</button></div>`;
         return;
       }
 
-      const candidate = candidates[currentIndex];
-      const container = document.getElementById('candidatesList');
-      const fotoUrl = convertDriveUrl(candidate.foto);
+      const c = candidates[currentIndex];
+      const fotoUrl = convertDriveUrl(c.foto);
+      const progress = ((currentIndex + 1) / candidates.length) * 100;
+      document.getElementById('progressText').textContent = `${currentIndex + 1}/${candidates.length} Kandidat`;
+      document.getElementById('progressFill').style.width = `${progress}%`;
 
       container.innerHTML = `
-        <div class="candidate-card">
-          <div class="candidate-header">
-            ${fotoUrl 
-              ? `<img src="${fotoUrl}" alt="${candidate.nama}" class="candidate-photo" onerror="this.outerHTML='<div class=\\'candidate-photo placeholder\\'>👤</div>'">`
-              : '<div class="candidate-photo placeholder">👤</div>'
-            }
-            <div class="candidate-info">
-              <h3 class="candidate-name">${candidate.nama}</h3>
-              <span class="candidate-class">Kelas ${candidate.kelas}</span>
-              <p class="candidate-priority"><strong>Prioritas:</strong> ${candidate.prioritas || '-'}</p>
-            </div>
-          </div>
+        ${fotoUrl ? `<img src="${fotoUrl}" class="candidate-photo" alt="Foto" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'candidate-photo placeholder\\'>👤</div>'">` : '<div class="candidate-photo placeholder">👤</div>'}
+        
+        <div class="info-box">
+          <div class="info-title">👤 Data Kandidat</div>
+          <div class="info-text"><b>Nama:</b> ${c.nama}<br><b>Kelas:</b> ${c.kelas}<br><b>Prioritas:</b> ${c.prioritas || '-'}</div>
+        </div>
 
-          <div class="answers-preview">
-            <div class="answers-title">📄 Preview Jawaban</div>
-            <div class="answer-item">
-              <div class="answer-label">Tujuan</div>
-              <div class="answer-text">${candidate.answers[5] || '-'}</div>
-            </div>
-            <div class="answer-item">
-              <div class="answer-label">Kelebihan & Kekurangan</div>
-              <div class="answer-text">${candidate.answers[6] || '-'}</div>
-            </div>
-            <div class="answer-item">
-              <div class="answer-label">Pengalaman Organisasi</div>
-              <div class="answer-text">${candidate.answers[8] || '-'}</div>
-            </div>
-          </div>
+        <div class="info-box">
+          <div class="info-title">📄 Jawaban Singkat</div>
+          <div class="info-text">🎯 <b>Tujuan:</b> ${c.answers[5] || '-'}<br>💡 <b>Kelebihan/Kekurangan:</b> ${c.answers[6] || '-'}</div>
+        </div>
 
-          <div class="rating-section">
-            <h4 class="rating-title">😐 Beri Rating</h4>
-            <p class="rating-subtitle">Pilih rating yang sesuai untuk kandidat ini</p>
-            
-            <div class="rating-options">
-              ${Object.entries(RATING_CONFIG).map(([rating, config]) => `
-                <div class="rating-option" data-rating="${rating}" onclick="selectRating(${rating})">
-                  <div class="rating-stars">${config.stars}</div>
-                  <div class="rating-label">${config.label}</div>
-                  <div class="rating-desc">${config.desc}</div>
-                </div>
-              `).join('')}
-            </div>
-
-            <div class="comment-section">
-              <label class="comment-label">
-                Alasan Rating <span class="comment-required">(Wajib min. 100 karakter)</span>
-              </label>
-              <textarea 
-                class="comment-textarea" 
-                id="commentText" 
-                placeholder="Jelaskan alasan pemberian rating ini..."
-                oninput="updateCharCount()"
-              ></textarea>
-              <div class="char-count invalid" id="charCount">0 / 100 karakter</div>
-              <div class="error-message" id="errorMsg" style="display: none;">
-                ⚠️ Komentar minimal 100 karakter
+        <div class="rating-section">
+          <div class="rating-title">😐 Beri Rating</div>
+          <div class="rating-grid">
+            ${Object.entries(RATING_MAP).map(([val, conf]) => `
+              <div class="rating-btn" data-val="${val}" onclick="pickRating(${val})">
+                <div class="rating-stars">${conf.stars}</div>
+                <div class="rating-label">${conf.label}</div>
               </div>
-            </div>
+            `).join('')}
+          </div>
 
-            <div class="action-buttons">
-              <button class="btn btn-secondary" onclick="skipCandidate()">
-                ⏭ Lewati
-              </button>
-              <button class="btn btn-primary" id="saveBtn" onclick="saveRating()" disabled>
-                💾 Simpan Rating
-              </button>
-            </div>
+          <textarea class="comment-box" id="commentBox" placeholder="Alasan rating (wajib min. 100 karakter)..." oninput="checkComment()"></textarea>
+          <div class="char-count invalid" id="charCount">0 / 100 karakter</div>
+
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="skipCandidate()">⏭ Lewati</button>
+            <button class="btn btn-primary" id="saveBtn" onclick="saveRating()" disabled>💾 Simpan</button>
           </div>
         </div>
       `;
-
-      // Reset rating selection
       selectedRating = null;
     }
 
-    // Select Rating
-    function selectRating(rating) {
-      selectedRating = rating;
-      
-      // Update UI
-      document.querySelectorAll('.rating-option').forEach(opt => {
-        opt.classList.remove('selected');
-        if (parseInt(opt.dataset.rating) === rating) {
-          opt.classList.add('selected');
-        }
-      });
-
-      // Enable save button if rating and comment are valid
-      checkSaveButton();
+    function pickRating(val) {
+      selectedRating = val;
+      document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelector(`.rating-btn[data-val="${val}"]`).classList.add('selected');
+      checkComment();
     }
 
-    // Update Character Count
-    function updateCharCount() {
-      const textarea = document.getElementById('commentText');
-      const count = textarea.value.length;
-      const charCount = document.getElementById('charCount');
-      const errorMsg = document.getElementById('errorMsg');
-
-      charCount.textContent = `${count} / 100 karakter`;
-      
-      if (count >= 100) {
-        charCount.classList.remove('invalid');
-        charCount.classList.add('valid');
-        textarea.classList.remove('error');
-        errorMsg.style.display = 'none';
-      } else {
-        charCount.classList.remove('valid');
-        charCount.classList.add('invalid');
-        textarea.classList.add('error');
-        errorMsg.style.display = 'flex';
-      }
-
-      checkSaveButton();
+    function checkComment() {
+      const box = document.getElementById('commentBox');
+      const len = box.value.length;
+      const countEl = document.getElementById('charCount');
+      countEl.textContent = `${len} / 100 karakter`;
+      countEl.className = len >= 100 ? 'char-count valid' : 'char-count invalid';
+      document.getElementById('saveBtn').disabled = !(selectedRating && len >= 100);
     }
 
-    // Check if Save Button Should Be Enabled
-    function checkSaveButton() {
-      const textarea = document.getElementById('commentText');
-      const saveBtn = document.getElementById('saveBtn');
-      const commentLength = textarea ? textarea.value.length : 0;
-
-      if (selectedRating && commentLength >= 100) {
-        saveBtn.disabled = false;
-      } else {
-        saveBtn.disabled = true;
-      }
-    }
-
-    // Skip Candidate
     function skipCandidate() {
-      if (confirm('Lewati kandidat ini tanpa memberi rating?')) {
+      if (confirm('Lewati kandidat ini?')) {
         currentIndex++;
-        if (currentIndex < candidates.length) {
-          renderCandidate();
-          updateProgress();
-        } else {
-          showEmptyState();
-        }
+        renderCandidate();
       }
     }
 
-    // Save Rating
     async function saveRating() {
-      const textarea = document.getElementById('commentText');
-      const comment = textarea.value.trim();
+      const comment = document.getElementById('commentBox').value.trim();
+      if (!selectedRating || comment.length < 100) return showToast('Lengkapi rating & komentar min. 100 karakter', 'error');
 
-      if (!selectedRating) {
-        showToast('Pilih rating terlebih dahulu', 'error');
-        return;
-      }
-
-      if (comment.length < 100) {
-        showToast('Komentar minimal 100 karakter', 'error');
-        return;
-      }
-
-      const candidate = candidates[currentIndex];
-      const data = {
-        rowIndex: candidate.rowIndex,
-        rating: selectedRating,
-        catatan: comment,
-        divisi: currentDivisi.id
-      };
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = true; btn.textContent = '⏳ Menyimpan...';
 
       try {
-        const response = await fetch(`${API_BASE}?action=saveRating`, {
+        const res = await fetch(`${API_BASE}?action=saveRating`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          body: JSON.stringify({ rowIndex: candidates[currentIndex].rowIndex, rating: selectedRating, catatan: comment, divisi: currentDivisi.id })
         });
-
-        const result = await response.json();
-
-        if (result.success) {
-          showToast('✅ Rating berhasil disimpan!', 'success');
-          
-          // Move to next candidate
-          currentIndex++;
-          if (currentIndex < candidates.length) {
-            setTimeout(() => {
-              renderCandidate();
-              updateProgress();
-            }, 1000);
-          } else {
-            setTimeout(() => {
-              showEmptyState();
-            }, 1000);
-          }
-        } else {
-          throw new Error(result.message || 'Gagal menyimpan rating');
-        }
-      } catch (error) {
-        console.error('Error saving rating:', error);
-        showToast(error.message || 'Gagal menyimpan rating', 'error');
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        showToast('✅ Rating berhasil disimpan!', 'success');
+        setTimeout(() => { currentIndex++; renderCandidate(); }, 1200);
+      } catch (e) {
+        showToast(e.message, 'error');
+        btn.disabled = false; btn.textContent = '💾 Simpan';
       }
     }
 
-    // Update Progress Bar
-    function updateProgress() {
-      const total = candidates.length;
-      const current = currentIndex + 1;
-      const percentage = (current / total) * 100;
-
-      document.getElementById('progressCount').textContent = `${current}/${total}`;
-      document.getElementById('progressFill').style.width = `${percentage}%`;
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    // Show Toast
-    function showToast(message, type = 'info') {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = `toast ${type} show`;
-
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
-    // Convert Google Drive URL
     function convertDriveUrl(url) {
-      if (!url || !url.includes('drive.google.com')) return '';
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://lh3.googleusercontent.com/d/${match[0]}` : '';
+      if (!url) return '';
+      const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
+      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
     }
   </script>
 </body>

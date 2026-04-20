@@ -3,642 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  <meta name="theme-color" content="#7c6bff">
+  <meta name="theme-color" content="#0f0f13">
   <title>Dashboard Review SHC 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #14141c;
-      --surface-2: #1e1e2a;
-      --card: #232330;
-      --border: #2a2a3a;
-      --accent: #7c6bff;
-      --accent-light: #9b8eff;
-      --text: #f0eeff;
-      --text-secondary: #b8b5d0;
-      --muted: #7a7794;
-      --star-1: #ff4757;
-      --star-2: #ff9f43;
-      --star-3: #2ed573;
-      --star-4: #7c6bff;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --bg: #0a0a0f; --surface: #14141c; --surface-2: #1e1e2a; --card: #232330;
+      --border: #2a2a3a; --accent: #7c6bff; --accent-light: #9b8eff;
+      --text: #f0eeff; --text-secondary: #b8b5d0; --muted: #7a7794;
+      --star-1: #ff4757; --star-2: #ff9f43; --star-3: #2ed573; --star-4: #7c6bff;
+      --radius-md: 12px; --radius-lg: 16px;
+      --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; font-size: 14px; }
     body { background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
 
-    /* Dashboard Layout */
     .dashboard { display: flex; min-height: 100dvh; }
+    .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: calc(20px + var(--safe-top)) 12px 20px; position: fixed; height: 100dvh; overflow-y: auto; z-index: 1000; left: 0; top: 0; transition: transform 0.3s ease; }
+    .sidebar-header { padding: 8px 8px 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+    .sidebar-logo { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, var(--accent-light), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sidebar-subtitle { font-size: 11px; color: var(--muted); }
+    .sidebar-title { font-size: 10px; font-weight: 700; color: var(--muted); margin: 10px 0; text-transform: uppercase; letter-spacing: 0.8px; padding: 0 8px; }
+    .div-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; margin-bottom: 4px; background: transparent; border: 1px solid transparent; border-radius: var(--radius-md); color: var(--text-secondary); font-size: 13px; font-weight: 500; text-align: left; cursor: pointer; transition: all 0.2s ease; min-height: 44px; font-family: inherit; }
+    .div-btn:hover { background: rgba(124, 107, 255, 0.08); color: var(--text); }
+    .div-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+    .div-btn-icon { font-size: 16px; flex-shrink: 0; }
+    
+    .menu-toggle { display: none; position: fixed; top: calc(12px + var(--safe-top)); left: 12px; z-index: 1100; width: 48px; height: 48px; background: var(--accent); border: none; border-radius: var(--radius-md); color: white; font-size: 20px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(124, 107, 255, 0.25); }
+    .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 999; opacity: 0; transition: opacity 0.3s ease; }
+    .overlay.show { display: block; opacity: 1; }
+    
+    .main { margin-left: 260px; flex: 1; padding: calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom)); min-height: 100dvh; }
+    .header { margin-bottom: 24px; }
+    .header h1 { font-size: 22px; font-weight: 800; }
+    .header p { color: var(--muted); font-size: 13px; margin-top: 8px; }
+    
+    .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; }
+    .stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+    .stat-value { font-size: 24px; font-weight: 800; color: var(--accent-light); margin-top: 4px; }
+    
+    .candidate-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; display: flex; gap: 14px; cursor: pointer; transition: all 0.25s ease; position: relative; }
+    .card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(124, 107, 255, 0.15); }
+    .card:active { transform: scale(0.985); }
+    .card-photo { width: 70px; height: 90px; border-radius: var(--radius-md); object-fit: cover; flex-shrink: 0; background: var(--card); border: 1px solid var(--border); }
+    .card-photo.placeholder { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 32px; }
+    .card-info { flex: 1; min-width: 0; }
+    .card-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-class { font-size: 12px; color: var(--accent-light); font-weight: 600; background: rgba(124, 107, 255, 0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
+    .card-divisi { font-size: 11px; color: var(--muted); }
+    .rating-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+    .rating-item { background: var(--card); border-radius: 8px; padding: 8px 10px; border: 1px solid var(--border); }
+    .rating-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .rating-badge { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px; }
+    .rating-badge[data-rating="1"] { background: rgba(255, 71, 87, 0.15); color: var(--star-1); }
+    .rating-badge[data-rating="2"] { background: rgba(255, 159, 67, 0.15); color: var(--star-2); }
+    .rating-badge[data-rating="3"] { background: rgba(46, 213, 115, 0.15); color: var(--star-3); }
+    .rating-badge[data-rating="4"] { background: rgba(124, 107, 255, 0.15); color: var(--star-4); }
+    .rating-div { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .rating-reason { font-size: 11px; color: var(--muted); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .loading, .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; color: var(--muted); text-align: center; }
+    .spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
+    .modal-overlay.active { display: flex; opacity: 1; }
+    .modal-content { background: var(--surface); width: 100%; max-width: 680px; max-height: 85dvh; border-radius: var(--radius-lg); display: flex; flex-direction: column; box-shadow: 0 16px 48px rgba(0,0,0,0.5); border: 1px solid var(--border); }
+    .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 16px; flex-shrink: 0; }
+    .modal-close { margin-left: auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .modal-photo { width: 72px; height: 92px; border-radius: var(--radius-md); object-fit: cover; background: var(--card); flex-shrink: 0; border: 1px solid var(--border); }
+    .modal-photo.placeholder { display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--muted); }
+    .modal-title { font-size: 18px; font-weight: 800; line-height: 1.3; }
+    .modal-subtitle { font-size: 13px; color: var(--accent-light); margin-top: 4px; font-weight: 600; }
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+    .modal-section { margin-bottom: 24px; }
+    .modal-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.6px; }
+    .modal-divisi-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .modal-divisi-tag { background: rgba(124, 107, 255, 0.12); color: var(--accent-light); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+    .modal-rating-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; }
+    .modal-rating-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .modal-rating-badge { font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
+    .modal-rating-reason { font-size: 13px; color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap; padding-top: 8px; border-top: 1px solid var(--border); margin-top: 8px; }
 
-    /* Sidebar - Desktop */
-    .sidebar {
-      width: 280px;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: calc(20px + var(--safe-top)) 16px 20px;
-      position: fixed;
-      height: 100dvh;
-      overflow-y: auto;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar-header {
-      padding: 8px 12px 20px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
-    }
-
-    .sidebar-logo {
-      font-size: 20px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent-light), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 4px;
-    }
-
-    .sidebar-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .sidebar-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 12px;
-      padding: 0 12px;
-    }
-
-    .division-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 6px;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: var(--radius-md);
-      color: var(--text-secondary);
-      font-size: 13px;
-      font-weight: 600;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-
-    .division-btn:hover {
-      background: rgba(124, 107, 255, 0.1);
-      color: var(--text);
-    }
-
-    .division-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: white;
-      box-shadow: 0 4px 12px rgba(124, 107, 255, 0.3);
-    }
-
-    .division-icon {
-      font-size: 18px;
-    }
-
-    /* Main Content */
-    .main {
-      margin-left: 280px;
-      flex: 1;
-      padding: calc(20px + var(--safe-top)) 24px calc(20px + var(--safe-bottom));
-      min-height: 100dvh;
-    }
-
-    .header {
-      margin-bottom: 24px;
-    }
-
-    .header h1 {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .header p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* Stats */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--accent-light);
-    }
-
-    /* Candidate Grid */
-    .candidate-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 16px;
-    }
-
-    .candidate-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .candidate-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(124, 107, 255, 0.15);
-    }
-
-    .candidate-card:active {
-      transform: scale(0.98);
-    }
-
-    .card-header {
-      display: flex;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .card-photo {
-      width: 70px;
-      height: 90px;
-      border-radius: var(--radius-md);
-      object-fit: cover;
-      background: var(--card);
-      border: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .card-photo.placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      color: var(--muted);
-    }
-
-    .card-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .card-name {
-      font-size: 15px;
-      font-weight: 800;
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-class {
-      display: inline-block;
-      background: rgba(124, 107, 255, 0.15);
-      color: var(--accent-light);
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .card-divisions {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .ratings-preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .rating-badge {
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .rating-badge[data-rating="1"] {
-      background: rgba(255, 71, 87, 0.15);
-      color: var(--star-1);
-    }
-
-    .rating-badge[data-rating="2"] {
-      background: rgba(255, 159, 67, 0.15);
-      color: var(--star-2);
-    }
-
-    .rating-badge[data-rating="3"] {
-      background: rgba(46, 213, 115, 0.15);
-      color: var(--star-3);
-    }
-
-    .rating-badge[data-rating="4"] {
-      background: rgba(124, 107, 255, 0.15);
-      color: var(--star-4);
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100dvh;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: var(--surface);
-      width: 100%;
-      max-width: 700px;
-      max-height: 90dvh;
-      border-radius: var(--radius-lg);
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .modal-photo {
-      width: 80px;
-      height: 100px;
-      border-radius: var(--radius-md);
-      object-fit: cover;
-      background: var(--card);
-      border: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .modal-photo.placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      color: var(--muted);
-    }
-
-    .modal-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .modal-name {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .modal-class {
-      display: inline-block;
-      background: rgba(124, 107, 255, 0.15);
-      color: var(--accent-light);
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .modal-close {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .modal-close:hover {
-      background: var(--star-1);
-      border-color: var(--star-1);
-      transform: rotate(90deg);
-    }
-
-    .modal-body {
-      padding: 20px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .modal-section {
-      margin-bottom: 24px;
-    }
-
-    .modal-section:last-child {
-      margin-bottom: 0;
-    }
-
-    .modal-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-    }
-
-    .modal-divisions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .division-tag {
-      background: rgba(124, 107, 255, 0.15);
-      color: var(--accent-light);
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .rating-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-
-    .rating-card:last-child {
-      margin-bottom: 0;
-    }
-
-    .rating-card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .rating-card-badge {
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .rating-card-badge[data-rating="1"] {
-      background: rgba(255, 71, 87, 0.15);
-      color: var(--star-1);
-    }
-
-    .rating-card-badge[data-rating="2"] {
-      background: rgba(255, 159, 67, 0.15);
-      color: var(--star-2);
-    }
-
-    .rating-card-badge[data-rating="3"] {
-      background: rgba(46, 213, 115, 0.15);
-      color: var(--star-3);
-    }
-
-    .rating-card-badge[data-rating="4"] {
-      background: rgba(124, 107, 255, 0.15);
-      color: var(--star-4);
-    }
-
-    .rating-card-reason {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-      margin-top: 10px;
-    }
-
-    /* Loading & Empty States */
-    .loading, .empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 20px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .spinner {
-      width: 44px;
-      height: 44px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-      margin-bottom: 16px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .empty-icon {
-      font-size: 64px;
-      margin-bottom: 16px;
-      opacity: 0.5;
-    }
-
-    /* Hamburger Menu - Mobile */
-    .menu-toggle {
-      display: none;
-      position: fixed;
-      top: calc(12px + var(--safe-top));
-      left: 12px;
-      z-index: 1100;
-      width: 48px;
-      height: 48px;
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius-md);
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 16px rgba(124, 107, 255, 0.3);
-      transition: all 0.2s ease;
-    }
-
-    .menu-toggle:active {
-      transform: scale(0.92);
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 999;
-    }
-
-    .overlay.show {
-      display: block;
-    }
-
-    /* Mobile Responsive */
     @media (max-width: 768px) {
-      .menu-toggle {
-        display: flex;
-      }
-
-      .sidebar {
-        width: 85vw;
-        max-width: 320px;
-        transform: translateX(-100%);
-        padding-top: calc(70px + var(--safe-top));
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-        box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5);
-      }
-
-      .main {
-        margin-left: 0;
-        padding: calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom));
-      }
-
-      .header h1 {
-        font-size: 20px;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-
-      .stat-card {
-        padding: 16px;
-      }
-
-      .stat-value {
-        font-size: 24px;
-      }
-
-      .candidate-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .modal-overlay {
-        align-items: flex-end;
-        padding: 0;
-      }
-
-      .modal-content {
-        max-height: 95dvh;
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-        margin-bottom: var(--safe-bottom);
-      }
-
-      .modal-header {
-        padding: 16px;
-      }
-
-      .modal-body {
-        padding: 16px;
-      }
-
-      .modal-photo {
-        width: 70px;
-        height: 90px;
-      }
-
-      .modal-name {
-        font-size: 18px;
-      }
+      .menu-toggle { display: flex !important; }
+      .sidebar { width: 85vw; max-width: 320px; transform: translateX(-100%); padding-top: calc(60px + var(--safe-top)); }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 32px rgba(0,0,0,0.5); }
+      .main { margin-left: 0; width: 100%; padding: calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom)); }
+      .candidate-grid { grid-template-columns: 1fr; gap: 12px; }
+      .card { padding: 14px; gap: 12px; }
+      .card-photo { width: 64px; height: 82px; }
+      .modal-overlay { align-items: flex-end; padding: 0; }
+      .modal-content { max-width: 100%; max-height: 92dvh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin-bottom: var(--safe-bottom); }
+      .modal-header { padding: 18px 16px; }
+      .modal-body { padding: 16px; }
+      .modal-photo { width: 60px; height: 78px; }
     }
   </style>
 </head>
 <body>
-  <!-- Hamburger Menu Button -->
   <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
-  
-  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <div class="dashboard">
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">SHC 2026</div>
@@ -648,51 +118,38 @@
       <div id="divisionList"></div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main">
       <div class="header">
-        <h1>📊 Dashboard Review</h1>
-        <p>Monitoring kandidat yang sudah direview</p>
+        <h1>📊 Review Kandidat</h1>
+        <p>Klik kartu untuk melihat detail rating & komentar</p>
       </div>
-
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Kandidat</div>
-          <div class="stat-value" id="statTotal">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Sudah Direview</div>
-          <div class="stat-value" id="statReviewed">0</div>
-        </div>
+      <div class="stats-bar" id="statsBar" style="display:none">
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
       </div>
-
       <div id="content">
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Memuat data...</p>
-        </div>
+        <div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>
       </div>
     </main>
   </div>
 
-  <!-- Detail Modal -->
   <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
         <div id="modalPhoto"></div>
-        <div class="modal-info">
-          <h3 class="modal-name" id="modalName">-</h3>
-          <span class="modal-class" id="modalClass">-</span>
+        <div style="flex:1">
+          <div class="modal-title" id="modalName">—</div>
+          <div class="modal-subtitle" id="modalClass">—</div>
         </div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
       <div class="modal-body">
         <div class="modal-section">
           <div class="modal-label">🎯 Divisi Dilamar</div>
-          <div class="modal-divisions" id="modalDivisions"></div>
+          <div class="modal-divisi-list" id="modalDivisi"></div>
         </div>
         <div class="modal-section">
-          <div class="modal-label">📝 Rating & Alasan dari Guru</div>
+          <div class="modal-label">📝 Rating & Alasan</div>
           <div id="modalRatings"></div>
         </div>
       </div>
@@ -700,257 +157,141 @@
   </div>
 
   <script>
-    // API Configuration - GANTI DENGAN URL APPS SCRIPT KAMU
     const API_BASE = "https://script.google.com/macros/s/AKfycbwamPmLwc_INw6u4bj2shO8RIXbcrHiuoUvhwPCBNhFG0VNCoilqZV1jUfh9EmeDusO/exec";
-
-    // State
     let currentDivisi = 'all';
-    let allCandidates = [];
+    let allCandidatesData = [];
 
-    // Division Icons
-    const DIVISION_ICONS = {
-      'all': '🏠',
-      'acara': '🎭',
-      'sekretaris': '📝',
-      'bendahara': '💰',
-      'perlengkapan': '🔧',
-      'keamanan': '🛡️',
-      'konsumsi': '🍽️',
-      'dana': '💵',
-      'promosi': '📢',
-      'dokumentasi': '📷',
-      'dekorasi': '🎨',
-      'desain': '✏️',
-      'art galery': '🖼️',
-      'akomodasi': '🏨',
-      'p3k': '🩹',
-      'mc': '🎤'
-    };
-
-    // Rating Labels
-    const RATING_LABELS = {
-      1: 'Kurang',
-      2: 'Ragu-ragu',
-      3: 'Baik',
-      4: 'Bagus'
-    };
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      loadDivisions();
-      loadCandidates('all');
-    });
-
-    // Toggle Mobile Menu
     function toggleMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('overlay');
-      
+      const isOpen = sidebar.classList.contains('open');
       sidebar.classList.toggle('open');
       overlay.classList.toggle('show');
-      
-      if (sidebar.classList.contains('open')) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
+      document.body.style.overflow = isOpen ? '' : 'hidden';
     }
 
-    // Load Divisions
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadDivisions();
+      await loadCandidates('all');
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); if(document.getElementById('sidebar').classList.contains('open')) toggleMenu(); }});
+    });
+
     async function loadDivisions() {
       try {
-        const response = await fetch(`${API_BASE}?action=getDashboardDivisions`);
-        const result = await response.json();
-        
-        if (!result.success) {
-          throw new Error(result.error || 'Gagal memuat divisi');
-        }
-
-        renderDivisions(result.data);
-      } catch (error) {
-        console.error('Error loading divisions:', error);
-      }
+        const res = await fetch(`${API_BASE}?action=getDashboardDivisions`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error);
+        const list = document.getElementById('divisionList');
+        list.innerHTML = '';
+        data.data.forEach(d => {
+          const btn = document.createElement('button');
+          btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
+          btn.innerHTML = `<span class="div-btn-icon">${d.name.split(' ')[0] || '📋'}</span> ${d.name.split(' ').slice(1).join(' ') || d.name}`;
+          btn.onclick = async () => {
+            document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentDivisi = d.id;
+            await loadCandidates(d.id);
+            if (window.innerWidth <= 768) toggleMenu();
+          };
+          list.appendChild(btn);
+        });
+      } catch (err) { console.error(err); }
     }
 
-    // Render Divisions
-    function renderDivisions(divisions) {
-      const list = document.getElementById('divisionList');
-      list.innerHTML = divisions.map(div => `
-        <button class="division-btn ${div.id === 'all' ? 'active' : ''}" onclick="selectDivision('${div.id}')">
-          <span class="division-icon">${div.name.split(' ')[0]}</span>
-          <span>${div.name.split(' ').slice(1).join(' ') || div.name}</span>
-        </button>
-      `).join('');
-    }
-
-    // Select Division
-    async function selectDivision(divisi) {
-      currentDivisi = divisi;
-      
-      // Update active state
-      document.querySelectorAll('.division-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('onclick').includes(divisi)) {
-          btn.classList.add('active');
-        }
-      });
-
-      // Close mobile menu
-      if (window.innerWidth <= 768) {
-        toggleMenu();
-      }
-
-      // Load candidates
-      await loadCandidates(divisi);
-    }
-
-    // Load Candidates
     async function loadCandidates(divisi) {
       const content = document.getElementById('content');
-      content.innerHTML = `
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>Memuat data...</p>
-        </div>
-      `;
-
+      const statsBar = document.getElementById('statsBar');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
+      statsBar.style.display = 'none';
       try {
-        const response = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
-        const result = await response.json();
-        
-        if (!result.success) {
-          throw new Error(result.error || 'Gagal memuat data');
-        }
-
-        allCandidates = result.data || [];
-        
-        // Update stats
-        document.getElementById('statTotal').textContent = allCandidates.length;
-        const reviewed = allCandidates.filter(c => Object.keys(c.ratings || {}).length > 0).length;
+        const res = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
+        const result = await res.json();
+        if (!result.success) throw new Error(result.error);
+        allCandidatesData = result.data || [];
+        document.getElementById('statTotal').textContent = allCandidatesData.length;
+        const reviewed = allCandidatesData.filter(c => Object.keys(c.ratings || {}).length > 0).length;
         document.getElementById('statReviewed').textContent = reviewed;
-
-        if (allCandidates.length === 0) {
-          content.innerHTML = `
-            <div class="empty">
-              <div class="empty-icon">📭</div>
-              <h3>Belum Ada Review</h3>
-              <p>Belum ada kandidat yang sudah direview di divisi ini.</p>
-            </div>
-          `;
+        statsBar.style.display = 'grid';
+        if (allCandidatesData.length === 0) {
+          content.innerHTML = '<div class="empty"><p>📭 Tidak ada data kandidat</p></div>';
           return;
         }
-
-        renderCandidates();
-      } catch (error) {
-        console.error('Error loading candidates:', error);
-        content.innerHTML = `
-          <div class="empty">
-            <div class="empty-icon">⚠️</div>
-            <h3>Gagal Memuat Data</h3>
-            <p>${error.message}</p>
-          </div>
-        `;
-      }
+        renderCandidates(allCandidatesData);
+      } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
     }
 
-    // Render Candidates
-    function renderCandidates() {
+    function renderCandidates(candidates) {
       const content = document.getElementById('content');
-      
-      content.innerHTML = `
-        <div class="candidate-grid">
-          ${allCandidates.map((candidate, idx) => {
-            const fotoUrl = convertDriveUrl(candidate.foto);
-            const ratings = Object.values(candidate.ratings || {});
-            
-            return `
-              <div class="candidate-card" onclick="openModal(${idx})">
-                <div class="card-header">
-                  ${fotoUrl 
-                    ? `<img src="${fotoUrl}" alt="${candidate.nama}" class="card-photo" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
-                    : '<div class="card-photo placeholder">👤</div>'
-                  }
-                  <div class="card-info">
-                    <h3 class="card-name">${candidate.nama}</h3>
-                    <span class="card-class">Kelas ${candidate.kelas}</span>
-                    <div class="card-divisions">
-                      ${candidate.divisiDilamar.map(d => capitalize(d)).join(', ')}
-                    </div>
-                  </div>
-                </div>
-                <div class="ratings-preview">
-                  ${ratings.map(r => `
-                    <span class="rating-badge" data-rating="${r.rating}">
-                      ${getStars(r.rating)} ${RATING_LABELS[r.rating]}
-                    </span>
-                  `).join('')}
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
+      let html = '<div class="candidate-grid">';
+      candidates.forEach((c, idx) => {
+        const fotoUrl = convertDriveUrl(c.foto);
+        const fotoHtml = fotoUrl 
+          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
+          : '<div class="card-photo placeholder">👤</div>';
+        
+        let ratingsHtml = '';
+        Object.values(c.ratings).forEach(r => {
+          ratingsHtml += `<div class="rating-item">
+            <div class="rating-header">
+              <span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+              <span class="rating-div">${r.divName}</span>
+            </div>
+            ${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}
+          </div>`;
+        });
+
+        const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+        html += `<div class="card" onclick="openModal(${idx})">
+          ${fotoHtml}
+          <div class="card-info">
+            <div class="card-name">${c.nama}</div>
+            <span class="card-class">Kelas ${c.kelas}</span>
+            <div class="card-divisi">🎯 ${divText}</div>
+            <div class="rating-list">${ratingsHtml}</div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+      content.innerHTML = html;
     }
 
-    // Open Modal
     function openModal(idx) {
-      const candidate = allCandidates[idx];
-      const fotoUrl = convertDriveUrl(candidate.foto);
-      
+      const c = allCandidatesData[idx];
+      if (!c) return;
+      const fotoUrl = convertDriveUrl(c.foto);
       document.getElementById('modalPhoto').innerHTML = fotoUrl 
-        ? `<img src="${fotoUrl}" alt="${candidate.nama}" class="modal-photo" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
+        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
         : '<div class="modal-photo placeholder">👤</div>';
+      document.getElementById('modalName').textContent = c.nama;
+      document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
+      document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`).join('');
       
-      document.getElementById('modalName').textContent = candidate.nama;
-      document.getElementById('modalClass').textContent = `Kelas ${candidate.kelas}`;
-      
-      document.getElementById('modalDivisions').innerHTML = candidate.divisiDilamar
-        .map(d => `<span class="division-tag">${capitalize(d)}</span>`)
-        .join('');
-      
-      const ratings = Object.values(candidate.ratings || {});
-      document.getElementById('modalRatings').innerHTML = ratings.map(r => `
-        <div class="rating-card">
-          <div class="rating-card-header">
-            <span class="rating-card-badge" data-rating="${r.rating}">
-              ${getStars(r.rating)} ${RATING_LABELS[r.rating]}
-            </span>
-            <span style="color: var(--text-secondary); font-size: 13px;">${r.divName}</span>
+      let ratingsHtml = '';
+      Object.values(c.ratings).forEach(r => {
+        ratingsHtml += `<div class="modal-rating-card">
+          <div class="modal-rating-header">
+            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+            <span class="modal-rating-div">${r.divName}</span>
           </div>
-          <div class="rating-card-reason">${r.alasan || 'Tidak ada alasan'}</div>
-        </div>
-      `).join('');
-      
+          <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
+        </div>`;
+      });
+      document.getElementById('modalRatings').innerHTML = ratingsHtml;
       document.getElementById('detailModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    // Close Modal
     function closeModal() {
       document.getElementById('detailModal').classList.remove('active');
       document.body.style.overflow = '';
     }
-
-    function closeModalOnBackdrop(event) {
-      if (event.target === event.currentTarget) {
-        closeModal();
-      }
-    }
-
-    // Helper Functions
-    function getStars(rating) {
-      return '⭐'.repeat(rating);
-    }
-
-    function capitalize(str) {
-      if (!str) return '';
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+    function closeModalOnBackdrop(e) { if (e.target === e.currentTarget) closeModal(); }
 
     function convertDriveUrl(url) {
-      if (!url || !url.includes('drive.google.com')) return '';
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://lh3.googleusercontent.com/d/${match[0]}` : '';
+      if (!url) return '';
+      const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
+      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
     }
   </script>
 </body>
