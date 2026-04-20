@@ -7,100 +7,98 @@
   <title>Dashboard Review SHC 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0a0a0f; --surface: #14141c; --surface-2: #1e1e2a; --card: #232330;
-      --border: #2a2a3a; --accent: #7c6bff; --accent-light: #9b8eff;
-      --text: #f0eeff; --text-secondary: #b8b5d0; --muted: #7a7794;
-      --star-1: #ff4757; --star-2: #ff9f43; --star-3: #2ed573; --star-4: #7c6bff;
-      --radius-md: 12px; --radius-lg: 16px;
-      --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; font-size: 14px; }
-    body { background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
-
-    .dashboard { display: flex; min-height: 100dvh; }
-    .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: calc(20px + var(--safe-top)) 12px 20px; position: fixed; height: 100dvh; overflow-y: auto; z-index: 1000; left: 0; top: 0; transition: transform 0.3s ease; }
-    .sidebar-header { padding: 8px 8px 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-    .sidebar-logo { font-size: 18px; font-weight: 800; background: linear-gradient(135deg, var(--accent-light), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .sidebar-subtitle { font-size: 11px; color: var(--muted); }
-    .sidebar-title { font-size: 10px; font-weight: 700; color: var(--muted); margin: 10px 0; text-transform: uppercase; letter-spacing: 0.8px; padding: 0 8px; }
-    .div-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; margin-bottom: 4px; background: transparent; border: 1px solid transparent; border-radius: var(--radius-md); color: var(--text-secondary); font-size: 13px; font-weight: 500; text-align: left; cursor: pointer; transition: all 0.2s ease; min-height: 44px; font-family: inherit; }
-    .div-btn:hover { background: rgba(124, 107, 255, 0.08); color: var(--text); }
-    .div-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-    .div-btn-icon { font-size: 16px; flex-shrink: 0; }
+    :root{--bg:#0a0a0f;--surface:#14141c;--surface-2:#1e1e2a;--card:#232330;--border:#2a2a3a;--accent:#7c6bff;--accent-light:#9b8eff;--text:#f0eeff;--text-secondary:#b8b5d0;--muted:#7a7794;--star-1:#ff4757;--star-2:#ff9f43;--star-3:#2ed573;--star-4:#7c6bff;--radius-md:12px;--radius-lg:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;font-size:14px}
+    body{background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+    .dashboard{display:flex;min-height:100dvh}
+    .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);padding:calc(20px + var(--safe-top)) 12px 20px;position:fixed;height:100dvh;overflow-y:auto;z-index:1000;left:0;top:0;transition:transform 0.3s ease}
+    .sidebar-header{padding:8px 8px 16px;border-bottom:1px solid var(--border);margin-bottom:16px}
+    .sidebar-logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent-light),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .sidebar-subtitle{font-size:11px;color:var(--muted)}
+    .sidebar-title{font-size:10px;font-weight:700;color:var(--muted);margin:10px 0;text-transform:uppercase;letter-spacing:0.8px;padding:0 8px}
+    .div-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;margin-bottom:4px;background:transparent;border:1px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary);font-size:13px;font-weight:500;text-align:left;cursor:pointer;transition:all 0.2s ease;min-height:44px;font-family:inherit}
+    .div-btn:hover{background:rgba(124,107,255,0.08);color:var(--text)}
+    .div-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600}
+    .div-btn-icon{font-size:16px;flex-shrink:0}
+    .menu-toggle{display:none;position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:1100;width:48px;height:48px;background:var(--accent);border:none;border-radius:var(--radius-md);color:white;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,107,255,0.25)}
+    .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.3s ease}
+    .overlay.show{display:block;opacity:1}
+    .main{margin-left:260px;flex:1;padding:calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom));min-height:100dvh}
+    .header{margin-bottom:24px}
+    .header h1{font-size:22px;font-weight:800}
+    .header p{color:var(--muted);font-size:13px;margin-top:8px}
+    .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px}
+    .stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
+    .stat-value{font-size:24px;font-weight:800;color:var(--accent-light);margin-top:4px}
+    .candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.25s ease;position:relative}
+    .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
+    .card:active{transform:scale(0.985)}
+    .card-photo{width:70px;height:90px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
+    .card-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:32px}
+    .card-info{flex:1;min-width:0}
+    .card-name{font-size:15px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .card-class{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
+    .card-divisi{font-size:11px;color:var(--muted)}
+    .rating-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+    .rating-item{background:var(--card);border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
+    .rating-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+    .rating-badge{font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px}
+    .rating-badge[data-rating="1"]{background:rgba(255,71,87,0.15);color:var(--star-1)}
+    .rating-badge[data-rating="2"]{background:rgba(255,159,67,0.15);color:var(--star-2)}
+    .rating-badge[data-rating="3"]{background:rgba(46,213,115,0.15);color:var(--star-3)}
+    .rating-badge[data-rating="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
+    .rating-div{font-size:11px;font-weight:600;color:var(--text-secondary)}
+    .rating-reason{font-size:11px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .loading,.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;color:var(--muted);text-align:center}
+    .spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s ease}
+    .modal-overlay.active{display:flex;opacity:1}
+    .modal-content{background:var(--surface);width:100%;max-width:680px;max-height:85dvh;border-radius:var(--radius-lg);display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.5);border:1px solid var(--border)}
+    .modal-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;flex-shrink:0}
+    .modal-close{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .modal-photo{width:72px;height:92px;border-radius:var(--radius-md);object-fit:cover;background:var(--card);flex-shrink:0;border:1px solid var(--border)}
+    .modal-photo.placeholder{display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted)}
+    .modal-title{font-size:18px;font-weight:800;line-height:1.3}
+    .modal-subtitle{font-size:13px;color:var(--accent-light);margin-top:4px;font-weight:600}
+    .modal-body{padding:20px;overflow-y:auto;flex:1}
+    .modal-section{margin-bottom:24px}
+    .modal-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:12px;letter-spacing:0.6px}
+    .modal-divisi-list{display:flex;flex-wrap:wrap;gap:8px}
+    .modal-divisi-tag{background:rgba(124,107,255,0.12);color:var(--accent-light);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600}
+    .modal-rating-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
+    .modal-rating-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .modal-rating-badge{font-size:13px;font-weight:800;padding:4px 10px;border-radius:6px}
+    .modal-rating-reason{font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
     
-    .menu-toggle { display: none; position: fixed; top: calc(12px + var(--safe-top)); left: 12px; z-index: 1100; width: 48px; height: 48px; background: var(--accent); border: none; border-radius: var(--radius-md); color: white; font-size: 20px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(124, 107, 255, 0.25); }
-    .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 999; opacity: 0; transition: opacity 0.3s ease; }
-    .overlay.show { display: block; opacity: 1; }
+    /* 🔍 Search Box */
+    .search-wrapper{margin:16px 0 20px}
+    .search-box{position:relative;max-width:100%}
+    .search-input{width:100%;padding:10px 14px 10px 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:13px;transition:border-color 0.2s ease}
+    .search-input:focus{outline:none;border-color:var(--accent)}
+    .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+    .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;display:none}
+    .search-clear.visible{display:block}
+    .search-clear:hover{color:var(--text)}
+    .search-hint{font-size:11px;color:var(--muted);margin-top:6px}
     
-    .main { margin-left: 260px; flex: 1; padding: calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom)); min-height: 100dvh; }
-    .header { margin-bottom: 24px; }
-    .header h1 { font-size: 22px; font-weight: 800; }
-    .header p { color: var(--muted); font-size: 13px; margin-top: 8px; }
-    
-    .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; }
-    .stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
-    .stat-value { font-size: 24px; font-weight: 800; color: var(--accent-light); margin-top: 4px; }
-    
-    .candidate-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; display: flex; gap: 14px; cursor: pointer; transition: all 0.25s ease; position: relative; }
-    .card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(124, 107, 255, 0.15); }
-    .card:active { transform: scale(0.985); }
-    .card-photo { width: 70px; height: 90px; border-radius: var(--radius-md); object-fit: cover; flex-shrink: 0; background: var(--card); border: 1px solid var(--border); }
-    .card-photo.placeholder { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 32px; }
-    .card-info { flex: 1; min-width: 0; }
-    .card-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-class { font-size: 12px; color: var(--accent-light); font-weight: 600; background: rgba(124, 107, 255, 0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
-    .card-divisi { font-size: 11px; color: var(--muted); }
-    .rating-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-    .rating-item { background: var(--card); border-radius: 8px; padding: 8px 10px; border: 1px solid var(--border); }
-    .rating-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-    .rating-badge { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px; }
-    .rating-badge[data-rating="1"] { background: rgba(255, 71, 87, 0.15); color: var(--star-1); }
-    .rating-badge[data-rating="2"] { background: rgba(255, 159, 67, 0.15); color: var(--star-2); }
-    .rating-badge[data-rating="3"] { background: rgba(46, 213, 115, 0.15); color: var(--star-3); }
-    .rating-badge[data-rating="4"] { background: rgba(124, 107, 255, 0.15); color: var(--star-4); }
-    .rating-div { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
-    .rating-reason { font-size: 11px; color: var(--muted); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    
-    .loading, .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; color: var(--muted); text-align: center; }
-    .spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 16px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
-    .modal-overlay.active { display: flex; opacity: 1; }
-    .modal-content { background: var(--surface); width: 100%; max-width: 680px; max-height: 85dvh; border-radius: var(--radius-lg); display: flex; flex-direction: column; box-shadow: 0 16px 48px rgba(0,0,0,0.5); border: 1px solid var(--border); }
-    .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 16px; flex-shrink: 0; }
-    .modal-close { margin-left: auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .modal-photo { width: 72px; height: 92px; border-radius: var(--radius-md); object-fit: cover; background: var(--card); flex-shrink: 0; border: 1px solid var(--border); }
-    .modal-photo.placeholder { display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--muted); }
-    .modal-title { font-size: 18px; font-weight: 800; line-height: 1.3; }
-    .modal-subtitle { font-size: 13px; color: var(--accent-light); margin-top: 4px; font-weight: 600; }
-    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
-    .modal-section { margin-bottom: 24px; }
-    .modal-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.6px; }
-    .modal-divisi-list { display: flex; flex-wrap: wrap; gap: 8px; }
-    .modal-divisi-tag { background: rgba(124, 107, 255, 0.12); color: var(--accent-light); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
-    .modal-rating-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; }
-    .modal-rating-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .modal-rating-badge { font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
-    .modal-rating-reason { font-size: 13px; color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap; padding-top: 8px; border-top: 1px solid var(--border); margin-top: 8px; }
-
-    @media (max-width: 768px) {
-      .menu-toggle { display: flex !important; }
-      .sidebar { width: 85vw; max-width: 320px; transform: translateX(-100%); padding-top: calc(60px + var(--safe-top)); }
-      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 32px rgba(0,0,0,0.5); }
-      .main { margin-left: 0; width: 100%; padding: calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom)); }
-      .candidate-grid { grid-template-columns: 1fr; gap: 12px; }
-      .card { padding: 14px; gap: 12px; }
-      .card-photo { width: 64px; height: 82px; }
-      .modal-overlay { align-items: flex-end; padding: 0; }
-      .modal-content { max-width: 100%; max-height: 92dvh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin-bottom: var(--safe-bottom); }
-      .modal-header { padding: 18px 16px; }
-      .modal-body { padding: 16px; }
-      .modal-photo { width: 60px; height: 78px; }
+    @media(max-width:768px){
+      .menu-toggle{display:flex!important}
+      .sidebar{width:85vw;max-width:320px;transform:translateX(-100%);padding-top:calc(60px + var(--safe-top))}
+      .sidebar.open{transform:translateX(0);box-shadow:4px 0 32px rgba(0,0,0,0.5)}
+      .main{margin-left:0;width:100%;padding:calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom))}
+      .candidate-grid{grid-template-columns:1fr;gap:12px}
+      .card{padding:14px;gap:12px}
+      .card-photo{width:64px;height:82px}
+      .modal-overlay{align-items:flex-end;padding:0}
+      .modal-content{max-width:100%;max-height:92dvh;border-radius:var(--radius-lg) var(--radius-lg) 0 0;margin-bottom:var(--safe-bottom)}
+      .modal-header{padding:18px 16px}
+      .modal-body{padding:16px}
+      .modal-photo{width:60px;height:78px}
+      .search-wrapper{margin:12px 0 16px}
     }
   </style>
 </head>
@@ -122,7 +120,18 @@
       <div class="header">
         <h1>📊 Review Kandidat</h1>
         <p>Klik kartu untuk melihat detail rating & komentar</p>
+        
+        <!-- 🔍 Search Box -->
+        <div class="search-wrapper">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau kelas..." autocomplete="off">
+            <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+          </div>
+          <div class="search-hint">Contoh: "gwen", "12", "xii"</div>
+        </div>
       </div>
+      
       <div class="stats-bar" id="statsBar" style="display:none">
         <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
         <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
@@ -160,6 +169,43 @@
     const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
     let currentDivisi = 'all';
     let allCandidatesData = [];
+    
+    // 🔍 Search + Debounce
+    let searchTimeout = null;
+    let currentSearchQuery = '';
+    
+    function debounce(func, delay) {
+      return function(...args) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+    
+    function filterCandidates(query, candidates) {
+      if (!query || query.trim() === '') return candidates;
+      const q = query.toLowerCase().trim();
+      return candidates.filter(c => 
+        (c.nama && c.nama.toLowerCase().includes(q)) || 
+        (c.kelas && String(c.kelas).toLowerCase().includes(q))
+      );
+    }
+    
+    function handleSearch(e) {
+      currentSearchQuery = e.target.value;
+      const clearBtn = document.getElementById('searchClear');
+      clearBtn.classList.toggle('visible', currentSearchQuery.length > 0);
+      const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
+      renderCandidates(filtered);
+    }
+    
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      currentSearchQuery = '';
+      document.getElementById('searchClear').classList.remove('visible');
+      renderCandidates(allCandidatesData);
+      input.focus();
+    }
 
     function toggleMenu() {
       const sidebar = document.getElementById('sidebar');
@@ -173,7 +219,13 @@
     document.addEventListener('DOMContentLoaded', async () => {
       await loadDivisions();
       await loadCandidates('all');
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); if(document.getElementById('sidebar').classList.contains('open')) toggleMenu(); }});
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); } });
+      
+      // 🔍 Initialize search with debounce
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', debounce(handleSearch, 300));
+      }
     });
 
     async function loadDivisions() {
@@ -191,6 +243,8 @@
             document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentDivisi = d.id;
+            // 🔍 Reset search when changing division
+            clearSearch();
             await loadCandidates(d.id);
             if (window.innerWidth <= 768) toggleMenu();
           };
@@ -221,36 +275,25 @@
       } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
     }
 
-    function renderCandidates(candidates) {
+    // ✅ Update: renderCandidates accepts parameter
+    function renderCandidates(candidates = allCandidatesData) {
       const content = document.getElementById('content');
+      if (!candidates || candidates.length === 0) {
+        content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Tidak ada kandidat ditemukan${currentSearchQuery ? ` untuk "<strong>${currentSearchQuery}</strong>"` : ''}</p>${currentSearchQuery ? `<button class="btn btn-secondary" onclick="clearSearch()">Tampilkan Semua</button>` : ''}</div>`;
+        return;
+      }
       let html = '<div class="candidate-grid">';
       candidates.forEach((c, idx) => {
         const fotoUrl = convertDriveUrl(c.foto);
-        const fotoHtml = fotoUrl 
+        const fotoHtml = fotoUrl
           ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
           : '<div class="card-photo placeholder">👤</div>';
-        
         let ratingsHtml = '';
         Object.values(c.ratings).forEach(r => {
-          ratingsHtml += `<div class="rating-item">
-            <div class="rating-header">
-              <span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
-              <span class="rating-div">${r.divName}</span>
-            </div>
-            ${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}
-          </div>`;
+          ratingsHtml += `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`;
         });
-
         const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        html += `<div class="card" onclick="openModal(${idx})">
-          ${fotoHtml}
-          <div class="card-info">
-            <div class="card-name">${c.nama}</div>
-            <span class="card-class">Kelas ${c.kelas}</span>
-            <div class="card-divisi">🎯 ${divText}</div>
-            <div class="rating-list">${ratingsHtml}</div>
-          </div>
-        </div>`;
+        html += `<div class="card" onclick="openModal(${idx})">${fotoHtml}<div class="card-info"><div class="card-name">${c.nama}</div><span class="card-class">Kelas ${c.kelas}</span><div class="card-divisi">🎯 ${divText}</div><div class="rating-list">${ratingsHtml}</div></div></div>`;
       });
       html += '</div>';
       content.innerHTML = html;
@@ -260,22 +303,13 @@
       const c = allCandidatesData[idx];
       if (!c) return;
       const fotoUrl = convertDriveUrl(c.foto);
-      document.getElementById('modalPhoto').innerHTML = fotoUrl 
-        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
-        : '<div class="modal-photo placeholder">👤</div>';
+      document.getElementById('modalPhoto').innerHTML = fotoUrl ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">` : '<div class="modal-photo placeholder">👤</div>';
       document.getElementById('modalName').textContent = c.nama;
       document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
       document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`).join('');
-      
       let ratingsHtml = '';
       Object.values(c.ratings).forEach(r => {
-        ratingsHtml += `<div class="modal-rating-card">
-          <div class="modal-rating-header">
-            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
-            <span class="modal-rating-div">${r.divName}</span>
-          </div>
-          <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
-        </div>`;
+        ratingsHtml += `<div class="modal-rating-card"><div class="modal-rating-header"><span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="modal-rating-div">${r.divName}</span></div><div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div></div>`;
       });
       document.getElementById('modalRatings').innerHTML = ratingsHtml;
       document.getElementById('detailModal').classList.add('active');
@@ -287,7 +321,6 @@
       document.body.style.overflow = '';
     }
     function closeModalOnBackdrop(e) { if (e.target === e.currentTarget) closeModal(); }
-
     function convertDriveUrl(url) {
       if (!url) return '';
       const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
