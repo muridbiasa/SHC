@@ -35,8 +35,18 @@
     .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
     .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
     
-    .candidate-photo { width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius); margin-bottom: 16px; background: var(--card); border: 1px solid var(--border); }
-    .candidate-photo.placeholder { display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--muted); }
+    /* PERBAIKAN FOTO DISINI */
+    .candidate-photo {
+      width: 100%;
+      height: auto; /* Tinggi otomatis menyesuaikan rasio foto asli */
+      max-height: 350px; /* Batas maksimal agar tidak terlalu panjang di desktop */
+      object-fit: contain; /* PENTING: Menampilkan SELURUH foto tanpa kepotong */
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    .candidate-photo.placeholder { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--muted); }
     
     .info-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
     .info-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
@@ -86,6 +96,8 @@
     @media (max-width: 640px) {
       .rating-grid { grid-template-columns: 1fr; }
       .btn-group { grid-template-columns: 1fr; }
+      /* Khusus mobile, foto boleh lebih panjang */
+      .candidate-photo { max-height: 400px; } 
     }
   </style>
 </head>
@@ -140,7 +152,7 @@
       "UPLOAD DI SINI!"
     ];
 
-    // INDEX PERTANYAAN YANG INGIN DITAMPILKAN (skip yang tidak penting)
+    // INDEX PERTANYAAN YANG INGIN DITAMPILKAN
     const QUESTIONS_TO_SHOW = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18];
 
     let currentDivisi = null;
