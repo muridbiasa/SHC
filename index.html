@@ -1,455 +1,81 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Review Kandidat SHC 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0f0f13;
-      --surface: #1a1a22;
-      --card: #232330;
-      --border: #2e2e3d;
-      --accent: #7c6bff;
-      --text: #f0eeff;
-      --muted: #9390ad;
-      --success: #2ed573;
-      --warning: #ff9f43;
-      --error: #ff4757;
-      --radius: 12px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 16px;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .header h1 {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .header p {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 16px;
-    }
-
-    .back-btn:active {
-      transform: scale(0.96);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .card:active {
-      transform: scale(0.96);
-    }
-
-    .card-icon {
-      font-size: 28px;
-      margin-bottom: 8px;
-    }
-
-    .card-name {
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .progress {
-      background: var(--card);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .progress-text {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .progress-bar {
-      height: 6px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--accent);
-      width: 0%;
-      transition: width 0.3s;
-    }
-
-    /* PERBAIKAN FOTO DISINI */
-    .candidate-photo {
-      width: 100%;
-      height: auto;
-      /* Tinggi otomatis menyesuaikan rasio foto asli */
-      max-height: 350px;
-      /* Batas maksimal agar tidak terlalu panjang di desktop */
-      object-fit: contain;
-      /* PENTING: Menampilkan SELURUH foto tanpa kepotong */
-      border-radius: var(--radius);
-      margin-bottom: 16px;
-      background: var(--card);
-      border: 1px solid var(--border);
-    }
-
-    .candidate-photo.placeholder {
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      color: var(--muted);
-    }
-
-    .info-box {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .info-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .info-text {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* Questions Section */
-    .questions-section {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .questions-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .question-item {
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .question-item:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .question-number {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-
-    .question-text {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-      line-height: 1.4;
-    }
-
-    .question-answer {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-      padding: 8px 12px;
-      background: var(--surface);
-      border-radius: 6px;
-    }
-
-    .question-answer.empty {
-      font-style: italic;
-      color: var(--muted);
-      opacity: 0.7;
-    }
-
-    .rating-section {
-      margin-top: 20px;
-    }
-
-    .rating-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-
-    .rating-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .rating-btn {
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .rating-btn.selected {
-      border-color: var(--accent);
-      background: rgba(124, 107, 255, 0.1);
-    }
-
-    .rating-btn:active {
-      transform: scale(0.96);
-    }
-
-    .rating-stars {
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-
-    .rating-label {
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .comment-box {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      resize: vertical;
-      min-height: 100px;
-      margin-bottom: 8px;
-    }
-
-    .comment-box:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .char-count {
-      text-align: right;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .char-count.valid {
-      color: var(--success);
-    }
-
-    .char-count.invalid {
-      color: var(--warning);
-    }
-
-    .btn-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .btn {
-      padding: 12px;
-      border: none;
-      border-radius: var(--radius);
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn:active {
-      transform: scale(0.96);
-    }
-
-    .btn-secondary {
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .empty-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-
-    .empty-text {
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      opacity: 0;
-      transition: all 0.3s;
-      z-index: 9999;
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    .toast.success {
-      border-left: 4px solid var(--success);
-      color: var(--success);
-    }
-
-    .toast.error {
-      border-left: 4px solid var(--error);
-      color: var(--error);
-    }
-
-    @media (max-width: 640px) {
-      .rating-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .btn-group {
-        grid-template-columns: 1fr;
-      }
-
-      /* Khusus mobile, foto boleh lebih panjang */
-      .candidate-photo {
-        max-height: 400px;
-      }
-    }
+    :root{--bg:#0f0f13;--surface:#1a1a22;--card:#232330;--border:#2e2e3d;--accent:#7c6bff;--text:#f0eeff;--muted:#9390ad;--success:#2ed573;--warning:#ff9f43;--error:#ff4757;--radius:12px}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:16px}
+    .container{max-width:700px;margin:0 auto}
+    .header{text-align:center;margin-bottom:24px}
+    .header h1{font-size:20px;font-weight:700;margin-bottom:4px}
+    .header p{font-size:13px;color:var(--muted)}
+    .back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:16px}
+    .back-btn:active{transform:scale(0.96)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:all 0.2s}
+    .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+    .card:active{transform:scale(0.96)}
+    .card-icon{font-size:28px;margin-bottom:8px}
+    .card-name{font-size:13px;font-weight:600}
+    .progress{background:var(--card);border-radius:8px;padding:12px;margin-bottom:16px;text-align:center}
+    .progress-text{font-size:12px;color:var(--muted);margin-bottom:8px}
+    .progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+    .progress-fill{height:100%;background:var(--accent);width:0%;transition:width 0.3s}
+    .candidate-photo{width:100%;height:auto;max-height:350px;object-fit:contain;border-radius:var(--radius);margin-bottom:16px;background:var(--card);border:1px solid var(--border)}
+    .candidate-photo.placeholder{height:200px;display:flex;align-items:center;justify-content:center;font-size:48px;color:var(--muted)}
+    .info-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+    .info-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+    .info-text{font-size:14px;line-height:1.5}
+    .questions-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+    .questions-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .question-item{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+    .question-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+    .question-number{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px}
+    .question-text{font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4}
+    .question-answer{font-size:13px;color:var(--muted);line-height:1.5;padding:8px 12px;background:var(--surface);border-radius:6px}
+    .question-answer.empty{font-style:italic;color:var(--muted);opacity:0.7}
+    .rating-section{margin-top:20px}
+    .rating-title{font-size:15px;font-weight:700;margin-bottom:12px;text-align:center}
+    .rating-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+    .rating-btn{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center;cursor:pointer;transition:all 0.2s}
+    .rating-btn.selected{border-color:var(--accent);background:rgba(124,107,255,0.1)}
+    .rating-btn:active{transform:scale(0.96)}
+    .rating-stars{font-size:18px;margin-bottom:4px}
+    .rating-label{font-size:12px;font-weight:600}
+    .comment-box{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;color:var(--text);font-family:inherit;font-size:14px;resize:vertical;min-height:100px;margin-bottom:8px}
+    .comment-box:focus{outline:none;border-color:var(--accent)}
+    .char-count{text-align:right;font-size:12px;color:var(--muted);margin-bottom:16px}
+    .char-count.valid{color:var(--success)}
+    .char-count.invalid{color:var(--warning)}
+    .btn-group{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn{padding:12px;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s}
+    .btn:active{transform:scale(0.96)}
+    .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed}
+    .empty{text-align:center;padding:40px 20px}
+    .empty-icon{font-size:48px;margin-bottom:12px}
+    .empty-text{color:var(--muted);margin-bottom:20px}
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border);padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:9999}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .toast.success{border-left:4px solid var(--success);color:var(--success)}
+    .toast.error{border-left:4px solid var(--error);color:var(--error)}
+    @media(max-width:640px){.rating-grid,.btn-group{grid-template-columns:1fr}.candidate-photo{max-height:400px}}
   </style>
 </head>
-
 <body>
   <div class="container">
     <div id="divisionView">
-      <div class="header">
-        <h1>📝 Review Kandidat SHC 2026</h1>
-        <p>Pilih divisi untuk memulai review</p>
-      </div>
-      <div class="grid" id="divisionGrid">
-        <div class="empty">
-          <div class="empty-icon">⏳</div>
-          <p>Memuat divisi...</p>
-        </div>
-      </div>
+      <div class="header"><h1>📝 Review Kandidat SHC 2026</h1><p>Pilih divisi untuk memulai review</p></div>
+      <div class="grid" id="divisionGrid"><div class="empty"><div class="empty-icon">⏳</div><p>Memuat divisi...</p></div></div>
     </div>
-
-    <div id="candidateView" style="display: none;">
+    <div id="candidateView" style="display:none">
       <button class="back-btn" onclick="backToDivisions()">← Kembali ke Divisi</button>
-      <div class="progress">
-        <div class="progress-text" id="progressText">0/0 Kandidat</div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-      </div>
+      <div class="progress"><div class="progress-text" id="progressText">0/0 Kandidat</div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
       <div id="candidateContent"></div>
     </div>
   </div>
@@ -459,230 +85,147 @@
     // ⚠️ GANTI DENGAN URL WEB APP APPS SCRIPT KAMU
     const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
 
-    // DAFTAR PERTANYAAN LENGKAP (sesuai dengan Code.gs)
-    const QUESTIONS = [
-      "Cap Waktu",
-      "Nama Lengkap",
-      "Kelas",
-      "Tanggal Lahir",
-      "Nomor HP",
-      "Apa tujuanmu mengikuti pendaftaran kepanitiaan SHC ini?",
-      "Sebutkan kekurangan serta kelebihanmu dalam hal sikap maupun sifat!",
-      "Bila terdapat seseorang yang memiliki pendapat yang berbeda denganmu, bagaimana tanggapanmu?",
-      "Adakah pengalaman dalam berorganisasi? Jika sudah pernah sebutkanlah!",
-      "Pernahkah melakukan sesuatu kesalahan selama bekerja sama dengan orang lain? Bagaimana caramu mempertanggungjawabkan kesalahan tersebut?",
-      "Apa solusimu apabila jadwal pribadimu bertabrakan dengan jadwal SHC nantinya? Jelaskan!",
-      "Apakah orang tua atau wali sudah memberikan perizinan untuk mengikuti kepanitiaan ini? Adakah batasan jam malam dari orang tua? Sebutkan!",
-      "Pilihlah divisi yang Anda inginkan (minimal 1, maksimal 3 divisi). Tugas divisi KLIK AKU",
-      "Manakah divisi yang lebih kamu prioritaskan diantara semua divisi yang kamu pilih? Mengapa?",
-      "Sebutkan skill yang bisa mendukung kamu untuk bergabung dengan divisi yang kamu inginkan! (Sebutkan setiap divisi apabila memilih divisi lebih dari 1)",
-      "Silahkan download lembar pernyataan KLIK AKU, lalu isi dengan tanda tangan yang telah discan, pastikan telah terisi semua lalu upload kembali dengan format yang sama!",
-      "Foto 3x4",
-      "Mengapa anda memilih 3 jobdesc tersebut?",
-      "Apakah kamu bersedia menginap di sekolah apabila masih banyak persiapan yang perlu dilakukan?",
-      "UPLOAD DI SINI!"
-    ];
+    const QUESTIONS = ["Cap Waktu","Nama Lengkap","Kelas","Tanggal Lahir","Nomor HP","Apa tujuanmu mengikuti pendaftaran kepanitiaan SHC ini?","Sebutkan kekurangan serta kelebihanmu dalam hal sikap maupun sifat!","Bila terdapat seseorang yang memiliki pendapat yang berbeda denganmu, bagaimana tanggapanmu?","Adakah pengalaman dalam berorganisasi? Jika sudah pernah sebutkanlah!","Pernahkah melakukan sesuatu kesalahan selama bekerja sama dengan orang lain? Bagaimana caramu mempertanggungjawabkan kesalahan tersebut?","Apa solusimu apabila jadwal pribadimu bertabrakan dengan jadwal SHC nantinya? Jelaskan!","Apakah orang tua atau wali sudah memberikan perizinan untuk mengikuti kepanitiaan ini? Adakah batasan jam malam dari orang tua? Sebutkan!","Pilihlah divisi yang Anda inginkan (minimal 1, maksimal 3 divisi). Tugas divisi KLIK AKU","Manakah divisi yang lebih kamu prioritaskan diantara semua divisi yang kamu pilih? Mengapa?","Sebutkan skill yang bisa mendukung kamu untuk bergabung dengan divisi yang kamu inginkan! (Sebutkan setiap divisi apabila memilih divisi lebih dari 1)","Silahkan download lembar pernyataan KLIK AKU, lalu isi dengan tanda tangan yang telah discan, pastikan telah terisi semua lalu upload kembali dengan format yang sama!","Foto 3x4","Mengapa anda memilih 3 jobdesc tersebut?","Apakah kamu bersedia menginap di sekolah apabila masih banyak persiapan yang perlu dilakukan?","UPLOAD DI SINI!"];
+    const QUESTIONS_TO_SHOW = [5,6,7,8,9,10,11,12,13,14,17,18];
 
-    // INDEX PERTANYAAN YANG INGIN DITAMPILKAN
-    const QUESTIONS_TO_SHOW = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18];
-
-    let currentDivisi = null;
-    let candidates = [];
-    let currentIndex = 0;
-    let selectedRating = null;
+    let currentDivisi=null, candidates=[], currentIndex=0, selectedRating=null;
 
     const RATING_MAP = {
-      1: { stars: '⭐', label: 'KURANG' },
-      2: { stars: '⭐⭐', label: 'RAGU-RAGU' },
-      3: { stars: '⭐⭐⭐', label: 'BAIK' },
-      4: { stars: '⭐⭐⭐⭐', label: 'BAGUS' }
+      1: {stars:'⭐', label:'KURANG'},
+      2: {stars:'⭐⭐', label:'RAGU-RAGU'},
+      3: {stars:'⭐⭐⭐', label:'BAIK'},
+      4: {stars:'⭐⭐⭐⭐', label:'BAGUS'}
     };
 
     document.addEventListener('DOMContentLoaded', loadDivisions);
 
-    async function loadDivisions() {
-      try {
-        const res = await fetch(`${API_BASE}?action=getDivisions`);
-        const data = await res.json();
-        if (!data.success) throw new Error(data.error);
+    async function loadDivisions(){
+      try{
+        const res=await fetch(API_BASE+'?action=getDivisions'), data=await res.json();
+        if(!data.success) throw new Error(data.error);
         renderDivisions(data.data);
-      } catch (e) {
-        document.getElementById('divisionGrid').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`;
-      }
+      }catch(e){ document.getElementById('divisionGrid').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><p>'+e.message+'</p></div>'; }
     }
 
-    function renderDivisions(divisions) {
-      const icons = { 'acara': '🎭', 'sekretaris': '📝', 'bendahara': '💰', 'perlengkapan': '🔧', 'keamanan': '🛡️', 'konsumsi': '🍽️', 'dana': '💵', 'promosi': '📢', 'dokumentasi': '📷', 'dekorasi': '🎨', 'desain': '✏️', 'art galery': '🖼️', 'akomodasi': '🏨', 'p3k': '🩹', 'mc': '🎤' };
-      document.getElementById('divisionGrid').innerHTML = divisions.map(d => `
-        <div class="card" onclick="selectDivision('${d.id}', '${d.name}')">
-          <div class="card-icon">${icons[d.id] || '📋'}</div>
-          <div class="card-name">${d.name}</div>
-        </div>
-      `).join('');
+    function renderDivisions(divisions){
+      const icons={'acara':'🎭','sekretaris':'📝','bendahara':'💰','perlengkapan':'🔧','keamanan':'🛡️','konsumsi':'🍽️','dana':'💵','promosi':'📢','dokumentasi':'📷','dekorasi':'🎨','desain':'✏️','art galery':'🖼️','akomodasi':'🏨','p3k':'🩹','mc':'🎤'};
+      document.getElementById('divisionGrid').innerHTML=divisions.map(d=>`<div class="card" onclick="selectDivision('${d.id}','${d.name}')"><div class="card-icon">${icons[d.id]||'📋'}</div><div class="card-name">${d.name}</div></div>`).join('');
     }
 
-    async function selectDivision(id, name) {
-      currentDivisi = { id, name };
-      document.getElementById('divisionView').style.display = 'none';
-      document.getElementById('candidateView').style.display = 'block';
+    async function selectDivision(id,name){
+      currentDivisi={id,name};
+      document.getElementById('divisionView').style.display='none';
+      document.getElementById('candidateView').style.display='block';
       await loadCandidates();
     }
 
-    function backToDivisions() {
-      if (confirm('Kembali ke pilihan divisi? Progress belum tersimpan akan hilang.')) {
-        document.getElementById('divisionView').style.display = 'block';
-        document.getElementById('candidateView').style.display = 'none';
-        currentDivisi = null;
-        candidates = [];
-        currentIndex = 0;
+    function backToDivisions(){
+      if(confirm('Kembali ke pilihan divisi? Progress belum tersimpan akan hilang.')){
+        document.getElementById('divisionView').style.display='block';
+        document.getElementById('candidateView').style.display='none';
+        currentDivisi=null; candidates=[]; currentIndex=0;
       }
     }
 
-    async function loadCandidates() {
-      try {
-        const res = await fetch(`${API_BASE}?action=getDataByDivisi&divisi=${currentDivisi.id}`);
-        const data = await res.json();
-        if (!data.success) throw new Error(data.error);
-        candidates = data.data || [];
-        currentIndex = 0;
-        renderCandidate();
-      } catch (e) {
-        document.getElementById('candidateContent').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`;
-      }
+    async function loadCandidates(){
+      try{
+        const res=await fetch(API_BASE+'?action=getDataByDivisi&divisi='+currentDivisi.id), data=await res.json();
+        if(!data.success) throw new Error(data.error);
+        candidates=data.data||[]; currentIndex=0; renderCandidate();
+      }catch(e){ document.getElementById('candidateContent').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><p>'+e.message+'</p></div>'; }
     }
 
-    function renderCandidate() {
-      const container = document.getElementById('candidateContent');
-      if (currentIndex >= candidates.length) {
-        container.innerHTML = `<div class="empty"><div class="empty-icon">🎉</div><p class="empty-text">Semua kandidat di <b>${currentDivisi.name}</b> sudah direview!</p><button class="btn btn-primary" onclick="backToDivisions()">Pilih Divisi Lain</button></div>`;
+    function renderCandidate(){
+      const container=document.getElementById('candidateContent');
+      if(currentIndex>=candidates.length){
+        container.innerHTML='<div class="empty"><div class="empty-icon">🎉</div><p class="empty-text">Semua kandidat di <b>'+currentDivisi.name+'</b> sudah direview!</p><button class="btn btn-primary" onclick="backToDivisions()">Pilih Divisi Lain</button></div>';
         return;
       }
+      const c=candidates[currentIndex], fotoUrl=convertDriveUrl(c.foto), progress=((currentIndex+1)/candidates.length)*100;
+      document.getElementById('progressText').textContent=(currentIndex+1)+'/'+candidates.length+' Kandidat';
+      document.getElementById('progressFill').style.width=progress+'%';
 
-      const c = candidates[currentIndex];
-      const fotoUrl = convertDriveUrl(c.foto);
-      const progress = ((currentIndex + 1) / candidates.length) * 100;
-      document.getElementById('progressText').textContent = `${currentIndex + 1}/${candidates.length} Kandidat`;
-      document.getElementById('progressFill').style.width = `${progress}%`;
-
-      // Render Questions
-      let questionsHtml = '';
-      QUESTIONS_TO_SHOW.forEach((qIndex, idx) => {
-        const answer = c.answers[qIndex] || '-';
-        questionsHtml += `
-          <div class="question-item">
-            <div class="question-number">Pertanyaan ${idx + 1}</div>
-            <div class="question-text">${QUESTIONS[qIndex]}</div>
-            <div class="question-answer ${answer === '-' ? 'empty' : ''}">${answer}</div>
-          </div>
-        `;
+      let questionsHtml='';
+      QUESTIONS_TO_SHOW.forEach((qIndex,idx)=>{
+        const answer=c.answers[qIndex]||'-';
+        questionsHtml+='<div class="question-item"><div class="question-number">Pertanyaan '+(idx+1)+'</div><div class="question-text">'+QUESTIONS[qIndex]+'</div><div class="question-answer '+(answer==='-'?'empty':'')+'">'+answer+'</div></div>';
       });
 
-      container.innerHTML = `
-        ${fotoUrl ? `<img src="${fotoUrl}" class="candidate-photo" alt="Foto" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'candidate-photo placeholder\\'>👤</div>'">` : '<div class="candidate-photo placeholder">👤</div>'}
-        
-        <div class="info-box">
-          <div class="info-title">👤 Data Kandidat</div>
-          <div class="info-text"><b>Nama:</b> ${c.nama}<br><b>Kelas:</b> ${c.kelas}<br><b>Prioritas:</b> ${c.prioritas || '-'}</div>
-        </div>
-
-        <div class="questions-section">
-          <div class="questions-title">📄 Jawaban Lengkap Kandidat</div>
-          ${questionsHtml}
-        </div>
-
+      container.innerHTML=`
+        ${fotoUrl?`<img src="${fotoUrl}" class="candidate-photo" alt="Foto" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'candidate-photo placeholder\\'>👤</div>'">`:'<div class="candidate-photo placeholder">👤</div>'}
+        <div class="info-box"><div class="info-title">👤 Data Kandidat</div><div class="info-text"><b>Nama:</b> ${c.nama}<br><b>Kelas:</b> ${c.kelas}<br><b>Prioritas:</b> ${c.prioritas||'-'}</div></div>
+        <div class="questions-section"><div class="questions-title">📄 Jawaban Lengkap Kandidat</div>${questionsHtml}</div>
         <div class="rating-section">
           <div class="rating-title">😐 Beri Rating</div>
           <div class="rating-grid">
-            ${Object.entries(RATING_MAP).map(([val, conf]) => `
-              <div class="rating-btn" data-val="${val}" onclick="pickRating(${val})">
-                <div class="rating-stars">${conf.stars}</div>
-                <div class="rating-label">${conf.label}</div>
-              </div>
-            `).join('')}
+            ${Object.entries(RATING_MAP).map(([val,conf])=>`<div class="rating-btn" data-val="${val}" onclick="pickRating(${val})"><div class="rating-stars">${conf.stars}</div><div class="rating-label">${conf.label}</div></div>`).join('')}
           </div>
-
           <textarea class="comment-box" id="commentBox" placeholder="Alasan rating (wajib min. 100 karakter)..." oninput="checkComment()"></textarea>
           <div class="char-count invalid" id="charCount">0 / 100 karakter</div>
-
           <div class="btn-group">
             <button class="btn btn-secondary" onclick="skipCandidate()">⏭ Lewati</button>
             <button class="btn btn-primary" id="saveBtn" onclick="saveRating()" disabled>💾 Simpan</button>
           </div>
-        </div>
-      `;
-      selectedRating = null;
+        </div>`;
+      selectedRating=null;
     }
 
-    function pickRating(val) {
-      selectedRating = val;
-      document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+    function pickRating(val){
+      selectedRating=val;
+      document.querySelectorAll('.rating-btn').forEach(b=>b.classList.remove('selected'));
       document.querySelector(`.rating-btn[data-val="${val}"]`).classList.add('selected');
       checkComment();
     }
 
-    function checkComment() {
-      const box = document.getElementById('commentBox');
-      const len = box.value.length;
-      const countEl = document.getElementById('charCount');
-      countEl.textContent = `${len} / 100 karakter`;
-      countEl.className = len >= 100 ? 'char-count valid' : 'char-count invalid';
-      document.getElementById('saveBtn').disabled = !(selectedRating && len >= 100);
+    function checkComment(){
+      const box=document.getElementById('commentBox'), len=box.value.length, countEl=document.getElementById('charCount');
+      countEl.textContent=len+' / 100 karakter';
+      countEl.className=len>=100?'char-count valid':'char-count invalid';
+      document.getElementById('saveBtn').disabled=!(selectedRating&&len>=100);
     }
 
-    function skipCandidate() {
-      if (confirm('Lewati kandidat ini?')) {
-        currentIndex++;
-        renderCandidate();
+    function skipCandidate(){ if(confirm('Lewati kandidat ini?')){ currentIndex++; renderCandidate(); } }
+
+    // ✅ FIX: Gunakan URLSearchParams (bukan JSON) agar tidak trigger preflight CORS
+    async function saveRating(){
+      const comment=document.getElementById('commentBox').value.trim();
+      if(!selectedRating||comment.length<100) return showToast('Lengkapi rating & komentar min. 100 karakter','error');
+      const btn=document.getElementById('saveBtn');
+      btn.disabled=true; btn.textContent='⏳ Menyimpan...';
+      const c=candidates[currentIndex];
+
+      // ✅ SIMPLE REQUEST: URLSearchParams + NO custom headers
+      const params=new URLSearchParams();
+      params.append('action','saveRating');
+      params.append('rowIndex',c.rowIndex);
+      params.append('rating',selectedRating);
+      params.append('catatan',comment);
+      params.append('divisi',currentDivisi.id);
+
+      try{
+        const res=await fetch(API_BASE,{ method:'POST', body:params }); // ❌ JANGAN set headers!
+        const data=await res.json();
+        if(!data.success) throw new Error(data.message);
+        showToast('✅ Rating berhasil disimpan!','success');
+        setTimeout(()=>{ currentIndex++; renderCandidate(); },1200);
+      }catch(e){
+        showToast(e.message,'error');
+        btn.disabled=false; btn.textContent='💾 Simpan';
       }
     }
 
-    async function saveRating() {
-      const comment = document.getElementById('commentBox').value.trim();
-      if (!selectedRating || comment.length < 100) return showToast('Lengkapi rating & komentar min. 100 karakter', 'error');
-
-      const btn = document.getElementById('saveBtn');
-      btn.disabled = true; btn.textContent = '⏳ Menyimpan...';
-
-      const c = candidates[currentIndex];
-
-      // ✅ PENTING: Gunakan URLSearchParams (bukan JSON) agar tidak trigger preflight CORS
-      const params = new URLSearchParams();
-      params.append('action', 'saveRating');
-      params.append('rowIndex', c.rowIndex);
-      params.append('rating', selectedRating);
-      params.append('catatan', comment);
-      params.append('divisi', currentDivisi.id);
-
-      try {
-        // ✅ PENTING: Jangan set header Content-Type! Browser akan otomatis pakai application/x-www-form-urlencoded
-        const res = await fetch(API_BASE, {
-          method: 'POST',
-          body: params
-          // ❌ JANGAN tambahkan headers: { 'Content-Type': 'application/json' }
-        });
-
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message);
-
-        showToast('✅ Rating berhasil disimpan!', 'success');
-        setTimeout(() => { currentIndex++; renderCandidate(); }, 1200);
-      } catch (e) {
-        showToast(e.message, 'error');
-        btn.disabled = false; btn.textContent = '💾 Simpan';
-      }
-    }
-    function showToast(msg, type) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.className = `toast ${type} show`;
-      setTimeout(() => t.classList.remove('show'), 3000);
+    function showToast(msg,type){
+      const t=document.getElementById('toast');
+      t.textContent=msg; t.className='toast '+type+' show';
+      setTimeout(()=>t.classList.remove('show'),3000);
     }
 
-    function convertDriveUrl(url) {
-      if (!url) return '';
-      const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
-      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
+    function convertDriveUrl(url){
+      if(!url) return '';
+      const patterns=[/\/d\/([a-zA-Z0-9_-]{25,})/,/[?&]id=([a-zA-Z0-9_-]{25,})/,/file\/d\/([a-zA-Z0-9_-]{25,})/];
+      for(let i=0;i<patterns.length;i++){ const m=url.match(patterns[i]); if(m) return 'https://lh3.googleusercontent.com/d/'+m[1]; }
+      return url;
     }
   </script>
 </body>
-
 </html>
