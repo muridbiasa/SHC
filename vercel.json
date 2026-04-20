@@ -1,0 +1,15 @@
+ercel · JSON
+Salin
+
+{
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    }
+  ]
+}

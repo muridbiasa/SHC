@@ -73,7 +73,6 @@
     .star-btn[data-rating="3"] .star-num { color: var(--star-3); }
     .star-btn[data-rating="4"] .star-num { color: var(--star-4); }
     
-    /* COMMENT SECTION STYLES */
     .comment-section { margin-bottom: 20px; display: none; animation: fadeSlideUp 0.2s; }
     .comment-section.visible { display: block; }
     .comment-label { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
@@ -89,7 +88,6 @@
     .error-msg { color: var(--star-1); font-size: 12px; margin-top: 4px; display: none; }
     .error-msg.show { display: block; }
     
-    /* BUTTONS */
     .save-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent), #9b8aff); border: none; border-radius: 12px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .save-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
     .save-btn:not(:disabled):active { transform: scale(0.97); }
@@ -98,107 +96,135 @@
     .save-btn.loading .btn-text { display: none; }
     .skip-btn { width: 100%; margin-top: 10px; padding: 12px; background: transparent; border: 1.5px solid var(--card-border); border-radius: 12px; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; }
     .skip-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .back-btn { width: 100%; margin-top: 16px; padding: 12px; background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 12px; color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer; }
-    .back-btn:hover { border-color: var(--accent); }
     
-    /* STATES */
-    .done-state, .empty-state { text-align: center; padding: 60px 20px; }
     .done-icon { font-size: 64px; margin-bottom: 16px; }
-    .done-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-    .done-sub { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+    .done-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .done-sub { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
     
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #2a2a38; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text-primary); box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 999; transition: transform 0.3s, opacity 0.3s; opacity: 0; }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast.success { border-color: rgba(109,207,129,0.4); }
-    .toast.error { border-color: rgba(255,92,92,0.4); color: var(--star-1); }
+    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 20px; font-size: 14px; font-weight: 600; box-shadow: var(--shadow); z-index: 999; opacity: 0; transition: all 0.3s; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: var(--star-3); color: var(--star-3); }
+    .toast.error { border-color: var(--star-1); color: var(--star-1); }
     
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- ===== HEADER ===== -->
     <div class="header">
       <div class="header-top">
         <div class="logo-dot"></div>
-        <span class="header-title">Review Kandidat SHC 2026</span>
+        <div class="header-title">Review Kandidat SHC 2026</div>
       </div>
     </div>
 
-    <div id="selectorScreen" class="selector-screen">
-      <h1 class="selector-title">Pilih Divisi</h1>
-      <p class="selector-sub">Pilih divisi yang ingin kamu review</p>
-      <div class="division-grid" id="divisionGrid"></div>
+    <!-- ===== SCREEN 1: Pilih Divisi ===== -->
+    <div id="selectorScreen" class="selector-screen hidden">
+      <h1 class="selector-title">Pilih Divisi untuk Review</h1>
+      <p class="selector-sub">Klik salah satu divisi di bawah untuk memulai</p>
+      <div id="divisionGrid" class="division-grid"></div>
     </div>
 
+    <!-- ===== SCREEN 2: Loading ===== -->
     <div id="loadingScreen" class="loading hidden">
       <div class="spinner"></div>
-      <p style="color:var(--text-muted); font-size:14px;">Memuat data kandidat...</p>
+      <div style="font-size: 14px; color: var(--text-muted);">Memuat data...</div>
     </div>
 
+    <!-- ===== SCREEN 3: Rating Kandidat ===== -->
     <div id="ratingScreen" class="hidden">
       <div class="progress-wrap">
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
-        <span class="progress-text" id="progressText">—</span>
+        <div class="progress-bar-bg">
+          <div id="progressFill" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div id="progressText" class="progress-text">0/0</div>
       </div>
 
       <div class="card">
         <div class="card-photo-wrap" id="photoContainer">
           <div class="card-photo-placeholder">Memuat foto...</div>
         </div>
+        
         <div class="card-body">
-          <div class="candidate-name" id="nama">—</div>
-          <div class="candidate-class" id="kelas">—</div>
+          <h2 id="nama" class="candidate-name">Loading...</h2>
+          <div id="kelas" class="candidate-class">Kelas -</div>
           
-          <div class="qa-section" id="qaPreview"></div>
+          <div class="section-label">Preview Jawaban</div>
+          <div id="qaPreview"></div>
           
-          <button class="toggle-answers" id="toggleAnswers" onclick="toggleAnswers()">📄 Lihat Jawaban Lengkap</button>
-          <div class="answers-container" id="allAnswers"></div>
-
-          <div class="rating-section">
-            <div class="section-label" style="margin-bottom:10px;">Beri Rating</div>
-            <div class="star-grid">
-              <button class="star-btn" data-rating="1" onclick="selectRating(1)"><span class="star-emoji">😞</span><span class="star-num">1</span><span class="star-label">Jelek</span></button>
-              <button class="star-btn" data-rating="2" onclick="selectRating(2)"><span class="star-emoji">🤔</span><span class="star-num">2</span><span class="star-label">Ragu</span></button>
-              <button class="star-btn" data-rating="3" onclick="selectRating(3)"><span class="star-emoji">👍</span><span class="star-num">3</span><span class="star-label">Bagus</span></button>
-              <button class="star-btn" data-rating="4" onclick="selectRating(4)"><span class="star-emoji">🌟</span><span class="star-num">4</span><span class="star-label">Lolos</span></button>
+          <button id="toggleAnswers" class="toggle-answers" onclick="toggleAnswers()">📄 Lihat Jawaban Lengkap</button>
+          <div id="allAnswers" class="answers-container"></div>
+          
+          <div class="qa-section">
+            <div class="section-label">Beri Rating</div>
+            <div class="rating-section">
+              <div class="star-grid">
+                <button class="star-btn" data-rating="1" onclick="selectRating(1)">
+                  <div class="star-emoji">😞</div>
+                  <div class="star-num">1</div>
+                  <div class="star-label">KURANG</div>
+                </button>
+                <button class="star-btn" data-rating="2" onclick="selectRating(2)">
+                  <div class="star-emoji">😐</div>
+                  <div class="star-num">2</div>
+                  <div class="star-label">CUKUP</div>
+                </button>
+                <button class="star-btn" data-rating="3" onclick="selectRating(3)">
+                  <div class="star-emoji">😊</div>
+                  <div class="star-num">3</div>
+                  <div class="star-label">BAIK</div>
+                </button>
+                <button class="star-btn" data-rating="4" onclick="selectRating(4)">
+                  <div class="star-emoji">🤩</div>
+                  <div class="star-num">4</div>
+                  <div class="star-label">SEMPURNA</div>
+                </button>
+              </div>
             </div>
+            
+            <div id="commentSection" class="comment-section">
+              <div class="comment-label">Alasan Rating <span>(Wajib min. 100 karakter)</span></div>
+              <textarea id="catatanInput" class="catatan-input" placeholder="Tuliskan alasan rating kamu di sini..." oninput="checkCommentLength()"></textarea>
+              <div id="charCounter" class="char-counter warning">0 / 100 karakter</div>
+              <div id="catatanError" class="error-msg">⚠️ Komentar minimal 100 karakter</div>
+            </div>
+            
+            <button id="saveBtn" class="save-btn" onclick="simpanRating()" disabled>
+              <div class="btn-spinner"></div>
+              <span class="btn-text">Lengkapi Rating & Komentar ⭐</span>
+            </button>
+            <button class="skip-btn" onclick="skipKandidat()">⏭ Lewati Kandidat Ini</button>
           </div>
-
-          <!-- BAGIAN KOMENTAR BARU -->
-          <div class="comment-section" id="commentSection">
-            <div class="comment-label">📝 Alasan / Masukan <span>(WAJIB min. 100 karakter)</span></div>
-            <textarea class="catatan-input" id="catatanInput" placeholder="Tuliskan alasan kenapa kamu memberi rating ini..." oninput="checkCommentLength()"></textarea>
-            <div class="char-counter warning" id="charCounter">0 / 100 karakter</div>
-            <div class="error-msg" id="catatanError">Minimal 100 karakter untuk menyimpan rating.</div>
-          </div>
-
-          <button class="save-btn" id="saveBtn" disabled onclick="simpanRating()">
-            <span class="btn-spinner"></span><span class="btn-text">Lengkapi Rating & Komentar ⭐</span>
-          </button>
-          <button class="skip-btn" onclick="skipKandidat()">Lewati untuk sekarang →</button>
         </div>
       </div>
-      <button class="back-btn" onclick="kembaliKePilihDivisi()">← Ganti Divisi</button>
     </div>
 
-    <div id="doneScreen" class="done-state hidden">
+    <!-- ===== SCREEN 4: Selesai ===== -->
+    <div id="doneScreen" class="selector-screen hidden">
       <div class="done-icon">🎉</div>
-      <h2 class="done-title">Semua Selesai!</h2>
-      <p class="done-sub">Semua kandidat divisi <strong id="doneDivisi">—</strong> sudah direview.</p>
-      <button class="save-btn" onclick="kembaliKePilihDivisi()" style="margin-top:20px; max-width:200px;">Pilih Divisi Lain</button>
+      <h2 class="done-title">Semua Kandidat Sudah Direview!</h2>
+      <p class="done-sub">Divisi <strong id="doneDivisi">-</strong> telah selesai direview.</p>
+      <button class="save-btn" onclick="kembaliKePilihDivisi()" style="margin-top: 20px; max-width: 200px;">Pilih Divisi Lain</button>
     </div>
 
-    <div id="emptyScreen" class="empty-state hidden">
-      <div class="done-icon">📭</div>
-      <h2 class="done-title">Data Kosong</h2>
-      <p class="done-sub">Tidak ada kandidat yang belum direview untuk divisi ini.</p>
-      <button class="save-btn" onclick="kembaliKePilihDivisi()" style="margin-top:20px; max-width:200px;">Pilih Divisi Lain</button>
+    <!-- ===== SCREEN 5: Empty / Error ===== -->
+    <div id="emptyScreen" class="selector-screen hidden">
+      <div class="done-icon">✅</div>
+      <h2 class="done-title">Semua Kandidat Sudah Direview!</h2>
+      <p class="done-sub">Tidak ada kandidat yang perlu direview di divisi <strong id="doneDivisi2">-</strong>.</p>
+      <button class="save-btn" onclick="kembaliKePilihDivisi()" style="margin-top: 20px; max-width: 200px;">Pilih Divisi Lain</button>
     </div>
+
+    <!-- ===== TOAST NOTIFICATION ===== -->
+    <div id="toast" class="toast"></div>
   </div>
 
-  <div class="toast" id="toast"></div>
-
   <script>
+    // ⚠️ PENTING: Ganti URL ini dengan Web App URL dari Apps Script kamu
+    const API_BASE = "https://script.google.com/macros/s/AKfycbwamPmLwc_INw6u4bj2shO8RIXbcrHiuoUvhwPCBNhFG0VNCoilqZV1jUfh9EmeDusO/exec";
+    
+    // ===== STATE =====
     var state = { divisi: "", kandidatList: [], currentIndex: 0, selectedRating: 0, totalAll: 0, totalReviewed: 0, totalPending: 0 };
     
     var QUESTIONS = [
@@ -222,10 +248,42 @@
 
     var PREVIEW_QUESTIONS = [5, 6, 7, 8]; 
 
+    // ===== API HELPER =====
+    async function apiFetch(action, params = {}) {
+      const url = new URL(API_BASE);
+      url.searchParams.append('action', action);
+      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+      
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Network error');
+      return await response.json();
+    }
+
+    async function apiPost(action, data) {
+      const url = new URL(API_BASE);
+      url.searchParams.append('action', action);
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) throw new Error('Network error');
+      return await response.json();
+    }
+
+    // ===== INIT =====
     window.addEventListener("load", function() { loadDivisionList(); });
 
-    function loadDivisionList() {
-      google.script.run.withSuccessHandler(renderDivisionSelector).withFailureHandler(showError).getDivisions();
+    async function loadDivisionList() {
+      try {
+        const result = await apiFetch('getDivisions');
+        if (!result.success) throw new Error(result.error);
+        renderDivisionSelector(result.data);
+      } catch (err) {
+        showError(err.message);
+      }
     }
 
     function renderDivisionSelector(divisions) {
@@ -241,28 +299,32 @@
       showScreen("selectorScreen");
     }
 
-    function pilihDivisi(id, name) {
+    async function pilihDivisi(id, name) {
       state.divisi = id;
       state.kandidatList = [];
       state.currentIndex = 0;
       showScreen("loadingScreen");
       
-      google.script.run.withSuccessHandler(function(result) {
-        if (!result.success) { showError(result.error); return; }
+      try {
+        const result = await apiFetch('getDataByDivisi', { divisi: id });
+        if (!result.success) throw new Error(result.error);
+        
         state.kandidatList = result.data || [];
         state.totalAll = result.totalAll || 0;
         state.totalReviewed = result.totalReviewed || 0;
         state.totalPending = result.totalPending || 0;
         
         if (state.kandidatList.length === 0) {
-          document.getElementById("doneDivisi").textContent = name;
+          document.getElementById("doneDivisi2").textContent = name;
           showScreen("emptyScreen");
         } else {
           updateProgress();
           renderKandidat(0);
           showScreen("ratingScreen");
         }
-      }).withFailureHandler(showError).getDataByDivisi(id);
+      } catch (err) {
+        showError(err.message);
+      }
     }
 
     function showScreen(screenId) {
@@ -275,7 +337,7 @@
     function kembaliKePilihDivisi() {
       state.divisi = "";
       state.kandidatList = [];
-      showScreen("selectorScreen");
+      loadDivisionList();
     }
 
     function updateProgress() {
@@ -297,16 +359,8 @@
       document.getElementById("kelas").textContent = "Kelas " + (k.kelas || "-");
       
       var photoContainer = document.getElementById("photoContainer");
-      if (k.foto && (k.foto.indexOf("drive.google.com") !== -1 || k.foto.indexOf("lh3.googleusercontent.com") !== -1)) {
-        var imgUrl = k.foto;
-        if (imgUrl.indexOf("/open?id=") !== -1) {
-          var id = imgUrl.split("id=")[1].split("&")[0];
-          imgUrl = "https://lh3.googleusercontent.com/d/" + id;
-        } else if (imgUrl.indexOf("/file/d/") !== -1) {
-          var id = imgUrl.split("/file/d/")[1].split("/")[0];
-          imgUrl = "https://lh3.googleusercontent.com/d/" + id;
-        }
-        photoContainer.innerHTML = '<img class="card-photo" src="' + escHtml(imgUrl) + '" alt="Foto" onerror="this.parentElement.innerHTML=\'<div class=\\\'card-photo-placeholder\\\'>Foto tidak tersedia</div>\'">';
+      if (k.foto && k.foto.trim() !== "") {
+        photoContainer.innerHTML = '<img class="card-photo" src="' + escHtml(k.foto) + '" alt="Foto" onerror="this.parentElement.innerHTML=\'<div class=\\\'card-photo-placeholder\\\'>Foto tidak tersedia</div>\'">';
       } else {
         photoContainer.innerHTML = '<div class="card-photo-placeholder">Foto tidak tersedia</div>';
       }
@@ -367,10 +421,7 @@
       document.querySelectorAll(".star-btn").forEach(function(btn) { btn.classList.remove("selected"); });
       document.querySelector('.star-btn[data-rating="' + val + '"]').classList.add("selected");
       
-      // Tampilkan kolom komentar untuk SEMUA rating
       document.getElementById("commentSection").classList.add("visible");
-      
-      // Update tombol text
       checkCommentLength();
     }
 
@@ -407,22 +458,33 @@
       else { updateProgress(); renderKandidat(state.currentIndex); }
     }
 
-    function simpanRating() {
+    async function simpanRating() {
       if (state.selectedRating === 0) return;
       var k = state.kandidatList[state.currentIndex];
       if (!k) return;
       
       var catatan = document.getElementById("catatanInput").value.trim();
-      // Double check just in case
       if (catatan.length < 100) { showToast("Alasan minimal 100 karakter!", "error"); return; }
       
       var btn = document.getElementById("saveBtn");
       btn.classList.add("loading");
       btn.disabled = true;
       
-      google.script.run.withSuccessHandler(function(res) {
+      try {
+        const result = await apiPost('saveRating', {
+          rowIndex: k.rowIndex,
+          rating: state.selectedRating,
+          catatan: catatan,
+          divisi: state.divisi
+        });
+        
         btn.classList.remove("loading");
-        if (!res.success) { showToast("Gagal: " + res.message, "error"); btn.disabled = false; return; }
+        
+        if (!result.success) {
+          showToast("Gagal: " + result.message, "error");
+          btn.disabled = false;
+          return;
+        }
         
         showToast("Rating ★" + state.selectedRating + " tersimpan! ✓", "success");
         state.totalReviewed++;
@@ -432,11 +494,12 @@
           if (state.currentIndex >= state.kandidatList.length) { showDone(); }
           else { updateProgress(); renderKandidat(state.currentIndex); }
         }, 700);
-      }).withFailureHandler(function(err) {
+        
+      } catch (err) {
         btn.classList.remove("loading");
         btn.disabled = false;
         showToast("Error: " + err.message, "error");
-      }).saveRating({ rowIndex: k.rowIndex, rating: state.selectedRating, catatan: catatan, divisi: state.divisi });
+      }
     }
 
     function showDone() {
