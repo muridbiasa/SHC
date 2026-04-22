@@ -362,6 +362,7 @@
       } catch (err) { console.error('Error loading selection counts:', err); }
     }
 
+    // ✅ FIX: Fungsi updateSelectionStatus yang benar
     async function updateSelectionStatus(rowIndex, divisi, status) {
       try {
         const params = new URLSearchParams();
@@ -372,28 +373,62 @@
         const res = await fetch(API_BASE, { method: 'POST', body: params });
         const result = await res.json();
         if (result.success) {
-          const candidate = allCandidatesData.find(c => c.rowIndex === parseInt(rowIndex));
+          // Update local state
+          const candidate = allCandidatesData.find(c => {
+            const r = c.ratings?.[divisi];
+            return r && r.rowIndex === parseInt(rowIndex);
+          });
           if (candidate) {
             if (!candidate.selectionStatus) candidate.selectionStatus = {};
             candidate.selectionStatus[divisi] = status;
           }
           await loadSelectionCounts(divisi);
+          // Re-render untuk update tombol
+          renderCandidates(allCandidatesData);
           showToast(`✅ Status diupdate: ${status}`, 'success');
-        } else { showToast(result.error || 'Gagal update status', 'error'); }
-      } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        } else { 
+          console.error('Backend error:', result);
+          showToast(result.error || 'Gagal update status', 'error'); 
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        showToast('Error: ' + err.message, 'error');
+      }
     }
 
+    // ✅ FIX: Fungsi getSelectionButtons yang benar - ambil rowIndex dari ratings[divisi]
     function getSelectionButtons(candidate, divisi) {
       const config = quotaConfig[divisi];
       if (!config) return '';
+      
+      // ✅ AMBIL ROW INDEX DARI ratings[divisi] (bukan dari root candidate)
+      const ratingData = candidate.ratings?.[divisi];
+      const rowIndex = ratingData?.rowIndex;
+      
+      if (!rowIndex) return ''; // Jika tidak ada row index, jangan tampilkan tombol
+      
       const currentStatus = candidate.selectionStatus?.[divisi] || '';
-      const counts = {terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length};
+      
+      // Hitung kuota saat ini dari data yang sudah di-filter
+      const counts = {
+        terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
+        cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
+      };
+      
       const isTerimaDisabled = currentStatus !== 'terima' && counts.terima >= config.kuota_anggota;
       const isCadanganDisabled = currentStatus !== 'cadangan' && counts.cadangan >= config.kuota_cadangan;
+      
       return `<div class="selection-buttons">
-        <button class="btn-status btn-terima${currentStatus==='terima'?' active':''}" onclick="event.stopPropagation();setSelection(${candidate.rowIndex},'${divisi}','terima')" ${isTerimaDisabled?'disabled':''} title="${isTerimaDisabled?'Kuota anggota penuh':''}">🟢 Terima</button>
-        <button class="btn-status btn-cadangan${currentStatus==='cadangan'?' active':''}" onclick="event.stopPropagation();setSelection(${candidate.rowIndex},'${divisi}','cadangan')" ${isCadanganDisabled?'disabled':''} title="${isCadanganDisabled?'Kuota cadangan penuh':''}">🟡 Cadangan</button>
-        <button class="btn-status btn-tolak${currentStatus==='tolak'?' active':''}" onclick="event.stopPropagation();setSelection(${candidate.rowIndex},'${divisi}','tolak')">🔴 Tolak</button>
+        <button class="btn-status btn-terima${currentStatus==='terima'?' active':''}" 
+                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','terima')" 
+                ${isTerimaDisabled?'disabled':''} 
+                title="${isTerimaDisabled?'Kuota anggota penuh':''}">🟢 Terima</button>
+        <button class="btn-status btn-cadangan${currentStatus==='cadangan'?' active':''}" 
+                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','cadangan')" 
+                ${isCadanganDisabled?'disabled':''} 
+                title="${isCadanganDisabled?'Kuota cadangan penuh':''}">🟡 Cadangan</button>
+        <button class="btn-status btn-tolak${currentStatus==='tolak'?' active':''}" 
+                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','tolak')">🔴 Tolak</button>
       </div>`;
     }
 
@@ -483,7 +518,10 @@
           ratingsHtml += `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`;
         });
         const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        const selectionButtons = currentDivisi && currentDivisi !== 'all' ? getSelectionButtons(c, currentDivisi) : '';
+        // ✅ Hanya tampilkan tombol seleksi jika divisi aktif dan candidate punya rating di divisi itu
+        const selectionButtons = (currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) 
+          ? getSelectionButtons(c, currentDivisi) 
+          : '';
         html += `<div class="card" onclick="openModal(${idx})">${fotoHtml}<div class="card-info"><div class="card-name">${c.nama}</div><span class="card-class">Kelas ${c.kelas}</span><div class="card-divisi">🎯 ${divText}</div><div class="rating-list">${ratingsHtml}</div>${selectionButtons}</div></div>`;
       });
       html += '</div>';
