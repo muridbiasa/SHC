@@ -248,6 +248,31 @@
     let searchTimeout = null;
     let currentSearchQuery = '';
 
+    // ⚡ PERF: sessionStorage cache helpers
+    function getCached(key) {
+      try {
+        const cached = sessionStorage.getItem(key);
+        if (cached) {
+          const {data, timestamp} = JSON.parse(cached);
+          if (Date.now() - timestamp < 300000) return data; // 5min TTL
+        }
+      } catch(e) {}
+      return null;
+    }
+    
+    function setCache(key, data) {
+      try {
+        sessionStorage.setItem(key, JSON.stringify({data, timestamp: Date.now()}));
+      } catch(e) {}
+    }
+    
+    function clearCache(key) {
+      try {
+        sessionStorage.removeItem(key);
+      } catch(e) {}
+    }
+
+    // ⚡ PERF: Debounce function (300ms delay)
     function debounce(func, delay) {
       return function(...args) {
         clearTimeout(searchTimeout);
@@ -289,8 +314,13 @@
 
     async function loadQuotaConfig() {
       try {
-        const res = await fetch(`${API_BASE}?action=getQuotaConfig`);
-        const result = await res.json();
+        // ⚡ PERF: Check cache first
+        let result = getCached('quota_config');
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getQuotaConfig`);
+          result = await res.json();
+          if (result.success) setCache('quota_config', result);
+        }
         if (result.success) {
           quotaConfig = {};
           result.data.forEach(q => { quotaConfig[q.divisi_id] = q; });
@@ -341,11 +371,18 @@
         params.append('divisiId', currentQuotaDivisi);
         params.append('kuotaAnggota', kuotaAnggota);
         params.append('kuotaCadangan', kuotaCadangan);
-        const res = await fetch(API_BASE, { method: 'POST', body: params });
+        
+        // ⚡ PERF: Explicit cache bypass for POST
+        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
         const result = await res.json();
+        
         if (result.success) {
           quotaConfig[currentQuotaDivisi].kuota_anggota = kuotaAnggota;
           quotaConfig[currentQuotaDivisi].kuota_cadangan = kuotaCadangan;
+          
+          // ⚡ PERF: Clear quota cache after update
+          clearCache('quota_config');
+          
           await loadSelectionCounts(currentQuotaDivisi);
           closeQuotaConfig();
           showToast('✅ Kuota berhasil diupdate', 'success');
@@ -356,13 +393,17 @@
     async function loadSelectionCounts(divisi) {
       if (!divisi || divisi === 'all') return;
       try {
-        const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
-        const result = await res.json();
+        // ⚡ PERF: Check cache first
+        let result = getCached('counts_' + divisi);
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
+          result = await res.json();
+          if (result.success) setCache('counts_' + divisi, result);
+        }
         if (result.success) updateQuotaTracker(divisi, result.data);
       } catch (err) { console.error('Error loading selection counts:', err); }
     }
 
-    // ✅ FIX: Fungsi updateSelectionStatus yang benar
     async function updateSelectionStatus(rowIndex, divisi, status) {
       try {
         const params = new URLSearchParams();
@@ -370,8 +411,11 @@
         params.append('rowIndex', rowIndex);
         params.append('divisi', divisi);
         params.append('status', status);
-        const res = await fetch(API_BASE, { method: 'POST', body: params });
+        
+        // ⚡ PERF: Explicit cache bypass for POST
+        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
         const result = await res.json();
+        
         if (result.success) {
           // Update local state
           const candidate = allCandidatesData.find(c => {
@@ -382,8 +426,13 @@
             if (!candidate.selectionStatus) candidate.selectionStatus = {};
             candidate.selectionStatus[divisi] = status;
           }
+          
+          // ⚡ PERF: Clear related caches
+          clearCache('dashboard_all');
+          clearCache('dashboard_' + divisi);
+          clearCache('counts_' + divisi);
+          
           await loadSelectionCounts(divisi);
-          // Re-render untuk update tombol
           renderCandidates(allCandidatesData);
           showToast(`✅ Status diupdate: ${status}`, 'success');
         } else { 
@@ -396,20 +445,17 @@
       }
     }
 
-    // ✅ FIX: Fungsi getSelectionButtons yang benar - ambil rowIndex dari ratings[divisi]
     function getSelectionButtons(candidate, divisi) {
       const config = quotaConfig[divisi];
       if (!config) return '';
       
-      // ✅ AMBIL ROW INDEX DARI ratings[divisi] (bukan dari root candidate)
       const ratingData = candidate.ratings?.[divisi];
       const rowIndex = ratingData?.rowIndex;
       
-      if (!rowIndex) return ''; // Jika tidak ada row index, jangan tampilkan tombol
+      if (!rowIndex) return '';
       
       const currentStatus = candidate.selectionStatus?.[divisi] || '';
       
-      // Hitung kuota saat ini dari data yang sudah di-filter
       const counts = {
         terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
         cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
@@ -440,18 +486,32 @@
       await loadQuotaConfig();
       await loadDivisions();
       await loadCandidates('all');
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); } });
+      document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') { 
+          closeModal(); 
+          if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); 
+        } 
+      });
+      
+      // ⚡ PERF: Debounced search input (300ms)
       const searchInput = document.getElementById('searchInput');
       if (searchInput) searchInput.addEventListener('input', debounce(handleSearch, 300));
     });
 
     async function loadDivisions() {
       try {
-        const res = await fetch(`${API_BASE}?action=getDashboardDivisions`);
-        const data = await res.json();
+        // ⚡ PERF: Check cache first
+        let data = getCached('dashboard_divisions');
+        if (!data) {
+          const res = await fetch(`${API_BASE}?action=getDashboardDivisions`);
+          data = await res.json();
+          if (data.success) setCache('dashboard_divisions', data);
+        }
         if (!data.success) throw new Error(data.error);
+        
         const list = document.getElementById('divisionList');
         list.innerHTML = '';
+        
         data.data.forEach(d => {
           const btn = document.createElement('button');
           btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
@@ -485,19 +545,31 @@
       const statsBar = document.getElementById('statsBar');
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
       statsBar.style.display = 'none';
+      
       try {
-        const res = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
-        const result = await res.json();
+        // ⚡ PERF: Check cache first
+        const cacheKey = 'dashboard_' + (divisi || 'all');
+        let result = getCached(cacheKey);
+        
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
+          result = await res.json();
+          if (result.success) setCache(cacheKey, result);
+        }
+        
         if (!result.success) throw new Error(result.error);
+        
         allCandidatesData = result.data || [];
         document.getElementById('statTotal').textContent = allCandidatesData.length;
         const reviewed = allCandidatesData.filter(c => Object.keys(c.ratings || {}).length > 0).length;
         document.getElementById('statReviewed').textContent = reviewed;
         statsBar.style.display = 'grid';
+        
         if (allCandidatesData.length === 0) {
           content.innerHTML = '<div class="empty"><p>📭 Tidak ada data kandidat</p></div>';
           return;
         }
+        
         renderCandidates(allCandidatesData);
         if (divisi && divisi !== 'all') await loadSelectionCounts(divisi);
       } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
@@ -505,41 +577,69 @@
 
     function renderCandidates(candidates = allCandidatesData) {
       const content = document.getElementById('content');
+      
       if (!candidates || candidates.length === 0) {
         content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Tidak ada kandidat ditemukan${currentSearchQuery ? ` untuk "<strong>${currentSearchQuery}</strong>"` : ''}</p>${currentSearchQuery ? `<button class="btn btn-secondary" onclick="clearSearch()">Tampilkan Semua</button>` : ''}</div>`;
         return;
       }
-      let html = '<div class="candidate-grid">';
-      candidates.forEach((c, idx) => {
+      
+      // ⚡ PERF: Batch DOM construction with array join
+      const cardHtmlArray = candidates.map((c, idx) => {
         const fotoUrl = convertDriveUrl(c.foto);
-        const fotoHtml = fotoUrl ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">` : '<div class="card-photo placeholder">👤</div>';
-        let ratingsHtml = '';
-        Object.values(c.ratings).forEach(r => {
-          ratingsHtml += `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`;
-        });
+        const fotoHtml = fotoUrl 
+          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
+          : '<div class="card-photo placeholder">👤</div>';
+        
+        const ratingsHtml = Object.values(c.ratings).map(r => 
+          `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
+        ).join('');
+        
         const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        // ✅ Hanya tampilkan tombol seleksi jika divisi aktif dan candidate punya rating di divisi itu
         const selectionButtons = (currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) 
           ? getSelectionButtons(c, currentDivisi) 
           : '';
-        html += `<div class="card" onclick="openModal(${idx})">${fotoHtml}<div class="card-info"><div class="card-name">${c.nama}</div><span class="card-class">Kelas ${c.kelas}</span><div class="card-divisi">🎯 ${divText}</div><div class="rating-list">${ratingsHtml}</div>${selectionButtons}</div></div>`;
+        
+        return `<div class="card" onclick="openModal(${idx})">
+          ${fotoHtml}
+          <div class="card-info">
+            <div class="card-name">${c.nama}</div>
+            <span class="card-class">Kelas ${c.kelas}</span>
+            <div class="card-divisi">🎯 ${divText}</div>
+            <div class="rating-list">${ratingsHtml}</div>
+            ${selectionButtons}
+          </div>
+        </div>`;
       });
-      html += '</div>';
-      content.innerHTML = html;
+      
+      // ⚡ PERF: Single innerHTML update
+      content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
     }
 
     function openModal(idx) {
       const c = allCandidatesData[idx];
       if (!c) return;
+      
       const fotoUrl = convertDriveUrl(c.foto);
-      document.getElementById('modalPhoto').innerHTML = fotoUrl ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">` : '<div class="modal-photo placeholder">👤</div>';
+      document.getElementById('modalPhoto').innerHTML = fotoUrl 
+        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
+        : '<div class="modal-photo placeholder">👤</div>';
+      
       document.getElementById('modalName').textContent = c.nama;
       document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
-      document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`).join('');
-      let ratingsHtml = '';
-      Object.values(c.ratings).forEach(r => {
-        ratingsHtml += `<div class="modal-rating-card"><div class="modal-rating-header"><span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="modal-rating-div">${r.divName}</span></div><div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div></div>`;
-      });
+      document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => 
+        `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`
+      ).join('');
+      
+      const ratingsHtml = Object.values(c.ratings).map(r => 
+        `<div class="modal-rating-card">
+          <div class="modal-rating-header">
+            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+            <span class="modal-rating-div">${r.divName}</span>
+          </div>
+          <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
+        </div>`
+      ).join('');
+      
       document.getElementById('modalRatings').innerHTML = ratingsHtml;
       document.getElementById('detailModal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -549,15 +649,21 @@
       document.getElementById('detailModal').classList.remove('active');
       document.body.style.overflow = '';
     }
-    function closeModalOnBackdrop(e) { if (e.target === e.currentTarget) closeModal(); }
+    
+    function closeModalOnBackdrop(e) { 
+      if (e.target === e.currentTarget) closeModal(); 
+    }
+    
     function convertDriveUrl(url) {
       if (!url) return '';
       const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
       return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
     }
+    
     function showToast(msg, type) {
       const t = document.getElementById('toast');
-      t.textContent = msg; t.className = `toast ${type} show`;
+      t.textContent = msg; 
+      t.className = `toast ${type} show`;
       setTimeout(() => t.classList.remove('show'), 3000);
     }
   </script>
