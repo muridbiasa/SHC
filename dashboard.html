@@ -2,669 +2,835 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  <meta name="theme-color" content="#0f0f13">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Review SHC 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0a0a0f;--surface:#14141c;--surface-2:#1e1e2a;--card:#232330;--border:#2a2a3a;--accent:#7c6bff;--accent-light:#9b8eff;--text:#f0eeff;--text-secondary:#b8b5d0;--muted:#7a7794;--star-1:#ff4757;--star-2:#ff9f43;--star-3:#2ed573;--star-4:#7c6bff;--radius-md:12px;--radius-lg:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    html{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;font-size:14px}
-    body{background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
-    .dashboard{display:flex;min-height:100dvh}
-    .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);padding:calc(20px + var(--safe-top)) 12px 20px;position:fixed;height:100dvh;overflow-y:auto;z-index:1000;left:0;top:0;transition:transform 0.3s ease}
-    .sidebar-header{padding:8px 8px 16px;border-bottom:1px solid var(--border);margin-bottom:16px}
-    .sidebar-logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent-light),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .sidebar-subtitle{font-size:11px;color:var(--muted)}
-    .sidebar-title{font-size:10px;font-weight:700;color:var(--muted);margin:10px 0;text-transform:uppercase;letter-spacing:0.8px;padding:0 8px}
-    .div-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;margin-bottom:4px;background:transparent;border:1px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary);font-size:13px;font-weight:500;text-align:left;cursor:pointer;transition:all 0.2s ease;min-height:44px;font-family:inherit}
-    .div-btn:hover{background:rgba(124,107,255,0.08);color:var(--text)}
-    .div-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600}
-    .div-btn-icon{font-size:16px;flex-shrink:0}
-    .div-btn-config{margin-left:auto;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px}
-    .div-btn-config:hover{color:var(--accent)}
-    .menu-toggle{display:none;position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:1100;width:48px;height:48px;background:var(--accent);border:none;border-radius:var(--radius-md);color:white;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,107,255,0.25)}
-    .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.3s ease}
-    .overlay.show{display:block;opacity:1}
-    .main{margin-left:260px;flex:1;padding:calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom));min-height:100dvh}
-    .header{margin-bottom:24px}
-    .header h1{font-size:22px;font-weight:800}
-    .header p{color:var(--muted);font-size:13px;margin-top:8px}
-    .search-wrapper{margin:16px 0 20px}
-    .search-box{position:relative;max-width:100%}
-    .search-input{width:100%;padding:10px 14px 10px 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:13px;transition:border-color 0.2s ease}
-    .search-input:focus{outline:none;border-color:var(--accent)}
-    .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
-    .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;display:none}
-    .search-clear.visible{display:block}
-    .search-clear:hover{color:var(--text)}
-    .search-hint{font-size:11px;color:var(--muted);margin-top:6px}
-    .quota-tracker{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;margin-bottom:16px}
-    .quota-tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-    .quota-tracker-title{font-size:13px;font-weight:600;color:var(--text)}
-    .quota-tracker-bars{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .quota-bar{display:flex;flex-direction:column;gap:4px}
-    .quota-bar-label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
-    .quota-bar-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-    .quota-bar-fill{height:100%;background:var(--accent);transition:width 0.3s ease;border-radius:3px}
-    .quota-bar-fill.cadangan{background:var(--star-2)}
-    .quota-status{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
-    .quota-status.full{color:var(--star-3);font-weight:600}
-    .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px}
-    .stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
-    .stat-value{font-size:24px;font-weight:800;color:var(--accent-light);margin-top:4px}
-    .candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.25s ease;position:relative}
-    .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
-    .card:active{transform:scale(0.985)}
-    .card-photo{width:70px;height:90px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
-    .card-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:32px}
-    .card-info{flex:1;min-width:0}
-    .card-name{font-size:15px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .card-class{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
-    .card-divisi{font-size:11px;color:var(--muted)}
-    .rating-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-    .rating-item{background:var(--card);border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
-    .rating-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-    .rating-badge{font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px}
-    .rating-badge[data-rating="1"]{background:rgba(255,71,87,0.15);color:var(--star-1)}
-    .rating-badge[data-rating="2"]{background:rgba(255,159,67,0.15);color:var(--star-2)}
-    .rating-badge[data-rating="3"]{background:rgba(46,213,115,0.15);color:var(--star-3)}
-    .rating-badge[data-rating="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
-    .rating-div{font-size:11px;font-weight:600;color:var(--text-secondary)}
-    .rating-reason{font-size:11px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .selection-buttons{display:flex;gap:8px;margin-top:12px}
-    .btn-status{flex:1;padding:8px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit}
-    .btn-status:disabled{opacity:0.4;cursor:not-allowed}
-    .btn-terima{background:rgba(46,213,115,0.2);color:var(--star-3);border:1px solid var(--star-3)}
-    .btn-terima:hover:not(:disabled){background:var(--star-3);color:white}
-    .btn-cadangan{background:rgba(255,159,67,0.2);color:var(--star-2);border:1px solid var(--star-2)}
-    .btn-cadangan:hover:not(:disabled){background:var(--star-2);color:white}
-    .btn-tolak{background:rgba(255,71,87,0.2);color:var(--star-1);border:1px solid var(--star-1)}
-    .btn-tolak:hover:not(:disabled){background:var(--star-1);color:white}
-    .btn-status.active{font-weight:700;box-shadow:0 0 0 2px currentColor}
-    .loading,.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;color:var(--muted);text-align:center}
-    .spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:16px}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s ease}
-    .modal-overlay.active{display:flex;opacity:1}
-    .modal-content{background:var(--surface);width:100%;max-width:680px;max-height:85dvh;border-radius:var(--radius-lg);display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.5);border:1px solid var(--border)}
-    .modal-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;flex-shrink:0}
-    .modal-close{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-    .modal-photo{width:72px;height:92px;border-radius:var(--radius-md);object-fit:cover;background:var(--card);flex-shrink:0;border:1px solid var(--border)}
-    .modal-photo.placeholder{display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted)}
-    .modal-title{font-size:18px;font-weight:800;line-height:1.3}
-    .modal-subtitle{font-size:13px;color:var(--accent-light);margin-top:4px;font-weight:600}
-    .modal-body{padding:20px;overflow-y:auto;flex:1}
-    .modal-section{margin-bottom:24px}
-    .modal-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:12px;letter-spacing:0.6px}
-    .modal-divisi-list{display:flex;flex-wrap:wrap;gap:8px}
-    .modal-divisi-tag{background:rgba(124,107,255,0.12);color:var(--accent-light);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600}
-    .modal-rating-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
-    .modal-rating-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .modal-rating-badge{font-size:13px;font-weight:800;padding:4px 10px;border-radius:6px}
-    .modal-rating-reason{font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
-    .modal-config{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
-    .modal-config.active{display:flex}
-    .modal-config-content{background:var(--surface);width:100%;max-width:400px;border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
-    .modal-config-title{font-size:16px;font-weight:700;margin-bottom:16px}
-    .config-input-group{margin-bottom:16px}
-    .config-input-label{font-size:12px;color:var(--muted);margin-bottom:6px;display:block}
-    .config-input{width:100%;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:14px}
-    .config-input:focus{outline:none;border-color:var(--accent)}
-    .config-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-    .btn{padding:10px 16px;border:none;border-radius:var(--radius-md);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
-    .btn:active{transform:scale(0.96)}
-    .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
-    .btn-primary{background:var(--accent);color:white}
-    .toast{position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:9999}
-    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-    .toast.success{border-left:4px solid var(--star-3);color:var(--star-3)}
-    .toast.error{border-left:4px solid var(--star-1);color:var(--star-1)}
-    @media(max-width:768px){
-      .menu-toggle{display:flex!important}
-      .sidebar{width:85vw;max-width:320px;transform:translateX(-100%);padding-top:calc(60px + var(--safe-top))}
-      .sidebar.open{transform:translateX(0);box-shadow:4px 0 32px rgba(0,0,0,0.5)}
-      .main{margin-left:0;width:100%;padding:calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom))}
-      .candidate-grid{grid-template-columns:1fr;gap:12px}
-      .card{padding:14px;gap:12px}
-      .card-photo{width:64px;height:82px}
-      .modal-overlay{align-items:flex-end;padding:0}
-      .modal-content{max-width:100%;max-height:92dvh;border-radius:var(--radius-lg) var(--radius-lg) 0 0;margin-bottom:var(--safe-bottom)}
-      .modal-header{padding:18px 16px}
-      .modal-body{padding:16px}
-      .modal-photo{width:60px;height:78px}
-      .search-wrapper{margin:12px 0 16px}
-      .quota-tracker-bars{grid-template-columns:1fr}
-      .selection-buttons{flex-wrap:wrap}
-      .btn-status{flex:1 1 45%}
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root {
+      --primary: #4f46e5; --primary-hover: #4338ca; --success: #22c55e; --warning: #f59e0b;
+      --danger: #ef4444; --gray: #6b7280; --light: #f9fafb; --dark: #1f2937;
+      --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --transition: all 0.2s ease;
+    }
+    body { background: var(--light); color: var(--dark); line-height: 1.5; }
+    
+    /* Sidebar */
+    #sidebar {
+      position: fixed; left: -280px; top: 0; width: 280px; height: 100vh;
+      background: white; border-right: 1px solid #e5e7eb; z-index: 1000;
+      transition: var(--transition); padding: 1rem;
+      display: flex; flex-direction: column;
+    }
+    #sidebar.active { left: 0; }
+    #sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0 1rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 1rem; }
+    #sidebar-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray); }
+    #sidebar-menu { flex: 1; overflow-y: auto; }
+    .menu-category { margin-bottom: 1rem; }
+    .menu-title { font-weight: 600; color: var(--gray); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 0.75rem; }
+    .menu-item {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem;
+      border-radius: 0.5rem; cursor: pointer; transition: var(--transition);
+      color: var(--dark); text-decoration: none;
+    }
+    .menu-item:hover, .menu-item.active { background: #eef2ff; color: var(--primary); }
+    .menu-item.disabled { opacity: 0.5; cursor: not-allowed; }
+    .menu-item i { font-size: 1.25rem; width: 20px; text-align: center; }
+    
+    /* Dropdown for categories */
+    .dropdown { position: relative; }
+    .dropdown-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.75rem; margin-left: auto; }
+    .dropdown-menu {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem;
+      box-shadow: var(--card-shadow); margin-top: 0.25rem; display: none; z-index: 10;
+    }
+    .dropdown.active .dropdown-menu { display: block; }
+    .dropdown-item {
+      padding: 0.5rem 1rem; display: block; color: var(--dark);
+      text-decoration: none; transition: var(--transition); font-size: 0.9rem;
+    }
+    .dropdown-item:hover { background: #f3f4f6; }
+    .dropdown-item.active { background: #eef2ff; color: var(--primary); font-weight: 500; }
+    
+    /* Main Content */
+    #main { margin-left: 0; transition: var(--transition); padding: 1.5rem; }
+    #main.sidebar-open { margin-left: 280px; }
+    
+    /* Header */
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; }
+    #menu-toggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--dark); margin-right: 1rem; }
+    .page-title { font-size: 1.5rem; font-weight: 700; }
+    
+    /* Stats Cards */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card {
+      background: white; padding: 1rem; border-radius: 0.75rem;
+      box-shadow: var(--card-shadow); text-align: center;
+    }
+    .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
+    .stat-label { color: var(--gray); font-size: 0.875rem; margin-top: 0.25rem; }
+    
+    /* Filters */
+    .filters { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
+    .search-box {
+      flex: 1; min-width: 200px; position: relative;
+    }
+    .search-box input {
+      width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;
+    }
+    .search-box::before {
+      content: '🔍'; position: absolute; left: 0.75rem; top: 50%;
+      transform: translateY(-50%); color: var(--gray);
+    }
+    .filter-select {
+      padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;
+      background: white; font-size: 1rem; min-width: 150px;
+    }
+    
+    /* Candidate Cards */
+    .candidates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+    .candidate-card {
+      background: white; border-radius: 0.75rem; box-shadow: var(--card-shadow);
+      overflow: hidden; cursor: pointer; transition: var(--transition);
+      border: 2px solid transparent; position: relative;
+    }
+    .candidate-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .candidate-card.accepted { border-color: var(--success); }
+    .candidate-card.rejected { border-color: var(--danger); }
+    .candidate-card.reserve { border-color: var(--warning); }
+    
+    /* Status Indicator Badge */
+    .status-badge {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      padding: 0.25rem 0.75rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+    }
+    .status-badge.accepted { background: #dcfce7; color: #166534; }
+    .status-badge.rejected { background: #fee2e2; color: #991b1b; }
+    .status-badge.reserve { background: #fef3c7; color: #92400e; }
+    .status-badge.pending { background: #f3f4f6; color: var(--gray); }
+    
+    .candidate-header { display: flex; align-items: center; padding: 1rem; gap: 1rem; border-bottom: 1px solid #e5e7eb; }
+    .candidate-photo {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: #e5e7eb; object-fit: cover; flex-shrink: 0;
+    }
+    .candidate-info h3 { font-weight: 600; margin-bottom: 0.25rem; }
+    .candidate-info p { color: var(--gray); font-size: 0.875rem; }
+    
+    .candidate-body { padding: 1rem; }
+    .rating-display {
+      display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;
+    }
+    .rating-stars { color: var(--warning); font-size: 1.25rem; }
+    .rating-value { font-weight: 600; }
+    .divisi-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .divisi-tag {
+      background: #eef2ff; color: var(--primary); padding: 0.25rem 0.75rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 500;
+    }
+    .alasan-preview {
+      color: var(--gray); font-size: 0.875rem; display: -webkit-box;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 2000; align-items: center;
+      justify-content: center; padding: 1rem;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: white; border-radius: 1rem; width: 100%; max-width: 600px;
+      max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb;
+    }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray); }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer {
+      display: flex; gap: 0.75rem; padding: 1rem 1.5rem;
+      border-top: 1px solid #e5e7eb; justify-content: flex-end;
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 0.5rem 1rem; border: none; border-radius: 0.5rem;
+      font-weight: 500; cursor: pointer; transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #16a34a; }
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-warning:hover { background: #d97706; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-outline { background: white; border: 1px solid #d1d5db; color: var(--dark); }
+    .btn-outline:hover { background: #f9fafb; }
+    .btn-sm { padding: 0.25rem 0.75rem; font-size: 0.875rem; }
+    
+    /* Rating Input */
+    .rating-input { display: flex; gap: 0.25rem; margin: 1rem 0; }
+    .rating-input input { display: none; }
+    .rating-input label {
+      font-size: 1.5rem; color: #d1d5db; cursor: pointer; transition: var(--transition);
+    }
+    .rating-input input:checked ~ label,
+    .rating-input label:hover,
+    .rating-input label:hover ~ label { color: var(--warning); }
+    
+    /* Form */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; }
+    .form-group textarea {
+      width: 100%; padding: 0.75rem; border: 1px solid #d1d5db;
+      border-radius: 0.5rem; font-size: 1rem; min-height: 100px;
+      resize: vertical;
+    }
+    .form-group textarea:invalid { border-color: var(--danger); }
+    .char-count { text-align: right; font-size: 0.75rem; color: var(--gray); margin-top: 0.25rem; }
+    
+    /* Undo Button */
+    .undo-btn {
+      position: absolute; top: 0.75rem; left: 0.75rem;
+      background: rgba(255,255,255,0.9); border: 1px solid #d1d5db;
+      border-radius: 9999px; padding: 0.25rem 0.5rem;
+      font-size: 0.75rem; cursor: pointer; display: none;
+    }
+    .candidate-card.has-status .undo-btn { display: inline-flex; }
+    .undo-btn:hover { background: #f9fafb; }
+    
+    /* Category Badge on Card */
+    .category-badge {
+      position: absolute; bottom: 0.75rem; left: 0.75rem;
+      padding: 0.25rem 0.5rem; border-radius: 0.25rem;
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    }
+    .category-badge.lolos { background: #dcfce7; color: #166534; }
+    .category-badge.tidak_lolos { background: #fee2e2; color: #991b1b; }
+    .category-badge.berkas { background: #f3f4f6; color: var(--gray); }
+    
+    /* Loading */
+    .loading { text-align: center; padding: 2rem; color: var(--gray); }
+    .spinner {
+      width: 40px; height: 40px; border: 4px solid #e5e7eb;
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin 1s linear infinite; margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      #sidebar { left: -100%; width: 100%; max-width: 320px; }
+      #main { margin-left: 0 !important; }
+      .candidates-grid { grid-template-columns: 1fr; }
+      .filters { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
-  <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-  <div class="dashboard">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo">SHC 2026</div>
-        <div class="sidebar-subtitle">Dashboard Review</div>
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div id="sidebar-header">
+      <strong>🎯 Filter</strong>
+      <button id="sidebar-close">&times;</button>
+    </div>
+    <nav id="sidebar-menu">
+      <div class="menu-category">
+        <div class="menu-title">Divisi</div>
+        <div id="divisi-list"></div>
       </div>
-      <div class="sidebar-title">Filter Divisi</div>
-      <div id="divisionList"></div>
-    </aside>
-
-    <main class="main">
-      <div class="header">
-        <h1>📊 Review Kandidat</h1>
-        <p>Klik kartu untuk melihat detail rating & komentar</p>
-        <div class="search-wrapper">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau kelas..." autocomplete="off">
-            <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+      <div class="menu-category">
+        <div class="menu-title">Kategori Seleksi</div>
+        <div class="dropdown">
+          <div class="menu-item dropdown-toggle" id="category-toggle">📁 Status Kandidat</div>
+          <div class="dropdown-menu">
+            <a href="#" class="dropdown-item active" data-category="all">🔄 Semua</a>
+            <a href="#" class="dropdown-item" data-category="lolos">✅ Lolos Seleksi</a>
+            <a href="#" class="dropdown-item" data-category="tidak_lolos">❌ Tidak Lolos</a>
+            <a href="#" class="dropdown-item" data-category="berkas">📁 Lolos Berkas (Pending)</a>
           </div>
-          <div class="search-hint">Contoh: "gwen", "12", "xii"</div>
-        </div>
-        <div class="quota-tracker" id="quotaTracker" style="display:none">
-          <div class="quota-tracker-header">
-            <span class="quota-tracker-title" id="quotaDivisiName">🎭 Divisi</span>
-            <button class="div-btn-config" onclick="openQuotaConfig()" title="Edit kuota">⚙️</button>
-          </div>
-          <div class="quota-tracker-bars">
-            <div class="quota-bar">
-              <div class="quota-bar-label"><span>👥 Anggota</span><span id="quotaAnggotaText">0/6</span></div>
-              <div class="quota-bar-progress"><div class="quota-bar-fill" id="quotaAnggotaFill" style="width:0%"></div></div>
-            </div>
-            <div class="quota-bar">
-              <div class="quota-bar-label"><span>📦 Cadangan</span><span id="quotaCadanganText">0/4</span></div>
-              <div class="quota-bar-progress"><div class="quota-bar-fill cadangan" id="quotaCadanganFill" style="width:0%"></div></div>
-            </div>
-          </div>
-          <div class="quota-status" id="quotaStatus">🟢 Slot tersedia</div>
         </div>
       </div>
-      <div class="stats-bar" id="statsBar" style="display:none">
-        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
-        <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
-      </div>
-      <div id="content">
-        <div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>
-      </div>
-    </main>
-  </div>
+    </nav>
+  </aside>
 
-  <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
+  <!-- Main Content -->
+  <main id="main">
+    <header>
+      <div style="display:flex;align-items:center">
+        <button id="menu-toggle">☰</button>
+        <h1 class="page-title">Dashboard Review SHC 2026</h1>
+      </div>
+      <div id="quota-display" style="font-size:0.9rem;color:var(--gray)"></div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Total Direview</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-lolos">0</div>
+        <div class="stat-label">✅ Lolos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-cadangan">0</div>
+        <div class="stat-label">📦 Cadangan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-slot">0/0</div>
+        <div class="stat-label">🟢 Slot Tersedia</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Cari: nama, kelas, divisi...">
+      </div>
+      <select class="filter-select" id="rating-filter">
+        <option value="">Semua Rating</option>
+        <option value="4">⭐ 4 - Excellent</option>
+        <option value="3">⭐ 3+ - Good</option>
+        <option value="2">⭐ 2+ - Fair</option>
+        <option value="1">⭐ 1 - Poor</option>
+      </select>
+      <select class="filter-select" id="status-filter">
+        <option value="">Semua Status</option>
+        <option value="accepted">✅ Diterima</option>
+        <option value="reserve">📦 Cadangan</option>
+        <option value="rejected">❌ Ditolak</option>
+        <option value="pending">⏳ Pending</option>
+      </select>
+    </div>
+
+    <!-- Candidates -->
+    <div id="candidates-container">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Memuat data kandidat...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Detail Modal -->
+  <div class="modal" id="detail-modal">
+    <div class="modal-content">
       <div class="modal-header">
-        <div id="modalPhoto"></div>
-        <div style="flex:1">
-          <div class="modal-title" id="modalName">—</div>
-          <div class="modal-subtitle" id="modalClass">—</div>
-        </div>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <h3 id="modal-nama">Nama Kandidat</h3>
+        <button class="modal-close" id="modal-close">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="modal-section">
-          <div class="modal-label">🎯 Divisi Dilamar</div>
-          <div class="modal-divisi-list" id="modalDivisi"></div>
+        <div style="display:flex;gap:1rem;margin-bottom:1rem;align-items:center">
+          <img id="modal-foto" class="candidate-photo" src="" alt="Foto">
+          <div>
+            <strong id="modal-kelas">Kelas</strong>
+            <div class="divisi-tags" id="modal-divisi"></div>
+          </div>
         </div>
-        <div class="modal-section">
-          <div class="modal-label">📝 Rating & Alasan</div>
-          <div id="modalRatings"></div>
+        
+        <div class="rating-display">
+          <span class="rating-stars" id="modal-stars">⭐⭐⭐</span>
+          <span class="rating-value">Rata-rata: <strong id="modal-rating">0.00</strong></span>
+          <span class="category-badge" id="modal-category">lolos</span>
         </div>
+        
+        <div style="margin-bottom:1rem">
+          <strong>🎯 Divisi Dilamar:</strong>
+          <div id="modal-divisi-list" style="margin-top:0.5rem"></div>
+        </div>
+        
+        <div style="margin-bottom:1rem">
+          <strong>📝 Rating & Alasan per Divisi:</strong>
+          <div id="modal-ratings" style="margin-top:0.5rem"></div>
+        </div>
+        
+        <div class="form-group">
+          <label>💬 Berikan Rating & Alasan (untuk divisi yang dipilih):</label>
+          <select id="modal-divisi-select" class="filter-select" style="width:100%;margin-bottom:0.5rem"></select>
+          <div class="rating-input" id="modal-rating-input">
+            <input type="radio" name="rating" id="r4" value="4"><label for="r4">⭐</label>
+            <input type="radio" name="rating" id="r3" value="3"><label for="r3">⭐</label>
+            <input type="radio" name="rating" id="r2" value="2"><label for="r2">⭐</label>
+            <input type="radio" name="rating" id="r1" value="1"><label for="r1">⭐</label>
+          </div>
+          <textarea id="modal-catatan" placeholder="Tulis alasan minimal 100 karakter..." required></textarea>
+          <div class="char-count"><span id="char-count">0</span>/100 karakter minimal</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="btn-undo" style="display:none">↩️ Undo</button>
+        <button class="btn btn-danger" id="btn-reject">❌ Tolak</button>
+        <button class="btn btn-warning" id="btn-reserve">📦 Cadangan</button>
+        <button class="btn btn-success" id="btn-accept">✅ Terima</button>
+        <button class="btn btn-primary" id="btn-save-rating">💾 Simpan Rating</button>
       </div>
     </div>
   </div>
 
-  <div class="modal-config" id="quotaConfigModal" onclick="closeQuotaConfig(event)">
-    <div class="modal-config-content" onclick="event.stopPropagation()">
-      <div class="modal-config-title">⚙️ Atur Kuota - <span id="configDivisiName">Divisi</span></div>
-      <div class="config-input-group">
-        <label class="config-input-label">👥 Jumlah Anggota Dibutuhkan</label>
-        <input type="number" class="config-input" id="inputKuotaAnggota" min="0" max="50" value="6">
+  <!-- Config Modal -->
+  <div class="modal" id="config-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>⚙️ Atur Kuota - <span id="config-divisi-name"></span></h3>
+        <button class="modal-close" id="config-close">&times;</button>
       </div>
-      <div class="config-input-group">
-        <label class="config-input-label">📦 Jumlah Cadangan Dibutuhkan</label>
-        <input type="number" class="config-input" id="inputKuotaCadangan" min="0" max="20" value="4">
+      <div class="modal-body">
+        <div class="form-group">
+          <label>👥 Jumlah Anggota Dibutuhkan</label>
+          <input type="number" id="config-anggota" min="0" class="filter-select" style="width:100%">
+        </div>
+        <div class="form-group">
+          <label>📦 Jumlah Cadangan Dibutuhkan</label>
+          <input type="number" id="config-cadangan" min="0" class="filter-select" style="width:100%">
+        </div>
       </div>
-      <div class="config-actions">
-        <button class="btn btn-secondary" onclick="closeQuotaConfig()">Batal</button>
-        <button class="btn btn-primary" onclick="saveQuotaConfig()">💾 Simpan</button>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="config-batal">Batal</button>
+        <button class="btn btn-primary" id="config-simpan">💾 Simpan</button>
       </div>
     </div>
   </div>
-
-  <div class="toast" id="toast"></div>
 
   <script>
-    const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
+    // ===== CONFIG =====
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec'; // ⚠️ GANTI DENGAN URL DEPLOYMU
+    const MIN_CATATAN = 100;
+    const MIN_LOLOS = 3; // Rating > ini = lolos
+
+    // ===== STATE =====
     let currentDivisi = 'all';
-    let allCandidatesData = [];
+    let currentCategory = 'all';
+    let candidates = [];
     let quotaConfig = {};
-    let currentQuotaDivisi = null;
-    let searchTimeout = null;
-    let currentSearchQuery = '';
+    let selectedCandidate = null;
+    let sidebarOpen = false;
 
-    // ⚡ PERF: sessionStorage cache helpers
-    function getCached(key) {
-      try {
-        const cached = sessionStorage.getItem(key);
-        if (cached) {
-          const {data, timestamp} = JSON.parse(cached);
-          if (Date.now() - timestamp < 300000) return data; // 5min TTL
-        }
-      } catch(e) {}
-      return null;
-    }
-    
-    function setCache(key, data) {
-      try {
-        sessionStorage.setItem(key, JSON.stringify({data, timestamp: Date.now()}));
-      } catch(e) {}
-    }
-    
-    function clearCache(key) {
-      try {
-        sessionStorage.removeItem(key);
-      } catch(e) {}
-    }
+    // ===== DOM ELEMENTS =====
+    const $ = id => document.getElementById(id);
+    const sidebar = $('sidebar');
+    const main = $('main');
+    const candidatesContainer = $('candidates-container');
+    const detailModal = $('detail-modal');
+    const configModal = $('config-modal');
 
-    // ⚡ PERF: Debounce function (300ms delay)
-    function debounce(func, delay) {
-      return function(...args) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => func.apply(this, args), delay);
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      initEventListeners();
+      loadDivisions();
+      loadQuotaConfig();
+      loadCandidates();
+    });
+
+    function initEventListeners() {
+      // Sidebar toggle
+      $('menu-toggle').onclick = () => toggleSidebar(true);
+      $('sidebar-close').onclick = () => toggleSidebar(false);
+      
+      // Category dropdown
+      $('category-toggle').onclick = (e) => {
+        e.stopPropagation();
+        document.querySelector('.dropdown').classList.toggle('active');
       };
+      
+      // Close dropdown when clicking outside
+      document.onclick = (e) => {
+        if (!e.target.closest('.dropdown')) {
+          document.querySelector('.dropdown').classList.remove('active');
+        }
+      };
+      
+      // Category selection
+      document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.onclick = (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          currentCategory = item.dataset.category;
+          loadCandidates();
+          document.querySelector('.dropdown').classList.remove('active');
+        };
+      });
+      
+      // Search & filters
+      $('search-input').oninput = filterCandidates;
+      $('rating-filter').onchange = filterCandidates;
+      $('status-filter').onchange = filterCandidates;
+      
+      // Modal close
+      $('modal-close').onclick = () => detailModal.classList.remove('active');
+      $('config-close').onclick = () => configModal.classList.remove('active');
+      detailModal.onclick = (e) => { if(e.target===detailModal) detailModal.classList.remove('active'); };
+      configModal.onclick = (e) => { if(e.target===configModal) configModal.classList.remove('active'); };
+      
+      // Rating input char count
+      $('modal-catatan').oninput = function() {
+        $('char-count').textContent = this.value.length;
+      };
+      
+      // Save rating
+      $('btn-save-rating').onclick = saveRating;
+      
+      // Selection buttons
+      $('btn-accept').onclick = () => updateStatus('terima');
+      $('btn-reserve').onclick = () => updateStatus('cadangan');
+      $('btn-reject').onclick = () => updateStatus('tolak');
+      $('btn-undo').onclick = undoStatus;
+      
+      // Config
+      $('config-simpan').onclick = saveQuotaConfig;
+      $('config-batal').onclick = () => configModal.classList.remove('active');
     }
 
-    function filterCandidates(query, candidates) {
-      if (!query || query.trim() === '') return candidates;
-      const q = query.toLowerCase().trim();
-      return candidates.filter(c => (c.nama && c.nama.toLowerCase().includes(q)) || (c.kelas && String(c.kelas).toLowerCase().includes(q)));
+    function toggleSidebar(open) {
+      sidebarOpen = open;
+      sidebar.classList.toggle('active', open);
+      main.classList.toggle('sidebar-open', open);
     }
 
-    function handleSearch(e) {
-      currentSearchQuery = e.target.value;
-      const clearBtn = document.getElementById('searchClear');
-      clearBtn.classList.toggle('visible', currentSearchQuery.length > 0);
-      const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
-      renderCandidates(filtered);
+    // ===== API CALLS =====
+    async function api(action, params = {}, method = 'GET') {
+      const url = new URL(SCRIPT_URL);
+      url.searchParams.append('action', action);
+      Object.entries(params).forEach(([k,v]) => url.searchParams.append(k, v));
+      
+      const options = {
+        method,
+        mode: 'cors',
+        cache: 'no-cache'
+      };
+      
+      if (method === 'POST') {
+        options.body = new URLSearchParams(params);
+      }
+      
+      try {
+        const res = await fetch(url, options);
+        return await res.json();
+      } catch (err) {
+        console.error('API Error:', err);
+        return { success: false, error: 'Connection failed' };
+      }
     }
 
-    function clearSearch() {
-      const input = document.getElementById('searchInput');
-      input.value = '';
-      currentSearchQuery = '';
-      document.getElementById('searchClear').classList.remove('visible');
-      renderCandidates(allCandidatesData);
-      input.focus();
-    }
-
-    function toggleMenu() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      const isOpen = sidebar.classList.contains('open');
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('show');
-      document.body.style.overflow = isOpen ? '' : 'hidden';
+    async function loadDivisions() {
+      const res = await api('getDashboardDivisions');
+      if (!res.success) return;
+      
+      const container = $('divisi-list');
+      container.innerHTML = '';
+      
+      res.data.forEach(div => {
+        if (div.disabled) {
+          container.innerHTML += `<div class="menu-item disabled">${div.name}</div>`;
+          return;
+        }
+        const item = document.createElement('div');
+        item.className = `menu-item ${div.id === currentDivisi ? 'active' : ''}`;
+        item.innerHTML = `<span>${div.name}</span>`;
+        item.onclick = () => {
+          document.querySelectorAll('#divisi-list .menu-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          currentDivisi = div.id;
+          loadCandidates();
+        };
+        container.appendChild(item);
+      });
     }
 
     async function loadQuotaConfig() {
-      try {
-        // ⚡ PERF: Check cache first
-        let result = getCached('quota_config');
-        if (!result) {
-          const res = await fetch(`${API_BASE}?action=getQuotaConfig`);
-          result = await res.json();
-          if (result.success) setCache('quota_config', result);
-        }
-        if (result.success) {
-          quotaConfig = {};
-          result.data.forEach(q => { quotaConfig[q.divisi_id] = q; });
-        }
-      } catch (err) { console.error('Error loading quota config:', err); }
-    }
-
-    function updateQuotaTracker(divisiId, counts) {
-      const config = quotaConfig[divisiId];
-      if (!config) return;
-      const tracker = document.getElementById('quotaTracker');
-      tracker.style.display = 'block';
-      document.getElementById('quotaDivisiName').textContent = `🎭 ${config.nama_divisi}`;
-      document.getElementById('quotaAnggotaText').textContent = `${counts.terima||0}/${config.kuota_anggota}`;
-      document.getElementById('quotaCadanganText').textContent = `${counts.cadangan||0}/${config.kuota_cadangan}`;
-      document.getElementById('quotaAnggotaFill').style.width = `${Math.min(100, ((counts.terima||0) / config.kuota_anggota) * 100)}%`;
-      document.getElementById('quotaCadanganFill').style.width = `${Math.min(100, ((counts.cadangan||0) / config.kuota_cadangan) * 100)}%`;
-      const sisa = config.kuota_anggota - (counts.terima||0);
-      const statusEl = document.getElementById('quotaStatus');
-      if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot anggota tersedia`; statusEl.className = 'quota-status'; }
-      else if (sisa === 0) { statusEl.textContent = `✅ Kuota anggota terpenuhi!`; statusEl.className = 'quota-status full'; }
-      else { statusEl.textContent = `⚠️ Melebihi kuota (${Math.abs(sisa)} berlebih)`; statusEl.className = 'quota-status'; }
-    }
-
-    function openQuotaConfig() {
-      if (!currentDivisi || currentDivisi === 'all') return;
-      currentQuotaDivisi = currentDivisi;
-      const config = quotaConfig[currentQuotaDivisi];
-      if (config) {
-        document.getElementById('configDivisiName').textContent = config.nama_divisi;
-        document.getElementById('inputKuotaAnggota').value = config.kuota_anggota;
-        document.getElementById('inputKuotaCadangan').value = config.kuota_cadangan;
-      }
-      document.getElementById('quotaConfigModal').classList.add('active');
-    }
-
-    function closeQuotaConfig(e) {
-      if (!e || e.target === e.currentTarget) document.getElementById('quotaConfigModal').classList.remove('active');
-    }
-
-    async function saveQuotaConfig() {
-      const kuotaAnggota = parseInt(document.getElementById('inputKuotaAnggota').value);
-      const kuotaCadangan = parseInt(document.getElementById('inputKuotaCadangan').value);
-      if (!currentQuotaDivisi || isNaN(kuotaAnggota) || isNaN(kuotaCadangan)) return;
-      try {
-        const params = new URLSearchParams();
-        params.append('action', 'updateQuotaConfig');
-        params.append('divisiId', currentQuotaDivisi);
-        params.append('kuotaAnggota', kuotaAnggota);
-        params.append('kuotaCadangan', kuotaCadangan);
-        
-        // ⚡ PERF: Explicit cache bypass for POST
-        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
-        const result = await res.json();
-        
-        if (result.success) {
-          quotaConfig[currentQuotaDivisi].kuota_anggota = kuotaAnggota;
-          quotaConfig[currentQuotaDivisi].kuota_cadangan = kuotaCadangan;
-          
-          // ⚡ PERF: Clear quota cache after update
-          clearCache('quota_config');
-          
-          await loadSelectionCounts(currentQuotaDivisi);
-          closeQuotaConfig();
-          showToast('✅ Kuota berhasil diupdate', 'success');
-        } else { showToast(result.error || 'Gagal update kuota', 'error'); }
-      } catch (err) { showToast('Error: ' + err.message, 'error'); }
-    }
-
-    async function loadSelectionCounts(divisi) {
-      if (!divisi || divisi === 'all') return;
-      try {
-        // ⚡ PERF: Check cache first
-        let result = getCached('counts_' + divisi);
-        if (!result) {
-          const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
-          result = await res.json();
-          if (result.success) setCache('counts_' + divisi, result);
-        }
-        if (result.success) updateQuotaTracker(divisi, result.data);
-      } catch (err) { console.error('Error loading selection counts:', err); }
-    }
-
-    async function updateSelectionStatus(rowIndex, divisi, status) {
-      try {
-        const params = new URLSearchParams();
-        params.append('action', 'updateSelectionStatus');
-        params.append('rowIndex', rowIndex);
-        params.append('divisi', divisi);
-        params.append('status', status);
-        
-        // ⚡ PERF: Explicit cache bypass for POST
-        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
-        const result = await res.json();
-        
-        if (result.success) {
-          // Update local state
-          const candidate = allCandidatesData.find(c => {
-            const r = c.ratings?.[divisi];
-            return r && r.rowIndex === parseInt(rowIndex);
-          });
-          if (candidate) {
-            if (!candidate.selectionStatus) candidate.selectionStatus = {};
-            candidate.selectionStatus[divisi] = status;
-          }
-          
-          // ⚡ PERF: Clear related caches
-          clearCache('dashboard_all');
-          clearCache('dashboard_' + divisi);
-          clearCache('counts_' + divisi);
-          
-          await loadSelectionCounts(divisi);
-          renderCandidates(allCandidatesData);
-          showToast(`✅ Status diupdate: ${status}`, 'success');
-        } else { 
-          console.error('Backend error:', result);
-          showToast(result.error || 'Gagal update status', 'error'); 
-        }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        showToast('Error: ' + err.message, 'error');
+      const res = await api('getQuotaConfig');
+      if (res.success) {
+        quotaConfig = {};
+        res.data.forEach(q => { quotaConfig[q.divisi_id] = q; });
+        updateQuotaDisplay();
       }
     }
 
-    function getSelectionButtons(candidate, divisi) {
-      const config = quotaConfig[divisi];
-      if (!config) return '';
-      
-      const ratingData = candidate.ratings?.[divisi];
-      const rowIndex = ratingData?.rowIndex;
-      
-      if (!rowIndex) return '';
-      
-      const currentStatus = candidate.selectionStatus?.[divisi] || '';
-      
-      const counts = {
-        terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
-        cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
-      };
-      
-      const isTerimaDisabled = currentStatus !== 'terima' && counts.terima >= config.kuota_anggota;
-      const isCadanganDisabled = currentStatus !== 'cadangan' && counts.cadangan >= config.kuota_cadangan;
-      
-      return `<div class="selection-buttons">
-        <button class="btn-status btn-terima${currentStatus==='terima'?' active':''}" 
-                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','terima')" 
-                ${isTerimaDisabled?'disabled':''} 
-                title="${isTerimaDisabled?'Kuota anggota penuh':''}">🟢 Terima</button>
-        <button class="btn-status btn-cadangan${currentStatus==='cadangan'?' active':''}" 
-                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','cadangan')" 
-                ${isCadanganDisabled?'disabled':''} 
-                title="${isCadanganDisabled?'Kuota cadangan penuh':''}">🟡 Cadangan</button>
-        <button class="btn-status btn-tolak${currentStatus==='tolak'?' active':''}" 
-                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','tolak')">🔴 Tolak</button>
-      </div>`;
-    }
-
-    function setSelection(rowIndex, divisi, status) {
-      updateSelectionStatus(rowIndex, divisi, status);
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadQuotaConfig();
-      await loadDivisions();
-      await loadCandidates('all');
-      document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') { 
-          closeModal(); 
-          if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); 
-        } 
-      });
-      
-      // ⚡ PERF: Debounced search input (300ms)
-      const searchInput = document.getElementById('searchInput');
-      if (searchInput) searchInput.addEventListener('input', debounce(handleSearch, 300));
-    });
-
-    async function loadDivisions() {
-      try {
-        // ⚡ PERF: Check cache first
-        let data = getCached('dashboard_divisions');
-        if (!data) {
-          const res = await fetch(`${API_BASE}?action=getDashboardDivisions`);
-          data = await res.json();
-          if (data.success) setCache('dashboard_divisions', data);
-        }
-        if (!data.success) throw new Error(data.error);
-        
-        const list = document.getElementById('divisionList');
-        list.innerHTML = '';
-        
-        data.data.forEach(d => {
-          const btn = document.createElement('button');
-          btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
-          btn.innerHTML = `<span class="div-btn-icon">${d.name.split(' ')[0] || '📋'}</span> <span>${d.name.split(' ').slice(1).join(' ') || d.name}</span>` + (d.id !== 'all' ? `<button class="div-btn-config" onclick="event.stopPropagation();openQuotaConfigFor('${d.id}')" title="Edit kuota">⚙️</button>` : '');
-          btn.onclick = async () => {
-            document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentDivisi = d.id;
-            clearSearch();
-            await loadCandidates(d.id);
-            if (window.innerWidth <= 768) toggleMenu();
-          };
-          list.appendChild(btn);
-        });
-      } catch (err) { console.error(err); }
-    }
-
-    function openQuotaConfigFor(divisiId) {
-      currentQuotaDivisi = divisiId;
-      const config = quotaConfig[divisiId];
-      if (config) {
-        document.getElementById('configDivisiName').textContent = config.nama_divisi;
-        document.getElementById('inputKuotaAnggota').value = config.kuota_anggota;
-        document.getElementById('inputKuotaCadangan').value = config.kuota_cadangan;
+    async function loadCandidates() {
+      showLoading();
+      const params = { divisi: currentDivisi !== 'all' ? currentDivisi : '' };
+      if (currentCategory && currentCategory !== 'all') {
+        params.category = currentCategory;
       }
-      document.getElementById('quotaConfigModal').classList.add('active');
-    }
-
-    async function loadCandidates(divisi) {
-      const content = document.getElementById('content');
-      const statsBar = document.getElementById('statsBar');
-      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
-      statsBar.style.display = 'none';
       
-      try {
-        // ⚡ PERF: Check cache first
-        const cacheKey = 'dashboard_' + (divisi || 'all');
-        let result = getCached(cacheKey);
-        
-        if (!result) {
-          const res = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
-          result = await res.json();
-          if (result.success) setCache(cacheKey, result);
-        }
-        
-        if (!result.success) throw new Error(result.error);
-        
-        allCandidatesData = result.data || [];
-        document.getElementById('statTotal').textContent = allCandidatesData.length;
-        const reviewed = allCandidatesData.filter(c => Object.keys(c.ratings || {}).length > 0).length;
-        document.getElementById('statReviewed').textContent = reviewed;
-        statsBar.style.display = 'grid';
-        
-        if (allCandidatesData.length === 0) {
-          content.innerHTML = '<div class="empty"><p>📭 Tidak ada data kandidat</p></div>';
-          return;
-        }
-        
-        renderCandidates(allCandidatesData);
-        if (divisi && divisi !== 'all') await loadSelectionCounts(divisi);
-      } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
-    }
-
-    function renderCandidates(candidates = allCandidatesData) {
-      const content = document.getElementById('content');
-      
-      if (!candidates || candidates.length === 0) {
-        content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Tidak ada kandidat ditemukan${currentSearchQuery ? ` untuk "<strong>${currentSearchQuery}</strong>"` : ''}</p>${currentSearchQuery ? `<button class="btn btn-secondary" onclick="clearSearch()">Tampilkan Semua</button>` : ''}</div>`;
+      const res = await api('getDashboardData', params);
+      if (!res.success) {
+        candidatesContainer.innerHTML = `<p style="color:var(--danger);text-align:center">Error: ${res.error}</p>`;
         return;
       }
       
-      // ⚡ PERF: Batch DOM construction with array join
-      const cardHtmlArray = candidates.map((c, idx) => {
-        const fotoUrl = convertDriveUrl(c.foto);
-        const fotoHtml = fotoUrl 
-          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
-          : '<div class="card-photo placeholder">👤</div>';
-        
-        const ratingsHtml = Object.values(c.ratings).map(r => 
-          `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
-        ).join('');
-        
-        const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        const selectionButtons = (currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) 
-          ? getSelectionButtons(c, currentDivisi) 
-          : '';
-        
-        return `<div class="card" onclick="openModal(${idx})">
-          ${fotoHtml}
-          <div class="card-info">
-            <div class="card-name">${c.nama}</div>
-            <span class="card-class">Kelas ${c.kelas}</span>
-            <div class="card-divisi">🎯 ${divText}</div>
-            <div class="rating-list">${ratingsHtml}</div>
-            ${selectionButtons}
-          </div>
-        </div>`;
+      candidates = res.data || [];
+      updateStats();
+      renderCandidates();
+    }
+
+    function showLoading() {
+      candidatesContainer.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Memuat data...</p>
+        </div>
+      `;
+    }
+
+    function updateStats() {
+      const total = candidates.length;
+      const lolos = candidates.filter(c => c.autoCategory === 'lolos').length;
+      const cadangan = candidates.filter(c => c.selectionStatus[Object.keys(c.selectionStatus)[0]] === 'cadangan').length;
+      const quota = quotaConfig[currentDivisi] || { kuota_anggota: 0 };
+      
+      $('stat-total').textContent = total;
+      $('stat-lolos').textContent = lolos;
+      $('stat-cadangan').textContent = cadangan;
+      $('stat-slot').textContent = `${Math.max(0, quota.kuota_anggota - lolos)}/${quota.kuota_anggota}`;
+    }
+
+    function updateQuotaDisplay() {
+      if (!quotaConfig[currentDivisi]) return;
+      const q = quotaConfig[currentDivisi];
+      $('quota-display').textContent = `🎯 ${q.nama_divisi}: ${q.kuota_anggota} anggota, ${q.kuota_cadangan} cadangan`;
+    }
+
+    function renderCandidates() {
+      const search = $('search-input').value.toLowerCase();
+      const ratingFilter = $('rating-filter').value;
+      const statusFilter = $('status-filter').value;
+      
+      let filtered = candidates.filter(c => {
+        const matchSearch = c.nama.toLowerCase().includes(search) || 
+                           c.kelas.toLowerCase().includes(search) ||
+                           c.divisiDilamar.some(d => d.includes(search));
+        const matchRating = !ratingFilter || c.averageRating >= parseInt(ratingFilter);
+        const matchStatus = !statusFilter || 
+                           (statusFilter === 'pending' && !c.selectionStatus[Object.keys(c.selectionStatus)[0]]) ||
+                           (statusFilter === 'accepted' && c.selectionStatus[Object.keys(c.selectionStatus)[0]] === 'terima') ||
+                           (statusFilter === 'reserve' && c.selectionStatus[Object.keys(c.selectionStatus)[0]] === 'cadangan') ||
+                           (statusFilter === 'rejected' && c.selectionStatus[Object.keys(c.selectionStatus)[0]] === 'tolak');
+        return matchSearch && matchRating && matchStatus;
       });
       
-      // ⚡ PERF: Single innerHTML update
-      content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
+      if (filtered.length === 0) {
+        candidatesContainer.innerHTML = `<p style="text-align:center;color:var(--gray);padding:2rem">Tidak ada kandidat ditemukan</p>`;
+        return;
+      }
+      
+      candidatesContainer.innerHTML = `
+        <div class="candidates-grid">
+          ${filtered.map(c => renderCandidateCard(c)).join('')}
+        </div>
+      `;
+      
+      // Add click listeners
+      document.querySelectorAll('.candidate-card').forEach(card => {
+        card.onclick = (e) => {
+          if (!e.target.closest('.undo-btn')) {
+            openDetail(card.dataset.nama);
+          }
+        };
+      });
+      
+      document.querySelectorAll('.undo-btn').forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          undoStatus(btn.dataset);
+        };
+      });
     }
 
-    function openModal(idx) {
-      const c = allCandidatesData[idx];
+    function renderCandidateCard(c) {
+      const status = c.selectionStatus[Object.keys(c.selectionStatus)[0]] || '';
+      const statusClass = status === 'terima' ? 'accepted' : status === 'cadangan' ? 'reserve' : status === 'tolak' ? 'rejected' : '';
+      const statusText = status === 'terima' ? '✅ Diterima' : status === 'cadangan' ? '📦 Cadangan' : status === 'tolak' ? '❌ Ditolak' : '';
+      const categoryClass = c.autoCategory;
+      
+      // Generate stars
+      const stars = '⭐'.repeat(Math.round(c.averageRating)) + '☆'.repeat(4 - Math.round(c.averageRating));
+      
+      return `
+        <div class="candidate-card ${statusClass} has-status" data-nama="${c.nama}">
+          <button class="undo-btn" data-row="${c.ratings[Object.keys(c.ratings)[0]]?.rowIndex}" data-div="${Object.keys(c.ratings)[0]}">↩️ Undo</button>
+          ${statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : ''}
+          <span class="category-badge ${categoryClass}">${c.autoCategory.replace('_',' ')}</span>
+          
+          <div class="candidate-header">
+            <img class="candidate-photo" src="${c.foto || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%239ca3af%22 stroke-width=%222%22><circle cx=%2212%22 cy=%228%22 r=%224%22/><path d=%22M20 21a8 8 0 1 0-16 0%22/></svg>'}" alt="Foto">
+            <div class="candidate-info">
+              <h3>${c.nama}</h3>
+              <p>${c.kelas}</p>
+            </div>
+          </div>
+          
+          <div class="candidate-body">
+            <div class="rating-display">
+              <span class="rating-stars">${stars}</span>
+              <span class="rating-value">${c.averageRating.toFixed(2)}</span>
+            </div>
+            <div class="divisi-tags">
+              ${c.divisiDilamar.slice(0,3).map(d => `<span class="divisi-tag">${d}</span>`).join('')}
+              ${c.divisiDilamar.length > 3 ? `<span class="divisi-tag">+${c.divisiDilamar.length-3}</span>` : ''}
+            </div>
+            <p class="alasan-preview">${Object.values(c.ratings)[0]?.alasan || 'Belum ada alasan'}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterCandidates() {
+      renderCandidates();
+    }
+
+    function openDetail(nama) {
+      const c = candidates.find(x => x.nama === nama);
       if (!c) return;
       
-      const fotoUrl = convertDriveUrl(c.foto);
-      document.getElementById('modalPhoto').innerHTML = fotoUrl 
-        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
-        : '<div class="modal-photo placeholder">👤</div>';
+      selectedCandidate = c;
+      const firstDiv = Object.keys(c.ratings)[0];
+      const firstRating = c.ratings[firstDiv];
       
-      document.getElementById('modalName').textContent = c.nama;
-      document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
-      document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => 
-        `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`
+      $('modal-nama').textContent = c.nama;
+      $('modal-kelas').textContent = c.kelas;
+      $('modal-foto').src = c.foto || $('modal-foto').src;
+      $('modal-rating').textContent = c.averageRating.toFixed(2);
+      $('modal-stars').textContent = '⭐'.repeat(Math.round(c.averageRating)) + '☆'.repeat(4 - Math.round(c.averageRating));
+      $('modal-category').textContent = c.autoCategory;
+      $('modal-category').className = `category-badge ${c.autoCategory}`;
+      
+      // Divisi dilamar
+      $('modal-divisi-list').innerHTML = c.divisiDilamar.map(d => 
+        `<span class="divisi-tag">${d}</span>`
       ).join('');
       
-      const ratingsHtml = Object.values(c.ratings).map(r => 
-        `<div class="modal-rating-card">
-          <div class="modal-rating-header">
-            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
-            <span class="modal-rating-div">${r.divName}</span>
-          </div>
-          <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
-        </div>`
+      // Ratings per divisi
+      $('modal-ratings').innerHTML = Object.entries(c.ratings).map(([div, data]) => `
+        <div style="margin-bottom:0.5rem;padding:0.5rem;background:#f9fafb;border-radius:0.5rem">
+          <strong>${data.divName}</strong>: ⭐${data.rating}
+          <p style="font-size:0.875rem;color:var(--gray);margin-top:0.25rem">${data.alasan || '-'}</p>
+        </div>
+      `).join('');
+      
+      // Select for new rating
+      const select = $('modal-divisi-select');
+      select.innerHTML = c.divisiDilamar.map(d => 
+        `<option value="${d}">${d}</option>`
       ).join('');
       
-      document.getElementById('modalRatings').innerHTML = ratingsHtml;
-      document.getElementById('detailModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
+      // Show undo button if has status
+      const currentStatus = c.selectionStatus[firstDiv];
+      $('btn-undo').style.display = currentStatus ? 'inline-flex' : 'none';
+      $('btn-undo').dataset.row = firstRating?.rowIndex;
+      $('btn-undo').dataset.div = firstDiv;
+      
+      // Reset form
+      document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+      $('modal-catatan').value = '';
+      $('char-count').textContent = '0';
+      
+      detailModal.classList.add('active');
     }
 
-    function closeModal() {
-      document.getElementById('detailModal').classList.remove('active');
-      document.body.style.overflow = '';
+    async function saveRating() {
+      const divisi = $('modal-divisi-select').value;
+      const rating = document.querySelector('input[name="rating"]:checked')?.value;
+      const catatan = $('modal-catatan').value.trim();
+      
+      if (!rating) { alert('Pilih rating!'); return; }
+      if (catatan.length < MIN_CATATAN) {
+        alert(`Alasan minimal ${MIN_CATATAN} karakter (saat ini: ${catatan.length})`);
+        return;
+      }
+      
+      const c = selectedCandidate;
+      const rowData = c.ratings[divisi];
+      if (!rowData?.rowIndex) { alert('Data row tidak ditemukan'); return; }
+      
+      const res = await api('saveRating', {
+        rowIndex: rowData.rowIndex,
+        rating,
+        catatan,
+        divisi
+      }, 'POST');
+      
+      if (res.success) {
+        alert('✅ Rating berhasil disimpan!');
+        detailModal.classList.remove('active');
+        loadCandidates();
+      } else {
+        alert('❌ Gagal: ' + res.message);
+      }
     }
-    
-    function closeModalOnBackdrop(e) { 
-      if (e.target === e.currentTarget) closeModal(); 
+
+    async function updateStatus(status) {
+      if (!selectedCandidate) return;
+      const divisi = $('modal-divisi-select').value;
+      const rowData = selectedCandidate.ratings[divisi];
+      
+      if (!rowData?.rowIndex) { alert('Data tidak lengkap'); return; }
+      
+      const res = await api('updateSelectionStatus', {
+        rowIndex: rowData.rowIndex,
+        divisi,
+        status
+      }, 'POST');
+      
+      if (res.success) {
+        alert(`✅ Status diupdate: ${status}`);
+        detailModal.classList.remove('active');
+        loadCandidates();
+      } else {
+        alert('❌ Gagal: ' + res.message);
+      }
     }
-    
-    function convertDriveUrl(url) {
-      if (!url) return '';
-      const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
-      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
+
+    async function undoStatus(btnData) {
+      // Support both modal button and card button
+      const rowIndex = btnData.row || $('btn-undo').dataset.row;
+      const divisi = btnData.div || $('btn-undo').dataset.div;
+      
+      if (!rowIndex || !divisi) { alert('Data tidak ditemukan'); return; }
+      
+      if (!confirm('Yakin ingin undo status ini?')) return;
+      
+      const res = await api('undoSelectionStatus', { rowIndex, divisi }, 'POST');
+      
+      if (res.success) {
+        alert('✅ Status berhasil di-undo');
+        detailModal.classList.remove('active');
+        loadCandidates();
+      } else {
+        alert('❌ Gagal: ' + res.message);
+      }
     }
-    
-    function showToast(msg, type) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; 
-      t.className = `toast ${type} show`;
-      setTimeout(() => t.classList.remove('show'), 3000);
+
+    async function saveQuotaConfig() {
+      const divisiId = currentDivisi;
+      const kuotaAnggota = $('config-anggota').value;
+      const kuotaCadangan = $('config-cadangan').value;
+      
+      if (!kuotaAnggota || !kuotaCadangan) { alert('Isi semua field'); return; }
+      
+      const res = await api('updateQuotaConfig', {
+        divisiId,
+        kuotaAnggota,
+        kuotaCadangan
+      }, 'POST');
+      
+      if (res.success) {
+        alert('✅ Kuota berhasil diupdate');
+        configModal.classList.remove('active');
+        loadQuotaConfig();
+      } else {
+        alert('❌ Gagal: ' + res.message);
+      }
     }
   </script>
 </body>
