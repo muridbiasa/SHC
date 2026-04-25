@@ -7,11 +7,21 @@
   <title>Dashboard Review SHC 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0a0a0f;--surface:#14141c;--surface-2:#1e1e2a;--card:#232330;--border:#2a2a3a;--accent:#7c6bff;--accent-light:#9b8eff;--text:#f0eeff;--text-secondary:#b8b5d0;--muted:#7a7794;--star-1:#ff4757;--star-2:#ff9f43;--star-3:#2ed573;--star-4:#7c6bff;--radius-md:12px;--radius-lg:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+    :root{
+      --bg:#0a0a0f;--surface:#14141c;--surface-2:#1e1e2a;--card:#232330;
+      --border:#2a2a3a;--accent:#7c6bff;--accent-light:#9b8eff;
+      --text:#f0eeff;--text-secondary:#b8b5d0;--muted:#7a7794;
+      --star-1:#ff4757;--star-2:#ff9f43;--star-3:#2ed573;--star-4:#7c6bff;
+      --radius-md:12px;--radius-lg:16px;
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px)
+    }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     html{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;font-size:14px}
     body{background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
     .dashboard{display:flex;min-height:100dvh}
+
+    /* ---- SIDEBAR ---- */
     .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);padding:calc(20px + var(--safe-top)) 12px 20px;position:fixed;height:100dvh;overflow-y:auto;z-index:1000;left:0;top:0;transition:transform 0.3s ease}
     .sidebar-header{padding:8px 8px 16px;border-bottom:1px solid var(--border);margin-bottom:16px}
     .sidebar-logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent-light),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -23,19 +33,32 @@
     .div-btn-icon{font-size:16px;flex-shrink:0}
     .div-btn-config{margin-left:auto;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px}
     .div-btn-config:hover{color:var(--accent)}
-    
-    /* Style khusus untuk menu Hasil Akhir */
-    .result-menu-btn { justify-content: space-between; }
-    .result-badge { background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
-    .div-btn.active .result-badge { background: white; color: var(--accent); }
 
+    /* Counter badge di sidebar */
+    .sidebar-count-badge{
+      background:rgba(124,107,255,0.2);
+      color:var(--accent-light);
+      font-size:11px;
+      font-weight:700;
+      padding:2px 7px;
+      border-radius:20px;
+      margin-left:auto;
+      min-width:24px;
+      text-align:center;
+    }
+
+    /* ---- MOBILE ---- */
     .menu-toggle{display:none;position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:1100;width:48px;height:48px;background:var(--accent);border:none;border-radius:var(--radius-md);color:white;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,107,255,0.25)}
     .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.3s ease}
     .overlay.show{display:block;opacity:1}
+
+    /* ---- MAIN ---- */
     .main{margin-left:260px;flex:1;padding:calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom));min-height:100dvh}
     .header{margin-bottom:24px}
     .header h1{font-size:22px;font-weight:800}
     .header p{color:var(--muted);font-size:13px;margin-top:8px}
+
+    /* ---- SEARCH ---- */
     .search-wrapper{margin:16px 0 20px}
     .search-box{position:relative;max-width:100%}
     .search-input{width:100%;padding:10px 14px 10px 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:13px;transition:border-color 0.2s ease}
@@ -43,8 +66,9 @@
     .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
     .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;display:none}
     .search-clear.visible{display:block}
-    .search-clear:hover{color:var(--text)}
     .search-hint{font-size:11px;color:var(--muted);margin-top:6px}
+
+    /* ---- QUOTA TRACKER ---- */
     .quota-tracker{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;margin-bottom:16px}
     .quota-tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
     .quota-tracker-title{font-size:13px;font-weight:600;color:var(--text)}
@@ -56,12 +80,16 @@
     .quota-bar-fill.cadangan{background:var(--star-2)}
     .quota-status{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
     .quota-status.full{color:var(--star-3);font-weight:600}
+
+    /* ---- STATS ---- */
     .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
     .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px}
     .stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
     .stat-value{font-size:24px;font-weight:800;color:var(--accent-light);margin-top:4px}
+
+    /* ---- CANDIDATE CARDS ---- */
     .candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.25s ease;position:relative}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.25s ease;position:relative;overflow:hidden}
     .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
     .card:active{transform:scale(0.985)}
     .card-photo{width:70px;height:90px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
@@ -70,13 +98,6 @@
     .card-name{font-size:15px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .card-class{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
     .card-divisi{font-size:11px;color:var(--muted)}
-    
-    /* Status Badge on Card */
-    .card-status-badge { position: absolute; top: 12px; right: 12px; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-lolos { background: rgba(46, 213, 115, 0.2); color: var(--star-3); border: 1px solid var(--star-3); }
-    .badge-cadangan { background: rgba(255, 159, 67, 0.2); color: var(--star-2); border: 1px solid var(--star-2); }
-    .badge-tidak_lolos { background: rgba(255, 71, 87, 0.2); color: var(--star-1); border: 1px solid var(--star-1); }
-
     .rating-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
     .rating-item{background:var(--card);border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
     .rating-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
@@ -87,6 +108,28 @@
     .rating-badge[data-rating="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
     .rating-div{font-size:11px;font-weight:600;color:var(--text-secondary)}
     .rating-reason{font-size:11px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+    /* Badge Final Status pada kartu */
+    .final-status-badge{
+      position:absolute;top:10px;right:10px;
+      padding:4px 10px;border-radius:20px;
+      font-size:10px;font-weight:800;
+      letter-spacing:0.5px;
+    }
+    .final-status-badge.lolos{background:rgba(46,213,115,0.2);color:var(--star-3);border:1px solid rgba(46,213,115,0.4)}
+    .final-status-badge.tidak_lolos{background:rgba(255,71,87,0.2);color:var(--star-1);border:1px solid rgba(255,71,87,0.4)}
+    .final-status-badge.manual{outline:2px solid currentColor;outline-offset:2px;}
+
+    /* Rata-rata score di kartu */
+    .avg-score-chip{
+      display:inline-flex;align-items:center;gap:4px;
+      background:var(--surface-2);border:1px solid var(--border);
+      border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;
+      color:var(--text-secondary);margin-top:6px;
+    }
+    .avg-score-chip .score-val{color:var(--accent-light)}
+
+    /* Tombol Seleksi per Divisi */
     .selection-buttons{display:flex;gap:8px;margin-top:12px}
     .btn-status{flex:1;padding:8px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit}
     .btn-status:disabled{opacity:0.4;cursor:not-allowed}
@@ -97,41 +140,92 @@
     .btn-tolak{background:rgba(255,71,87,0.2);color:var(--star-1);border:1px solid var(--star-1)}
     .btn-tolak:hover:not(:disabled){background:var(--star-1);color:white}
     .btn-status.active{font-weight:700;box-shadow:0 0 0 2px currentColor}
+
+    /* ---- LOADING / EMPTY ---- */
     .loading,.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;color:var(--muted);text-align:center}
     .spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:16px}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ---- MODAL DETAIL ---- */
     .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s ease}
     .modal-overlay.active{display:flex;opacity:1}
-    .modal-content{background:var(--surface);width:100%;max-width:680px;max-height:85dvh;border-radius:var(--radius-lg);display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.5);border:1px solid var(--border)}
+    .modal-content{background:var(--surface);width:100%;max-width:680px;max-height:88dvh;border-radius:var(--radius-lg);display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.5);border:1px solid var(--border)}
     .modal-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;flex-shrink:0}
-    .modal-close{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .modal-close{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .modal-close:hover{background:var(--border)}
     .modal-photo{width:72px;height:92px;border-radius:var(--radius-md);object-fit:cover;background:var(--card);flex-shrink:0;border:1px solid var(--border)}
     .modal-photo.placeholder{display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted)}
     .modal-title{font-size:18px;font-weight:800;line-height:1.3}
     .modal-subtitle{font-size:13px;color:var(--accent-light);margin-top:4px;font-weight:600}
     .modal-body{padding:20px;overflow-y:auto;flex:1}
-    .modal-section{margin-bottom:24px}
+    .modal-section{margin-bottom:20px}
     .modal-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:12px;letter-spacing:0.6px}
     .modal-divisi-list{display:flex;flex-wrap:wrap;gap:8px}
     .modal-divisi-tag{background:rgba(124,107,255,0.12);color:var(--accent-light);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600}
     .modal-rating-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
     .modal-rating-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
     .modal-rating-badge{font-size:13px;font-weight:800;padding:4px 10px;border-radius:6px}
+    .modal-rating-badge[data-rating="1"]{background:rgba(255,71,87,0.15);color:var(--star-1)}
+    .modal-rating-badge[data-rating="2"]{background:rgba(255,159,67,0.15);color:var(--star-2)}
+    .modal-rating-badge[data-rating="3"]{background:rgba(46,213,115,0.15);color:var(--star-3)}
+    .modal-rating-badge[data-rating="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
+    .modal-rating-divname{font-size:13px;font-weight:600;color:var(--text-secondary)}
     .modal-rating-reason{font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
-    
-    /* Final Status Editor Styles */
-    .final-status-editor { background: var(--card); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-top: 20px; }
-    .final-status-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 12px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
-    .final-status-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-    .btn-final { padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; color: white; font-family: inherit; }
-    .btn-final-lolos { background: var(--star-3); }
-    .btn-final-lolos:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    .btn-final-cadangan { background: var(--star-2); }
-    .btn-final-cadangan:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    .btn-final-tolak { background: var(--star-1); }
-    .btn-final-tolak:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    .current-status-indicator { text-align: center; font-size: 11px; color: var(--muted); margin-top: 8px; font-style: italic; }
 
+    /* Avg Score di modal */
+    .modal-avg-block{
+      display:flex;align-items:center;gap:12px;
+      background:var(--card);border:1px solid var(--border);
+      border-radius:var(--radius-md);padding:14px;margin-bottom:16px;
+    }
+    .modal-avg-number{font-size:36px;font-weight:800;color:var(--accent-light)}
+    .modal-avg-label{font-size:12px;color:var(--muted)}
+    .modal-avg-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+    /* Status badge di modal header */
+    .modal-status-pill{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;
+      margin-top:8px;
+    }
+    .modal-status-pill.lolos{background:rgba(46,213,115,0.15);color:var(--star-3);border:1px solid rgba(46,213,115,0.3)}
+    .modal-status-pill.tidak_lolos{background:rgba(255,71,87,0.15);color:var(--star-1);border:1px solid rgba(255,71,87,0.3)}
+    .modal-status-pill.pending{background:rgba(255,159,67,0.1);color:var(--star-2);border:1px solid rgba(255,159,67,0.2)}
+    .modal-status-pill.manual-tag{font-size:10px;background:rgba(124,107,255,0.2);color:var(--accent-light);border-radius:4px;padding:2px 6px;margin-left:4px}
+
+    /* ---- FINAL ACTION BOX ---- */
+    .final-action-box{
+      background:var(--surface-2);padding:18px;border-radius:var(--radius-md);
+      margin-top:16px;border:1px solid var(--border);
+    }
+    .final-action-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+    .final-action-desc{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+    .final-buttons{display:flex;gap:12px}
+    .btn-final{
+      flex:1;padding:12px;border:2px solid transparent;border-radius:var(--radius-md);
+      font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;
+      font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;
+    }
+    .btn-final:disabled{opacity:0.5;cursor:not-allowed}
+    .btn-final-lolos{
+      background:rgba(46,213,115,0.15);color:var(--star-3);
+      border-color:rgba(46,213,115,0.4);
+    }
+    .btn-final-lolos:hover:not(:disabled){background:var(--star-3);color:white;border-color:var(--star-3)}
+    .btn-final-lolos.active{background:var(--star-3);color:white;border-color:var(--star-3);box-shadow:0 0 0 3px rgba(46,213,115,0.3)}
+    .btn-final-tolak{
+      background:rgba(255,71,87,0.15);color:var(--star-1);
+      border-color:rgba(255,71,87,0.4);
+    }
+    .btn-final-tolak:hover:not(:disabled){background:var(--star-1);color:white;border-color:var(--star-1)}
+    .btn-final-tolak.active{background:var(--star-1);color:white;border-color:var(--star-1);box-shadow:0 0 0 3px rgba(255,71,87,0.3)}
+
+    /* ---- DIVISI ACTION BOX ---- */
+    .divisi-action-box{
+      border-top:1px solid var(--border);margin-top:20px;padding-top:16px;
+    }
+
+    /* ---- QUOTA CONFIG MODAL ---- */
     .modal-config{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
     .modal-config.active{display:flex}
     .modal-config-content{background:var(--surface);width:100%;max-width:400px;border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
@@ -145,10 +239,15 @@
     .btn:active{transform:scale(0.96)}
     .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
     .btn-primary{background:var(--accent);color:white}
-    .toast{position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:9999}
+
+    /* ---- TOAST ---- */
+    .toast{position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:9999;max-width:90vw;text-align:center}
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
     .toast.success{border-left:4px solid var(--star-3);color:var(--star-3)}
     .toast.error{border-left:4px solid var(--star-1);color:var(--star-1)}
+    .toast.info{border-left:4px solid var(--accent);color:var(--accent-light)}
+
+    /* ---- RESPONSIVE ---- */
     @media(max-width:768px){
       .menu-toggle{display:flex!important}
       .sidebar{width:85vw;max-width:320px;transform:translateX(-100%);padding-top:calc(60px + var(--safe-top))}
@@ -158,15 +257,12 @@
       .card{padding:14px;gap:12px}
       .card-photo{width:64px;height:82px}
       .modal-overlay{align-items:flex-end;padding:0}
-      .modal-content{max-width:100%;max-height:92dvh;border-radius:var(--radius-lg) var(--radius-lg) 0 0;margin-bottom:var(--safe-bottom)}
+      .modal-content{max-width:100%;max-height:92dvh;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
       .modal-header{padding:18px 16px}
       .modal-body{padding:16px}
       .modal-photo{width:60px;height:78px}
-      .search-wrapper{margin:12px 0 16px}
       .quota-tracker-bars{grid-template-columns:1fr}
-      .selection-buttons{flex-wrap:wrap}
-      .btn-status{flex:1 1 45%}
-      .final-status-actions { grid-template-columns: 1fr; }
+      .final-buttons{flex-direction:column}
     }
   </style>
 </head>
@@ -180,44 +276,39 @@
         <div class="sidebar-logo">SHC 2026</div>
         <div class="sidebar-subtitle">Dashboard Review</div>
       </div>
-      
+
       <div class="sidebar-title">Filter Divisi</div>
       <div id="divisionList"></div>
 
-      <!-- NEW SECTION: HASIL AKHIR SELEKSI -->
-      <div class="sidebar-title" style="margin-top: 24px;">Hasil Akhir Seleksi</div>
-      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('all')">
-        <span><span class="div-btn-icon">📊</span> Semua Data</span>
-        <span class="result-badge" id="count-all">0</span>
+      <div class="sidebar-title" style="margin-top:24px;">Hasil Akhir Seleksi</div>
+      <button class="div-btn" id="btnMenuSemua" onclick="loadFinalSelectionData('all', this)">
+        <span class="div-btn-icon">📊</span>
+        <span>Semua Data</span>
       </button>
-      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('lolos')">
-        <span><span class="div-btn-icon">✅</span> Lolos</span>
-        <span class="result-badge" id="count-lolos" style="background:rgba(46,213,115,0.2); color:var(--star-3)">0</span>
+      <button class="div-btn" id="btnMenuLolos" onclick="loadFinalSelectionData('lolos', this)">
+        <span class="div-btn-icon">✅</span>
+        <span>Lolos</span>
+        <span class="sidebar-count-badge" id="countLolos">0</span>
       </button>
-      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('cadangan')">
-        <span><span class="div-btn-icon">⏳</span> Cadangan</span>
-        <span class="result-badge" id="count-cadangan" style="background:rgba(255,159,67,0.2); color:var(--star-2)">0</span>
+      <button class="div-btn" id="btnMenuTidak" onclick="loadFinalSelectionData('tidak_lolos', this)">
+        <span class="div-btn-icon">❌</span>
+        <span>Tidak Lolos</span>
+        <span class="sidebar-count-badge" id="countTidak">0</span>
       </button>
-      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('tidak_lolos')">
-        <span><span class="div-btn-icon">❌</span> Tidak Lolos</span>
-        <span class="result-badge" id="count-tidak_lolos" style="background:rgba(255,71,87,0.2); color:var(--star-1)">0</span>
-      </button>
-
     </aside>
 
     <main class="main">
       <div class="header">
         <h1 id="pageTitle">📊 Review Kandidat</h1>
-        <p id="pageSubtitle">Klik kartu untuk melihat detail rating & komentar</p>
-        
-        <!-- Search only visible in division view -->
-        <div class="search-wrapper" id="searchWrapper">
+        <p id="pageDesc">Klik kartu untuk melihat detail rating &amp; komentar</p>
+
+        <div class="search-wrapper">
           <div class="search-box">
             <span class="search-icon">🔍</span>
             <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau kelas..." autocomplete="off">
             <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
           </div>
-          <div class="search-hint">Contoh: "gwen", "12", "xii"</div>
+          <div class="search-hint">Contoh: "gwen", "12 IPA", "xii"</div>
         </div>
 
         <div class="quota-tracker" id="quotaTracker" style="display:none">
@@ -240,8 +331,8 @@
       </div>
 
       <div class="stats-bar" id="statsBar" style="display:none">
-        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
-        <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
+        <div class="stat-card"><div class="stat-label">Total Kandidat</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat-card"><div class="stat-label">Sudah Dinilai</div><div class="stat-value" id="statReviewed">0</div></div>
       </div>
 
       <div id="content">
@@ -250,53 +341,75 @@
     </main>
   </div>
 
+  <!-- ===== MODAL DETAIL ===== -->
   <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
         <div id="modalPhoto"></div>
-        <div style="flex:1">
+        <div style="flex:1;min-width:0">
           <div class="modal-title" id="modalName">—</div>
           <div class="modal-subtitle" id="modalClass">—</div>
+          <div id="modalStatusPill"></div>
         </div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
+
       <div class="modal-body">
+        <!-- Divisi Dilamar -->
         <div class="modal-section">
           <div class="modal-label">🎯 Divisi Dilamar</div>
           <div class="modal-divisi-list" id="modalDivisi"></div>
         </div>
-        
-        <!-- Section for Division Specific Actions (Old Feature) -->
-        <div id="divisionActionSection" class="modal-section" style="display:none;">
-          <div class="modal-label">📝 Aksi Divisi (<span id="actionDivisiName"></span>)</div>
-          <div id="modalRatings"></div>
-          <div id="modalSelectionButtons"></div>
-        </div>
 
-        <!-- Section for Final Status Editing (New Feature) -->
-        <div id="finalStatusSection" class="modal-section" style="display:none;">
-          <div class="modal-label">🏆 Status Akhir Seleksi</div>
-          <div class="final-status-editor">
-            <div class="final-status-title">Ubah Status Kandidat Ini Menjadi:</div>
-            <div class="final-status-actions">
-              <button class="btn-final btn-final-lolos" onclick="updateFinalStatus('lolos')">✅ LOLoS</button>
-              <button class="btn-final btn-final-cadangan" onclick="updateFinalStatus('cadangan')">⏳ CADANGAN</button>
-              <button class="btn-final btn-final-tolak" onclick="updateFinalStatus('tidak_lolos')">❌ TIDAK LOLOS</button>
+        <!-- Rata-rata Score (hanya di mode final) -->
+        <div id="modalAvgBlock" style="display:none" class="modal-section">
+          <div class="modal-label">📈 Rata-rata Nilai</div>
+          <div class="modal-avg-block">
+            <div class="modal-avg-number" id="modalAvgNumber">—</div>
+            <div>
+              <div class="modal-avg-label">dari 4.00 maksimum</div>
+              <div class="modal-avg-sub" id="modalAvgSub">—</div>
             </div>
-            <div class="current-status-indicator" id="currentFinalStatusText">Status saat ini: Menghitung...</div>
-          </div>
-          <div style="margin-top:12px; font-size:11px; color:var(--muted); text-align:center;">
-            *Perubahan akan langsung memperbarui data di Sheet Divisi terkait dan memindahkan kandidat ke daftar yang sesuai.
           </div>
         </div>
 
+        <!-- Rating per Divisi -->
+        <div class="modal-section">
+          <div class="modal-label">📝 Rating &amp; Catatan per Divisi</div>
+          <div id="modalRatings"></div>
+        </div>
+
+        <!-- ACTION: Override Final Status (Mode Hasil Akhir) -->
+        <div id="finalActionBox" class="final-action-box" style="display:none">
+          <div class="final-action-title">⚖️ Keputusan Final Guru (Override Manual)</div>
+          <div class="final-action-desc">Ubah status secara manual. Ini akan menggantikan perhitungan otomatis dan ditandai sebagai keputusan guru.</div>
+          <div class="final-buttons">
+            <button id="btnFinalLolos" class="btn-final btn-final-lolos" onclick="changeFinalStatus('LOLOS')">
+              ✅ Tetapkan LOLOS
+            </button>
+            <button id="btnFinalTidak" class="btn-final btn-final-tolak" onclick="changeFinalStatus('TIDAK_LOLOS')">
+              ❌ Tetapkan TIDAK LOLOS
+            </button>
+          </div>
+        </div>
+
+        <!-- ACTION: Status per Divisi (Mode Review Divisi) -->
+        <div id="divisiActionBox" class="divisi-action-box" style="display:none">
+          <div class="modal-label">🎛️ Status Penerimaan Divisi Ini</div>
+          <div class="selection-buttons">
+            <button class="btn-status btn-terima" id="btnDivTerima" onclick="setSelectionCurrent('terima')">🟢 Terima</button>
+            <button class="btn-status btn-cadangan" id="btnDivCadangan" onclick="setSelectionCurrent('cadangan')">🟡 Cadangan</button>
+            <button class="btn-status btn-tolak" id="btnDivTolak" onclick="setSelectionCurrent('tolak')">🔴 Tolak</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- ===== MODAL QUOTA CONFIG ===== -->
   <div class="modal-config" id="quotaConfigModal" onclick="closeQuotaConfig(event)">
     <div class="modal-config-content" onclick="event.stopPropagation()">
-      <div class="modal-config-title">⚙️ Atur Kuota - <span id="configDivisiName">Divisi</span></div>
+      <div class="modal-config-title">⚙️ Atur Kuota — <span id="configDivisiName">Divisi</span></div>
       <div class="config-input-group">
         <label class="config-input-label">👥 Jumlah Anggota Dibutuhkan</label>
         <input type="number" class="config-input" id="inputKuotaAnggota" min="0" max="50" value="6">
@@ -314,72 +427,102 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- ===== SCRIPT ===== -->
   <script>
+    // ============================================================
+    // KONFIGURASI
+    // ============================================================
     const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
-    
-    // State Variables
-    let currentView = 'division'; // 'division' or 'final'
+
+    // ============================================================
+    // STATE
+    // ============================================================
     let currentDivisi = 'all';
-    let currentFilterType = 'all'; // for final selection
     let allCandidatesData = [];
     let quotaConfig = {};
     let currentQuotaDivisi = null;
     let searchTimeout = null;
     let currentSearchQuery = '';
-    
-    // Variable to track which candidate is being edited in Final Selection mode
-    let editingCandidateIndex = -1; 
+    let currentModalCandidate = null;
+    let isFinalSelectionMode = false;
+    let currentFilterType = 'all'; // 'all', 'lolos', 'tidak_lolos'
 
-    // ⚡ PERF: Cache helpers
+    // ============================================================
+    // CACHE HELPERS
+    // ============================================================
     function getCached(key) {
       try {
-        const cached = sessionStorage.getItem(key);
+        const cached = sessionStorage.getItem('shc_' + key);
         if (cached) {
-          const {data, timestamp} = JSON.parse(cached);
-          if (Date.now() - timestamp < 300000) return data; 
+          const {data, ts} = JSON.parse(cached);
+          if (Date.now() - ts < 3 * 60 * 1000) return data; // 3 menit
         }
       } catch(e) {}
       return null;
     }
-    
+
     function setCache(key, data) {
-      try { sessionStorage.setItem(key, JSON.stringify({data, timestamp: Date.now()})); } catch(e) {}
+      try { sessionStorage.setItem('shc_' + key, JSON.stringify({data, ts: Date.now()})); } catch(e) {}
     }
-    
+
     function clearCache(key) {
-      try { sessionStorage.removeItem(key); } catch(e) {}
+      try { sessionStorage.removeItem('shc_' + key); } catch(e) {}
     }
 
-    function debounce(func, delay) {
-      return function(...args) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => func.apply(this, args), delay);
-      };
+    function clearAllCache() {
+      try {
+        Object.keys(sessionStorage).filter(k => k.startsWith('shc_')).forEach(k => sessionStorage.removeItem(k));
+      } catch(e) {}
     }
 
+    // ============================================================
+    // API HELPER
+    // ============================================================
+    async function apiGet(params) {
+      const url = API_BASE + '?' + new URLSearchParams(params).toString();
+      const res = await fetch(url, {cache: 'no-store'});
+      return res.json();
+    }
+
+    async function apiPost(params) {
+      const body = new URLSearchParams(params);
+      const res = await fetch(API_BASE, {method: 'POST', body, cache: 'no-store'});
+      return res.json();
+    }
+
+    // ============================================================
+    // SEARCH
+    // ============================================================
     function filterCandidates(query, candidates) {
-      if (!query || query.trim() === '') return candidates;
+      if (!query || !query.trim()) return candidates;
       const q = query.toLowerCase().trim();
-      return candidates.filter(c => (c.nama && c.nama.toLowerCase().includes(q)) || (c.kelas && String(c.kelas).toLowerCase().includes(q)));
+      return candidates.filter(c =>
+        (c.nama && c.nama.toLowerCase().includes(q)) ||
+        (c.kelas && String(c.kelas).toLowerCase().includes(q))
+      );
     }
 
     function handleSearch(e) {
       currentSearchQuery = e.target.value;
-      const clearBtn = document.getElementById('searchClear');
-      clearBtn.classList.toggle('visible', currentSearchQuery.length > 0);
-      const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
-      renderCandidates(filtered);
+      document.getElementById('searchClear').classList.toggle('visible', currentSearchQuery.length > 0);
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
+        renderCandidates(filtered);
+      }, 250);
     }
 
     function clearSearch() {
-      const input = document.getElementById('searchInput');
-      input.value = '';
+      document.getElementById('searchInput').value = '';
       currentSearchQuery = '';
       document.getElementById('searchClear').classList.remove('visible');
       renderCandidates(allCandidatesData);
-      input.focus();
+      document.getElementById('searchInput').focus();
     }
 
+    // ============================================================
+    // SIDEBAR TOGGLE (Mobile)
+    // ============================================================
     function toggleMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('overlay');
@@ -389,14 +532,26 @@
       document.body.style.overflow = isOpen ? '' : 'hidden';
     }
 
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      document.getElementById('searchInput').addEventListener('input', handleSearch);
+      await loadQuotaConfig();
+      await loadDivisions();
+      await loadCandidates('all');
+    });
+
+    // ============================================================
+    // QUOTA CONFIG
+    // ============================================================
     async function loadQuotaConfig() {
       let result = getCached('quota_config');
       if (!result) {
-        const res = await fetch(`${API_BASE}?action=getQuotaConfig`);
-        result = await res.json();
+        result = await apiGet({action: 'getQuotaConfig'});
         if (result.success) setCache('quota_config', result);
       }
-      if (result.success) {
+      if (result && result.success) {
         quotaConfig = {};
         result.data.forEach(q => { quotaConfig[q.divisi_id] = q; });
       }
@@ -404,25 +559,40 @@
 
     function updateQuotaTracker(divisiId, counts) {
       const config = quotaConfig[divisiId];
-      if (!config) return;
-      const tracker = document.getElementById('quotaTracker');
-      tracker.style.display = 'block';
-      document.getElementById('quotaDivisiName').textContent = `🎭 ${config.nama_divisi}`;
+      if (!config) { document.getElementById('quotaTracker').style.display = 'none'; return; }
+      document.getElementById('quotaTracker').style.display = 'block';
+      document.getElementById('quotaDivisiName').textContent = config.nama_divisi;
       document.getElementById('quotaAnggotaText').textContent = `${counts.terima||0}/${config.kuota_anggota}`;
       document.getElementById('quotaCadanganText').textContent = `${counts.cadangan||0}/${config.kuota_cadangan}`;
-      document.getElementById('quotaAnggotaFill').style.width = `${Math.min(100, ((counts.terima||0) / config.kuota_anggota) * 100)}%`;
-      document.getElementById('quotaCadanganFill').style.width = `${Math.min(100, ((counts.cadangan||0) / config.kuota_cadangan) * 100)}%`;
+      const fillA = config.kuota_anggota > 0 ? Math.min(100, ((counts.terima||0) / config.kuota_anggota) * 100) : 0;
+      const fillC = config.kuota_cadangan > 0 ? Math.min(100, ((counts.cadangan||0) / config.kuota_cadangan) * 100) : 0;
+      document.getElementById('quotaAnggotaFill').style.width = fillA + '%';
+      document.getElementById('quotaCadanganFill').style.width = fillC + '%';
       const sisa = config.kuota_anggota - (counts.terima||0);
       const statusEl = document.getElementById('quotaStatus');
-      if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot anggota tersedia`; statusEl.className = 'quota-status'; }
-      else if (sisa === 0) { statusEl.textContent = `✅ Kuota anggota terpenuhi!`; statusEl.className = 'quota-status full'; }
-      else { statusEl.textContent = `⚠️ Melebihi kuota (${Math.abs(sisa)} berlebih)`; statusEl.className = 'quota-status'; }
+      if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot tersedia`; statusEl.className = 'quota-status'; }
+      else if (sisa === 0) { statusEl.textContent = `✅ Kuota terpenuhi!`; statusEl.className = 'quota-status full'; }
+      else { statusEl.textContent = `⚠️ Over kuota (${Math.abs(sisa)} lebih)`; statusEl.className = 'quota-status'; }
+    }
+
+    async function loadSelectionCounts(divisi) {
+      if (!divisi || divisi === 'all') return;
+      let result = getCached('counts_' + divisi);
+      if (!result) {
+        result = await apiGet({action: 'getSelectionCounts', divisi});
+        if (result.success) setCache('counts_' + divisi, result);
+      }
+      if (result && result.success) updateQuotaTracker(divisi, result.data);
     }
 
     function openQuotaConfig() {
       if (!currentDivisi || currentDivisi === 'all') return;
-      currentQuotaDivisi = currentDivisi;
-      const config = quotaConfig[currentQuotaDivisi];
+      openQuotaConfigFor(currentDivisi);
+    }
+
+    function openQuotaConfigFor(divisiId) {
+      currentQuotaDivisi = divisiId;
+      const config = quotaConfig[divisiId];
       if (config) {
         document.getElementById('configDivisiName').textContent = config.nama_divisi;
         document.getElementById('inputKuotaAnggota').value = config.kuota_anggota;
@@ -439,460 +609,534 @@
       const kuotaAnggota = parseInt(document.getElementById('inputKuotaAnggota').value);
       const kuotaCadangan = parseInt(document.getElementById('inputKuotaCadangan').value);
       if (!currentQuotaDivisi || isNaN(kuotaAnggota) || isNaN(kuotaCadangan)) return;
-      try {
-        const params = new URLSearchParams();
-        params.append('action', 'updateQuotaConfig');
-        params.append('divisiId', currentQuotaDivisi);
-        params.append('kuotaAnggota', kuotaAnggota);
-        params.append('kuotaCadangan', kuotaCadangan);
-        
-        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
-        const result = await res.json();
-        
-        if (result.success) {
+
+      const result = await apiPost({
+        action: 'updateQuotaConfig',
+        divisiId: currentQuotaDivisi,
+        kuotaAnggota, kuotaCadangan
+      });
+
+      if (result.success) {
+        if (quotaConfig[currentQuotaDivisi]) {
           quotaConfig[currentQuotaDivisi].kuota_anggota = kuotaAnggota;
           quotaConfig[currentQuotaDivisi].kuota_cadangan = kuotaCadangan;
-          clearCache('quota_config');
-          await loadSelectionCounts(currentQuotaDivisi);
-          closeQuotaConfig();
-          showToast('✅ Kuota berhasil diupdate', 'success');
-        } else { showToast(result.error || 'Gagal update kuota', 'error'); }
-      } catch (err) { showToast('Error: ' + err.message, 'error'); }
-    }
-
-    async function loadSelectionCounts(divisi) {
-      if (!divisi || divisi === 'all') return;
-      let result = getCached('counts_' + divisi);
-      if (!result) {
-        const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
-        result = await res.json();
-        if (result.success) setCache('counts_' + divisi, result);
-      }
-      if (result.success) updateQuotaTracker(divisi, result.data);
-    }
-
-    // --- CORE LOGIC FOR DIVISION VIEW ---
-    async function updateSelectionStatus(rowIndex, divisi, status) {
-      try {
-        const params = new URLSearchParams();
-        params.append('action', 'updateSelectionStatus');
-        params.append('rowIndex', rowIndex);
-        params.append('divisi', divisi);
-        params.append('status', status);
-        
-        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
-        const result = await res.json();
-        
-        if (result.success) {
-          const candidate = allCandidatesData.find(c => {
-            const r = c.ratings?.[divisi];
-            return r && r.rowIndex === parseInt(rowIndex);
-          });
-          if (candidate) {
-            if (!candidate.selectionStatus) candidate.selectionStatus = {};
-            candidate.selectionStatus[divisi] = status;
-          }
-          
-          clearCache('dashboard_all');
-          clearCache('dashboard_' + divisi);
-          clearCache('counts_' + divisi);
-          // Also clear final selection cache because status changed
-          clearCache('final_all'); clearCache('final_lolos'); clearCache('final_cadangan'); clearCache('final_tidak_lolos');
-          
-          await loadSelectionCounts(divisi);
-          renderCandidates(allCandidatesData);
-          showToast(`✅ Status divisi diupdate: ${status}`, 'success');
-        } else { showToast(result.error || 'Gagal update status', 'error'); }
-      } catch (err) { showToast('Error: ' + err.message, 'error'); }
-    }
-
-    function getSelectionButtons(candidate, divisi) {
-      const config = quotaConfig[divisi];
-      if (!config) return '';
-      const ratingData = candidate.ratings?.[divisi];
-      const rowIndex = ratingData?.rowIndex;
-      if (!rowIndex) return '';
-      const currentStatus = candidate.selectionStatus?.[divisi] || '';
-      const counts = {
-        terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
-        cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
-      };
-      const isTerimaDisabled = currentStatus !== 'terima' && counts.terima >= config.kuota_anggota;
-      const isCadanganDisabled = currentStatus !== 'cadangan' && counts.cadangan >= config.kuota_cadangan;
-      
-      return `<div class="selection-buttons">
-        <button class="btn-status btn-terima${currentStatus==='terima'?' active':''}" 
-                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','terima')" 
-                ${isTerimaDisabled?'disabled':''}>🟢 Terima</button>
-        <button class="btn-status btn-cadangan${currentStatus==='cadangan'?' active':''}" 
-                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','cadangan')" 
-                ${isCadanganDisabled?'disabled':''}>🟡 Cadangan</button>
-        <button class="btn-status btn-tolak${currentStatus==='tolak'?' active':''}" 
-                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','tolak')">🔴 Tolak</button>
-      </div>`;
-    }
-
-    function setSelection(rowIndex, divisi, status) {
-      updateSelectionStatus(rowIndex, divisi, status);
-    }
-
-    // --- CORE LOGIC FOR FINAL SELECTION VIEW ---
-    async function updateFinalStatus(newStatus) {
-      if (editingCandidateIndex === -1) return;
-      const candidate = allCandidatesData[editingCandidateIndex];
-      
-      // We need to find AT LEAST ONE divisi where this candidate has a rating to update the status.
-      // Ideally, we update the status in their PRIORITY divisi or the first one they applied to.
-      // For simplicity and robustness: Update the status in the FIRST divisi they have a rating for.
-      
-      const ratings = candidate.ratings;
-      const divisiKeys = Object.keys(ratings);
-      
-      if (divisiKeys.length === 0) {
-        showToast('❌ Kandidat belum memiliki rating divisi apapun!', 'error');
-        return;
-      }
-
-      const targetDivisi = divisiKeys[0]; // Take first divisi
-      const rowIndex = ratings[targetDivisi].rowIndex;
-
-      try {
-        const params = new URLSearchParams();
-        params.append('action', 'updateSelectionStatus');
-        params.append('rowIndex', rowIndex);
-        params.append('divisi', targetDivisi);
-        params.append('status', newStatus === 'lolos' ? 'terima' : (newStatus === 'cadangan' ? 'cadangan' : 'tolak'));
-        
-        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
-        const result = await res.json();
-        
-        if (result.success) {
-          // Clear all caches to force refresh
-          clearCache('final_all'); clearCache('final_lolos'); clearCache('final_cadangan'); clearCache('final_tidak_lolos');
-          clearCache('dashboard_all'); clearCache('dashboard_' + targetDivisi);
-          clearCache('counts_' + targetDivisi);
-          
-          showToast(`✅ Status diubah menjadi ${newStatus.toUpperCase()}`, 'success');
-          closeModal();
-          // Reload current view
-          if (currentView === 'final') {
-            loadFinalSelection(currentFilterType);
-          }
-        } else {
-          showToast(result.error || 'Gagal update status', 'error');
         }
-      } catch (err) {
-        showToast('Error: ' + err.message, 'error');
+        clearCache('quota_config');
+        clearCache('counts_' + currentQuotaDivisi);
+        await loadSelectionCounts(currentQuotaDivisi);
+        closeQuotaConfig();
+        showToast('✅ Kuota berhasil diupdate', 'success');
+      } else {
+        showToast('❌ ' + (result.error || 'Gagal simpan kuota'), 'error');
       }
     }
 
-    // --- INIT & NAVIGATION ---
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadQuotaConfig();
-      await loadDivisions();
-      await loadCandidates('all'); // Default view
-      
-      document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') { 
-          closeModal(); 
-          if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); 
-        } 
-      });
-      
-      const searchInput = document.getElementById('searchInput');
-      if (searchInput) searchInput.addEventListener('input', debounce(handleSearch, 300));
-    });
-
+    // ============================================================
+    // LOAD DIVISIONS
+    // ============================================================
     async function loadDivisions() {
-      let data = getCached('dashboard_divisions');
+      let data = getCached('divisions');
       if (!data) {
-        const res = await fetch(`${API_BASE}?action=getDashboardDivisions`);
-        data = await res.json();
-        if (data.success) setCache('dashboard_divisions', data);
+        data = await apiGet({action: 'getDashboardDivisions'});
+        if (data.success) setCache('divisions', data);
       }
-      if (!data.success) throw new Error(data.error);
-      
+      if (!data || !data.success) return;
+
       const list = document.getElementById('divisionList');
       list.innerHTML = '';
-      
+
       data.data.forEach(d => {
         const btn = document.createElement('button');
         btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
-        btn.innerHTML = `<span class="div-btn-icon">${d.name.split(' ')[0] || '📋'}</span> <span>${d.name.split(' ').slice(1).join(' ') || d.name}</span>` + (d.id !== 'all' ? `<button class="div-btn-config" onclick="event.stopPropagation();openQuotaConfigFor('${d.id}')" title="Edit kuota">⚙️</button>` : '');
+        btn.dataset.divId = d.id;
+
+        const parts = d.name.split(' ');
+        const icon = parts[0];
+        const label = parts.slice(1).join(' ') || d.name;
+
+        let inner = `<span class="div-btn-icon">${icon}</span><span>${label}</span>`;
+        if (d.id !== 'all') {
+          inner += `<button class="div-btn-config" onclick="event.stopPropagation();openQuotaConfigFor('${d.id}')" title="Edit kuota">⚙️</button>`;
+        }
+        btn.innerHTML = inner;
+
         btn.onclick = async () => {
-          document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
-          // Remove active from result buttons too
-          document.querySelectorAll('.result-menu-btn').forEach(b => b.classList.remove('active'));
-          
-          btn.classList.add('active');
+          setActiveSidebarBtn(btn);
+          isFinalSelectionMode = false;
           currentDivisi = d.id;
-          currentView = 'division';
-          
-          // UI Toggles
-          document.getElementById('searchWrapper').style.display = 'block';
-          document.getElementById('pageTitle').innerText = d.id === 'all' ? '📊 Semua Kandidat' : `🎭 Review ${d.name}`;
-          document.getElementById('pageSubtitle').innerText = 'Klik kartu untuk melihat detail rating & aksi divisi';
-          
+          currentFilterType = 'all';
+
+          document.getElementById('pageTitle').textContent = d.id === 'all' ? '📊 Review Kandidat' : `${icon} Review ${label}`;
+          document.getElementById('pageDesc').textContent = 'Klik kartu untuk melihat detail rating & komentar';
+
           clearSearch();
           await loadCandidates(d.id);
           if (window.innerWidth <= 768) toggleMenu();
         };
+
         list.appendChild(btn);
       });
     }
 
-    function openQuotaConfigFor(divisiId) {
-      currentQuotaDivisi = divisiId;
-      const config = quotaConfig[divisiId];
-      if (config) {
-        document.getElementById('configDivisiName').textContent = config.nama_divisi;
-        document.getElementById('inputKuotaAnggota').value = config.kuota_anggota;
-        document.getElementById('inputKuotaCadangan').value = config.kuota_cadangan;
-      }
-      document.getElementById('quotaConfigModal').classList.add('active');
+    function setActiveSidebarBtn(activeBtn) {
+      document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+      activeBtn.classList.add('active');
     }
 
+    // ============================================================
+    // LOAD CANDIDATES (per divisi)
+    // ============================================================
     async function loadCandidates(divisi) {
+      isFinalSelectionMode = false;
       const content = document.getElementById('content');
       const statsBar = document.getElementById('statsBar');
       const quotaTracker = document.getElementById('quotaTracker');
-      
+
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
       statsBar.style.display = 'none';
       quotaTracker.style.display = 'none';
-      
-      try {
-        const cacheKey = 'dashboard_' + (divisi || 'all');
-        let result = getCached(cacheKey);
-        
-        if (!result) {
-          const res = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
-          result = await res.json();
-          if (result.success) setCache(cacheKey, result);
-        }
-        
-        if (!result.success) throw new Error(result.error);
-        
-        allCandidatesData = result.data || [];
-        document.getElementById('statTotal').textContent = allCandidatesData.length;
-        const reviewed = allCandidatesData.filter(c => Object.keys(c.ratings || {}).length > 0).length;
-        document.getElementById('statReviewed').textContent = reviewed;
-        statsBar.style.display = 'grid';
-        
-        if (allCandidatesData.length === 0) {
-          content.innerHTML = '<div class="empty"><p>📭 Tidak ada data kandidat</p></div>';
-          return;
-        }
-        
-        renderCandidates(allCandidatesData);
-        if (divisi && divisi !== 'all') await loadSelectionCounts(divisi);
-      } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
-    }
 
-    // NEW FUNCTION: Load Final Selection Data
-    async function loadFinalSelection(filterType) {
-      currentView = 'final';
-      currentFilterType = filterType;
-      
-      // Update Active State in Sidebar
-      document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.result-menu-btn').forEach(b => b.classList.remove('active'));
-      // Find the button clicked (approximate via onclick attribute match for simplicity in this scope)
-      const activeBtn = Array.from(document.querySelectorAll('.result-menu-btn')).find(b => b.getAttribute('onclick').includes(filterType));
-      if(activeBtn) activeBtn.classList.add('active');
+      const cacheKey = 'dashboard_' + (divisi || 'all');
+      let result = getCached(cacheKey);
+      if (!result) {
+        result = await apiGet({action: 'getDashboardData', divisi: divisi || 'all'});
+        if (result.success) setCache(cacheKey, result);
+      }
 
-      const content = document.getElementById('content');
-      const statsBar = document.getElementById('statsBar');
-      const quotaTracker = document.getElementById('quotaTracker');
-      const searchWrapper = document.getElementById('searchWrapper');
-      
-      // UI Updates
-      searchWrapper.style.display = 'none'; // Disable search in final view for now to keep it simple
-      quotaTracker.style.display = 'none';
-      statsBar.style.display = 'none';
-      
-      let title = "Hasil Akhir Seleksi";
-      if(filterType === 'lolos') title = "✅ Kandidat Lolos";
-      if(filterType === 'cadangan') title = "⏳ Kandidat Cadangan";
-      if(filterType === 'tidak_lolos') title = "❌ Kandidat Tidak Lolos";
-      
-      document.getElementById('pageTitle').innerText = title;
-      document.getElementById('pageSubtitle').innerText = 'Klik kartu untuk mengedit status kandidat';
-      
-      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Menghitung status akhir...</p></div>';
-      
-      try {
-        const cacheKey = 'final_' + filterType;
-        let result = getCached(cacheKey);
-        
-        if (!result) {
-          const res = await fetch(`${API_BASE}?action=getFinalSelectionData&filterType=${filterType}`);
-          result = await res.json();
-          if (result.success) setCache(cacheKey, result);
-        }
-        
-        if (!result.success) throw new Error(result.error);
-        
-        allCandidatesData = result.data || [];
-        
-        // Update Badges in Sidebar
-        if(filterType === 'all') {
-           // If loading 'all', we should ideally fetch counts for others too, 
-           // but for performance, we just update the current one and let user click to refresh others.
-           // Or we can do a quick fetch for counts only. Let's just update the displayed count for now.
-           document.getElementById('count-all').innerText = result.total || 0;
-        } else if (filterType === 'lolos') {
-           document.getElementById('count-lolos').innerText = result.total || 0;
-        } else if (filterType === 'cadangan') {
-           document.getElementById('count-cadangan').innerText = result.total || 0;
-        } else if (filterType === 'tidak_lolos') {
-           document.getElementById('count-tidak_lolos').innerText = result.total || 0;
-        }
-
-        if (allCandidatesData.length === 0) {
-          content.innerHTML = '<div class="empty"><p>📭 Tidak ada kandidat dalam kategori ini.</p></div>';
-          return;
-        }
-        
-        renderCandidates(allCandidatesData);
-      } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
-    }
-
-    function renderCandidates(candidates = allCandidatesData) {
-      const content = document.getElementById('content');
-      
-      if (!candidates || candidates.length === 0) {
-        content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Tidak ada kandidat ditemukan${currentSearchQuery ? ` untuk "<strong>${currentSearchQuery}</strong>"` : ''}</p>${currentSearchQuery ? `<button class="btn btn-secondary" onclick="clearSearch()">Tampilkan Semua</button>` : ''}</div>`;
+      if (!result || !result.success) {
+        content.innerHTML = `<div class="empty"><p>⚠️ ${result?.error || 'Gagal memuat data'}</p></div>`;
         return;
       }
-      
-      const cardHtmlArray = candidates.map((c, idx) => {
-        const fotoUrl = convertDriveUrl(c.foto);
-        const fotoHtml = fotoUrl 
-          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
-          : '<div class="card-photo placeholder">👤</div>';
-        
-        // Determine Badge for Final View
-        let statusBadgeHtml = '';
-        if (currentView === 'final') {
-          if (c.finalStatus === 'lolos') statusBadgeHtml = '<div class="card-status-badge badge-lolos">LOLOS</div>';
-          else if (c.finalStatus === 'cadangan') statusBadgeHtml = '<div class="card-status-badge badge-cadangan">CADANGAN</div>';
-          else if (c.finalStatus === 'tidak_lolos') statusBadgeHtml = '<div class="card-status-badge badge-tidak_lolos">TIDAK LOLOS</div>';
-        }
 
-        const ratingsHtml = Object.values(c.ratings).map(r => 
-          `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
-        ).join('');
-        
-        const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        
-        // Logic for Buttons inside Card
-        let actionHtml = '';
-        if (currentView === 'division' && currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) {
-          actionHtml = getSelectionButtons(c, currentDivisi);
-        }
+      allCandidatesData = result.data || [];
+      document.getElementById('statTotal').textContent = allCandidatesData.length;
+      const reviewed = allCandidatesData.filter(c => Object.keys(c.ratings || {}).length > 0).length;
+      document.getElementById('statReviewed').textContent = reviewed;
+      statsBar.style.display = 'grid';
 
-        return `<div class="card" onclick="openModal(${idx})">
-          ${statusBadgeHtml}
-          ${fotoHtml}
-          <div class="card-info">
-            <div class="card-name">${c.nama}</div>
-            <span class="card-class">Kelas ${c.kelas}</span>
-            <div class="card-divisi">🎯 ${divText}</div>
-            <div class="rating-list">${ratingsHtml}</div>
-            ${actionHtml}
-          </div>
-        </div>`;
-      });
-      
-      content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
+      if (allCandidatesData.length === 0) {
+        content.innerHTML = '<div class="empty"><p>📭 Tidak ada data kandidat di divisi ini</p></div>';
+        return;
+      }
+
+      renderCandidates(allCandidatesData);
+
+      if (divisi && divisi !== 'all') {
+        await loadSelectionCounts(divisi);
+      }
     }
 
-    function openModal(idx) {
+    // ============================================================
+    // LOAD FINAL SELECTION DATA (Lolos / Tidak Lolos)
+    // ============================================================
+    async function loadFinalSelectionData(filterType, clickedBtn) {
+      isFinalSelectionMode = true;
+      currentFilterType = filterType;
+      currentDivisi = 'all';
+
+      // Update active sidebar button
+      if (clickedBtn) {
+        setActiveSidebarBtn(clickedBtn);
+      } else {
+        const map = {all: 'btnMenuSemua', lolos: 'btnMenuLolos', tidak_lolos: 'btnMenuTidak'};
+        const btn = document.getElementById(map[filterType]);
+        if (btn) setActiveSidebarBtn(btn);
+      }
+
+      const titles = {
+        all: '📊 Semua Hasil Seleksi',
+        lolos: '✅ Kandidat Lolos',
+        tidak_lolos: '❌ Kandidat Tidak Lolos'
+      };
+      document.getElementById('pageTitle').textContent = titles[filterType] || '📊 Hasil Seleksi';
+      document.getElementById('pageDesc').textContent = 'Status dihitung otomatis dari rata-rata nilai. Guru dapat override secara manual.';
+
+      document.getElementById('quotaTracker').style.display = 'none';
+      document.getElementById('statsBar').style.display = 'none';
+
+      const content = document.getElementById('content');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Menghitung status final...</p></div>';
+
+      const result = await apiGet({action: 'getFinalSelectionData', filterType});
+
+      if (!result || !result.success) {
+        content.innerHTML = `<div class="empty"><p>⚠️ ${result?.error || 'Gagal memuat data'}</p></div>`;
+        return;
+      }
+
+      allCandidatesData = result.data || [];
+
+      // Update counter badge di sidebar
+      if (result.countLolos !== undefined) document.getElementById('countLolos').textContent = result.countLolos;
+      if (result.countTidakLolos !== undefined) document.getElementById('countTidak').textContent = result.countTidakLolos;
+      if (filterType === 'lolos') document.getElementById('countLolos').textContent = result.total;
+      if (filterType === 'tidak_lolos') document.getElementById('countTidak').textContent = result.total;
+
+      if (allCandidatesData.length === 0) {
+        content.innerHTML = `<div class="empty"><p>📭 Belum ada kandidat di kategori "${filterType === 'all' ? 'Semua' : filterType === 'lolos' ? 'Lolos' : 'Tidak Lolos'}"</p></div>`;
+        return;
+      }
+
+      renderCandidates(allCandidatesData);
+
+      if (window.innerWidth <= 768) toggleMenu();
+    }
+
+    // ============================================================
+    // RENDER CANDIDATES
+    // ============================================================
+    function renderCandidates(candidates) {
+      const content = document.getElementById('content');
+      if (!candidates || candidates.length === 0) {
+        content.innerHTML = `<div class="empty"><p>🔍 Tidak ada kandidat ditemukan</p></div>`;
+        return;
+      }
+
+      const html = candidates.map((c, idx) => buildCandidateCard(c, idx)).join('');
+      content.innerHTML = `<div class="candidate-grid">${html}</div>`;
+    }
+
+    function buildCandidateCard(c, idx) {
+      const fotoHtml = buildPhotoHtml(c.foto, 'card-photo');
+
+      // Badge final status
+      let badgeHtml = '';
+      if (c.finalStatus) {
+        const isLolos = c.finalStatus === 'lolos';
+        const manualClass = c.isManualOverride ? ' manual' : '';
+        badgeHtml = `<div class="final-status-badge ${c.finalStatus}${manualClass}">${isLolos ? '✅ LOLOS' : '❌ TIDAK LOLOS'}${c.isManualOverride ? ' ✍️' : ''}</div>`;
+      }
+
+      // Avg score chip (di mode final)
+      let avgChip = '';
+      if (isFinalSelectionMode && c.averageScore) {
+        avgChip = `<div class="avg-score-chip">⭐ Rata-rata: <span class="score-val">${c.averageScore}</span>/4.00</div>`;
+      }
+
+      // Ratings
+      const ratingsHtml = Object.values(c.ratings || {}).map(r =>
+        `<div class="rating-item">
+          <div class="rating-header">
+            <span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+            <span class="rating-div">${r.divName}</span>
+          </div>
+          ${r.alasan ? `<div class="rating-reason">${escHtml(r.alasan)}</div>` : ''}
+        </div>`
+      ).join('');
+
+      const divText = (c.divisiDilamar || []).map(d => capitalize(d)).join(', ');
+
+      // Action buttons (hanya di mode divisi spesifik)
+      let actionHtml = '';
+      if (!isFinalSelectionMode && currentDivisi !== 'all') {
+        const r = c.ratings?.[currentDivisi];
+        if (r) {
+          const st = c.selectionStatus?.[currentDivisi] || '';
+          actionHtml = `<div class="selection-buttons">
+            <button class="btn-status btn-terima${st==='terima'?' active':''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','terima',${idx})">✓ Terima</button>
+            <button class="btn-status btn-cadangan${st==='cadangan'?' active':''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','cadangan',${idx})">~ Cad</button>
+            <button class="btn-status btn-tolak${st==='tolak'?' active':''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','tolak',${idx})">✗ Tolak</button>
+          </div>`;
+        }
+      }
+
+      return `<div class="card" onclick="openModalDetail(${idx})">
+        ${badgeHtml}
+        ${fotoHtml}
+        <div class="card-info">
+          <div class="card-name">${escHtml(c.nama)}</div>
+          <span class="card-class">Kelas ${escHtml(c.kelas)}</span>
+          <div class="card-divisi">🎯 ${escHtml(divText)}</div>
+          ${avgChip}
+          <div class="rating-list">${ratingsHtml}</div>
+          ${actionHtml}
+        </div>
+      </div>`;
+    }
+
+    // ============================================================
+    // QUICK STATUS (tombol di kartu, tanpa buka modal)
+    // ============================================================
+    async function quickSetStatus(rowIndex, divisi, status, cardIdx) {
+      const result = await apiPost({action: 'updateSelectionStatus', rowIndex, divisi, status});
+      if (result.success) {
+        const c = allCandidatesData[cardIdx];
+        if (c) {
+          if (!c.selectionStatus) c.selectionStatus = {};
+          c.selectionStatus[divisi] = status;
+        }
+        clearCache('dashboard_' + divisi);
+        clearCache('counts_' + divisi);
+        renderCandidates(filterCandidates(currentSearchQuery, allCandidatesData));
+        await loadSelectionCounts(divisi);
+        showToast(`Status "${status}" disimpan`, 'success');
+      } else {
+        showToast('❌ ' + (result.error || result.message || 'Gagal'), 'error');
+      }
+    }
+
+    // ============================================================
+    // STATUS PER DIVISI dari dalam Modal
+    // ============================================================
+    async function setSelectionCurrent(status) {
+      if (!currentModalCandidate || isFinalSelectionMode) return;
+      const r = currentModalCandidate.ratings?.[currentDivisi];
+      if (!r || !r.rowIndex) {
+        showToast('Data row tidak ditemukan untuk divisi ini', 'error');
+        return;
+      }
+
+      // Disable tombol
+      ['btnDivTerima','btnDivCadangan','btnDivTolak'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = true;
+      });
+
+      const result = await apiPost({action: 'updateSelectionStatus', rowIndex: r.rowIndex, divisi: currentDivisi, status});
+
+      ['btnDivTerima','btnDivCadangan','btnDivTolak'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = false;
+      });
+
+      if (result.success) {
+        if (!currentModalCandidate.selectionStatus) currentModalCandidate.selectionStatus = {};
+        currentModalCandidate.selectionStatus[currentDivisi] = status;
+
+        // Update active state tombol di modal
+        updateDivisiActionButtons(status);
+
+        clearCache('dashboard_' + currentDivisi);
+        clearCache('counts_' + currentDivisi);
+
+        // Refresh list dan kuota tanpa tutup modal
+        renderCandidates(filterCandidates(currentSearchQuery, allCandidatesData));
+        await loadSelectionCounts(currentDivisi);
+
+        showToast(`Status divisi "${status}" disimpan`, 'success');
+      } else {
+        showToast('❌ ' + (result.message || 'Gagal simpan status'), 'error');
+      }
+    }
+
+    function updateDivisiActionButtons(activeStatus) {
+      const btnMap = {terima: 'btnDivTerima', cadangan: 'btnDivCadangan', tolak: 'btnDivTolak'};
+      Object.entries(btnMap).forEach(([s, id]) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('active', s === activeStatus);
+      });
+    }
+
+    // ============================================================
+    // CHANGE FINAL STATUS (Override Manual Guru)
+    // ============================================================
+    async function changeFinalStatus(newStatus) {
+      if (!currentModalCandidate || !isFinalSelectionMode) {
+        showToast('Konteks tidak valid', 'error');
+        return;
+      }
+
+      const btnLolos = document.getElementById('btnFinalLolos');
+      const btnTidak = document.getElementById('btnFinalTidak');
+      btnLolos.disabled = true; btnTidak.disabled = true;
+      btnLolos.textContent = '...'; btnTidak.textContent = '...';
+
+      // Ambil rowIndex dan divisi dari kandidat
+      // Gunakan entri pertama dari ratings sebagai referensi sheet
+      const ratingsEntries = Object.entries(currentModalCandidate.ratings || {});
+      if (ratingsEntries.length === 0) {
+        showToast('Data rating tidak ditemukan', 'error');
+        btnLolos.disabled = false; btnTidak.disabled = false;
+        btnLolos.textContent = '✅ Tetapkan LOLOS'; btnTidak.textContent = '❌ Tetapkan TIDAK LOLOS';
+        return;
+      }
+
+      // Cari sheet yang paling relevan (rowIndex yang valid)
+      const [firstDivId, firstRating] = ratingsEntries[0];
+      const rowIndex = firstRating.rowIndex;
+      const divisi = firstDivId;
+
+      if (!rowIndex || rowIndex < 2) {
+        showToast('rowIndex tidak valid: ' + rowIndex, 'error');
+        btnLolos.disabled = false; btnTidak.disabled = false;
+        btnLolos.textContent = '✅ Tetapkan LOLOS'; btnTidak.textContent = '❌ Tetapkan TIDAK LOLOS';
+        return;
+      }
+
+      const result = await apiPost({
+        action: 'updateFinalStatus',
+        rowIndex: rowIndex,
+        divisi: divisi,
+        status: newStatus
+      });
+
+      btnLolos.disabled = false; btnTidak.disabled = false;
+      btnLolos.textContent = '✅ Tetapkan LOLOS';
+      btnTidak.textContent = '❌ Tetapkan TIDAK LOLOS';
+
+      if (result.success) {
+        // Update state lokal
+        currentModalCandidate.finalStatus = newStatus.toLowerCase();
+        currentModalCandidate.isManualOverride = true;
+        currentModalCandidate.statusReason = 'Override Manual Guru';
+
+        // Update tampilan modal
+        updateModalStatusPill(newStatus.toLowerCase(), true);
+        updateFinalActionButtons(newStatus.toLowerCase());
+
+        // Invalidate cache dan refresh list
+        clearAllCache();
+        showToast(`✅ Status "${newStatus}" berhasil disimpan`, 'success');
+
+        // Tutup modal dan refresh data
+        setTimeout(async () => {
+          closeModal();
+          await loadFinalSelectionData(currentFilterType);
+        }, 800);
+      } else {
+        showToast('❌ ' + (result.message || 'Gagal update status final'), 'error');
+      }
+    }
+
+    // ============================================================
+    // MODAL DETAIL
+    // ============================================================
+    function openModalDetail(idx) {
       const c = allCandidatesData[idx];
       if (!c) return;
-      
-      editingCandidateIndex = idx; // Set global index for editing
-      
-      const fotoUrl = convertDriveUrl(c.foto);
-      document.getElementById('modalPhoto').innerHTML = fotoUrl 
-        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
-        : '<div class="modal-photo placeholder">👤</div>';
-      
+      currentModalCandidate = c;
+
+      // Foto
+      document.getElementById('modalPhoto').innerHTML = buildPhotoHtml(c.foto, 'modal-photo');
+
+      // Info
       document.getElementById('modalName').textContent = c.nama;
       document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
-      document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => 
-        `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`
+
+      // Status pill
+      updateModalStatusPill(c.finalStatus, c.isManualOverride);
+
+      // Divisi dilamar
+      document.getElementById('modalDivisi').innerHTML = (c.divisiDilamar || []).map(d =>
+        `<span class="modal-divisi-tag">${capitalize(d)}</span>`
       ).join('');
-      
-      const divisionActionSection = document.getElementById('divisionActionSection');
-      const finalStatusSection = document.getElementById('finalStatusSection');
-      
-      if (currentView === 'division') {
-        // Show Division Specific Actions
-        divisionActionSection.style.display = 'block';
-        finalStatusSection.style.display = 'none';
-        
-        if (currentDivisi && currentDivisi !== 'all') {
-          document.getElementById('actionDivisiName').innerText = quotaConfig[currentDivisi]?.nama_divisi || currentDivisi;
-          const r = c.ratings[currentDivisi];
-          if (r) {
-            const ratingsHtml = `<div class="modal-rating-card">
-              <div class="modal-rating-header">
-                <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
-                <span class="modal-rating-div">${r.divName}</span>
-              </div>
-              <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
-            </div>`;
-            document.getElementById('modalRatings').innerHTML = ratingsHtml;
-            document.getElementById('modalSelectionButtons').innerHTML = getSelectionButtons(c, currentDivisi);
-          } else {
-            document.getElementById('modalRatings').innerHTML = '<p class="text-muted">Belum ada rating untuk divisi ini.</p>';
-            document.getElementById('modalSelectionButtons').innerHTML = '';
-          }
-        } else {
-          document.getElementById('modalRatings').innerHTML = '<p class="text-muted">Pilih divisi spesifik dari dashboard untuk memberikan nilai.</p>';
-          document.getElementById('modalSelectionButtons').innerHTML = '';
-        }
-        
+
+      // Avg block (hanya di mode final)
+      const avgBlock = document.getElementById('modalAvgBlock');
+      if (isFinalSelectionMode && c.averageScore) {
+        avgBlock.style.display = 'block';
+        document.getElementById('modalAvgNumber').textContent = c.averageScore;
+        document.getElementById('modalAvgSub').textContent =
+          `Dinilai ${c.countRated || Object.keys(c.ratings || {}).length} divisi` +
+          (c.statusReason ? ` · ${c.statusReason}` : '');
       } else {
-        // Show Final Status Editor
-        divisionActionSection.style.display = 'none';
-        finalStatusSection.style.display = 'block';
-        
-        let statusText = "Belum ditentukan (Proses)";
-        if (c.finalStatus === 'lolos') statusText = "✅ LOLoS";
-        else if (c.finalStatus === 'cadangan') statusText = "⏳ CADANGAN";
-        else if (c.finalStatus === 'tidak_lolos') statusText = "❌ TIDAK LOLOS";
-        
-        document.getElementById('currentFinalStatusText').innerText = "Status saat ini: " + statusText + (c.statusReason ? ` - ${c.statusReason}` : '');
+        avgBlock.style.display = 'none';
       }
-      
+
+      // Ratings per divisi
+      const ratingsHtml = Object.values(c.ratings || {}).map(r =>
+        `<div class="modal-rating-card">
+          <div class="modal-rating-header">
+            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+            <span class="modal-rating-divname">${r.divName}</span>
+          </div>
+          <div class="modal-rating-reason">${escHtml(r.alasan || 'Tidak ada catatan')}</div>
+        </div>`
+      ).join('');
+      document.getElementById('modalRatings').innerHTML = ratingsHtml || '<p style="color:var(--muted);font-size:13px">Belum ada rating</p>';
+
+      // Toggle action boxes
+      const finalActionBox = document.getElementById('finalActionBox');
+      const divisiActionBox = document.getElementById('divisiActionBox');
+
+      if (isFinalSelectionMode) {
+        finalActionBox.style.display = 'block';
+        divisiActionBox.style.display = 'none';
+        updateFinalActionButtons(c.finalStatus);
+      } else if (currentDivisi !== 'all') {
+        finalActionBox.style.display = 'none';
+        divisiActionBox.style.display = 'block';
+        // Set active button berdasarkan status saat ini
+        const currentDivStatus = c.selectionStatus?.[currentDivisi] || '';
+        updateDivisiActionButtons(currentDivStatus);
+      } else {
+        finalActionBox.style.display = 'none';
+        divisiActionBox.style.display = 'none';
+      }
+
       document.getElementById('detailModal').classList.add('active');
       document.body.style.overflow = 'hidden';
+    }
+
+    function updateModalStatusPill(finalStatus, isManual) {
+      const pill = document.getElementById('modalStatusPill');
+      if (!finalStatus) {
+        pill.innerHTML = `<span class="modal-status-pill pending">⏳ Menunggu Keputusan</span>`;
+      } else {
+        const isLolos = finalStatus === 'lolos';
+        const manualTag = isManual ? `<span class="modal-status-pill manual-tag">✍️ Override Guru</span>` : '';
+        pill.innerHTML = `<span class="modal-status-pill ${finalStatus}">${isLolos ? '✅ LOLOS' : '❌ TIDAK LOLOS'}${manualTag}</span>`;
+      }
+    }
+
+    function updateFinalActionButtons(finalStatus) {
+      const btnLolos = document.getElementById('btnFinalLolos');
+      const btnTidak = document.getElementById('btnFinalTidak');
+      if (!btnLolos || !btnTidak) return;
+
+      btnLolos.classList.toggle('active', finalStatus === 'lolos');
+      btnTidak.classList.toggle('active', finalStatus === 'tidak_lolos');
     }
 
     function closeModal() {
       document.getElementById('detailModal').classList.remove('active');
       document.body.style.overflow = '';
-      editingCandidateIndex = -1;
+      currentModalCandidate = null;
     }
-    
-    function closeModalOnBackdrop(e) { 
-      if (e.target === e.currentTarget) closeModal(); 
+
+    function closeModalOnBackdrop(e) {
+      if (e.target === e.currentTarget) closeModal();
     }
-    
+
+    // ============================================================
+    // UTILITIES
+    // ============================================================
+    function buildPhotoHtml(url, cls) {
+      const converted = convertDriveUrl(url);
+      if (converted) {
+        return `<img class="${cls}" src="${converted}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'${cls} placeholder\\'>👤</div>'">`;
+      }
+      return `<div class="${cls} placeholder">👤</div>`;
+    }
+
     function convertDriveUrl(url) {
       if (!url) return '';
-      const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
-      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
+      const s = String(url).trim();
+      const match = s.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || s.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
+      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : s;
     }
-    
-    function showToast(msg, type) {
+
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    let toastTimer = null;
+    function showToast(msg, type = 'info') {
       const t = document.getElementById('toast');
-      t.textContent = msg; 
+      t.textContent = msg;
       t.className = `toast ${type} show`;
-      setTimeout(() => t.classList.remove('show'), 3000);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
     }
   </script>
 </body>
