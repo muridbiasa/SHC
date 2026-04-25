@@ -54,11 +54,6 @@
     .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px}
     .stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
     .stat-value{font-size:24px;font-weight:800;color:var(--accent-light);margin-top:4px}
-    /* Stats Bar Khusus Hasil Akhir */
-    .stat-card.lolos .stat-value { color: var(--star-3); }
-    .stat-card.cadangan .stat-value { color: var(--star-2); }
-    .stat-card.tidak .stat-value { color: var(--star-1); }
-
     .candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.25s ease;position:relative}
     .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
@@ -111,13 +106,17 @@
     .modal-rating-badge{font-size:13px;font-weight:800;padding:4px 10px;border-radius:6px}
     .modal-rating-reason{font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
     
-    /* Global Status Actions */
-    .global-status-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
-    .btn-global { padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 13px; transition: transform 0.1s; }
-    .btn-global:active { transform: scale(0.95); }
-    .btn-lolos { background: var(--star-3); color: #000; }
-    .btn-cadangan-global { background: var(--star-2); color: #000; }
-    .btn-tidak-global { background: var(--star-1); color: #fff; }
+    /* Styles for Result Actions */
+    .result-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .btn-result { padding: 10px; border: none; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; color: white; transition: transform 0.1s; }
+    .btn-result:active { transform: scale(0.95); }
+    .btn-lolos { background: var(--star-3); }
+    .btn-cadangan-res { background: var(--star-2); }
+    .btn-tolak-res { background: var(--star-1); }
+    .current-status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 12px; }
+    .bg-lolos { background: rgba(46, 213, 115, 0.2); color: var(--star-3); border: 1px solid var(--star-3); }
+    .bg-cadangan { background: rgba(255, 159, 67, 0.2); color: var(--star-2); border: 1px solid var(--star-2); }
+    .bg-tolak { background: rgba(255, 71, 87, 0.2); color: var(--star-1); border: 1px solid var(--star-1); }
 
     .modal-config{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
     .modal-config.active{display:flex}
@@ -153,7 +152,7 @@
       .quota-tracker-bars{grid-template-columns:1fr}
       .selection-buttons{flex-wrap:wrap}
       .btn-status{flex:1 1 45%}
-      .global-status-actions { grid-template-columns: 1fr; }
+      .result-actions { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -171,8 +170,8 @@
       <div class="sidebar-title">Review Per Divisi</div>
       <div id="divisionList"></div>
 
-      <div class="sidebar-title" style="margin-top: 20px;">Hasil Akhir Seleksi</div>
-      <div id="finalResultsList">
+      <div class="sidebar-title" style="margin-top: 24px;">Hasil Akhir Seleksi</div>
+      <div id="resultCategoryList">
         <!-- Akan diisi oleh JS -->
       </div>
     </aside>
@@ -182,7 +181,7 @@
         <h1 id="pageTitle">📊 Review Kandidat</h1>
         <p id="pageDesc">Klik kartu untuk melihat detail rating & komentar</p>
         
-        <!-- Search Only for Division View -->
+        <!-- Search hanya muncul di mode review divisi -->
         <div class="search-wrapper" id="searchWrapper">
           <div class="search-box">
             <span class="search-icon">🔍</span>
@@ -192,7 +191,7 @@
           <div class="search-hint">Contoh: "gwen", "12", "xii"</div>
         </div>
 
-        <!-- Quota Tracker Only for Division View -->
+        <!-- Quota Tracker hanya muncul di mode review divisi -->
         <div class="quota-tracker" id="quotaTracker" style="display:none">
           <div class="quota-tracker-header">
             <span class="quota-tracker-title" id="quotaDivisiName">🎭 Divisi</span>
@@ -210,11 +209,17 @@
           </div>
           <div class="quota-status" id="quotaStatus">🟢 Slot tersedia</div>
         </div>
+        
+        <!-- Total Counter untuk Hasil Akhir -->
+        <div id="resultCounter" style="display:none; background: var(--card); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); text-align: center;">
+          <div class="stat-label">TOTAL KANDIDAT DI KATEGORI INI</div>
+          <div class="stat-value" id="totalResultCount" style="font-size: 32px; color: var(--text);">0</div>
+        </div>
       </div>
 
-      <!-- Stats Bar -->
       <div class="stats-bar" id="statsBar" style="display:none">
-        <!-- Dynamic Content -->
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
       </div>
 
       <div id="content">
@@ -223,7 +228,7 @@
     </main>
   </div>
 
-  <!-- Modal Detail -->
+  <!-- Modal Detail (Digunakan untuk Review Divisi DAN Hasil Akhir) -->
   <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -231,7 +236,7 @@
         <div style="flex:1">
           <div class="modal-title" id="modalName">—</div>
           <div class="modal-subtitle" id="modalClass">—</div>
-          <div id="modalAvgScore" style="font-size:12px; color:var(--star-3); margin-top:4px; font-weight:bold;"></div>
+          <div id="modalStatusBadge"></div>
         </div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
@@ -240,27 +245,35 @@
           <div class="modal-label">🎯 Divisi Dilamar</div>
           <div class="modal-divisi-list" id="modalDivisi"></div>
         </div>
-        <div class="modal-section">
+        
+        <!-- Bagian Rating (Hanya muncul jika ada data rating) -->
+        <div class="modal-section" id="modalRatingsSection">
           <div class="modal-label">📝 Rating & Alasan</div>
           <div id="modalRatings"></div>
         </div>
 
-        <!-- Action Buttons Contextual -->
-        <div id="divisionActions" class="selection-buttons" style="display:none;">
-          <!-- Injected via JS for Division View -->
+        <!-- Bagian Aksi Hasil Akhir (Hanya muncul di mode Hasil Akhir) -->
+        <div id="resultActionSection" style="display:none;">
+          <div class="modal-label">⚡ Ubah Status Akhir</div>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">
+            Perubahan akan otomatis memindahkan data ke sheet yang sesuai (Hasil_Lolos, Hasil_Cadangan, atau Hasil_TidakLolos).
+          </p>
+          <div class="result-actions">
+            <button class="btn-result btn-lolos" onclick="changeFinalStatus('Lolos')">✅ JADIKAN LOLOS</button>
+            <button class="btn-result btn-cadangan-res" onclick="changeFinalStatus('Cadangan')">🟡 JADIKAN CADANGAN</button>
+            <button class="btn-result btn-tolak-res" onclick="changeFinalStatus('Tidak Lolos')">❌ JADIKAN TIDAK LOLOS</button>
+          </div>
         </div>
 
-        <div id="globalActions" class="global-status-actions" style="display:none;">
-          <!-- Injected via JS for Final Results View -->
-          <button class="btn-global btn-lolos" onclick="changeGlobalStatus('Lolos')">✅ JADIKAN LOLOS</button>
-          <button class="btn-global btn-cadangan-global" onclick="changeGlobalStatus('Cadangan')">🟡 JADIKAN CADANGAN</button>
-          <button class="btn-global btn-tidak-global" onclick="changeGlobalStatus('TidakLolos')">❌ TIDAK LOLOS</button>
+        <!-- Bagian Aksi Review Divisi (Hanya muncul di mode Review Divisi) -->
+        <div id="divisiActionSection" style="display:none;">
+           <div class="modal-label">⚡ Status Divisi Ini</div>
+           <div class="selection-buttons" id="modalSelectionButtons"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Config Modal -->
   <div class="modal-config" id="quotaConfigModal" onclick="closeQuotaConfig(event)">
     <div class="modal-config-content" onclick="event.stopPropagation()">
       <div class="modal-config-title">⚙️ Atur Kuota - <span id="configDivisiName">Divisi</span></div>
@@ -284,17 +297,17 @@
   <script>
     const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
     
-    let currentView = 'division'; // 'division' or 'final'
+    let currentMode = 'review'; // 'review' atau 'result'
     let currentDivisi = 'all';
-    let currentCategory = 'all'; // For final results: Lolos, Cadangan, TidakLolos
+    let currentCategory = ''; // 'lolos', 'cadangan', 'tidak_lolos'
     let allCandidatesData = [];
     let quotaConfig = {};
     let currentQuotaDivisi = null;
     let searchTimeout = null;
     let currentSearchQuery = '';
-    let selectedCandidate = null; // Store currently selected candidate object
+    let currentSelectedCandidate = null; // Untuk menyimpan data kandidat yang sedang dibuka di modal
 
-    // Cache Helpers
+    // Cache helpers
     function getCached(key) {
       try {
         const cached = sessionStorage.getItem(key);
@@ -318,28 +331,6 @@
       };
     }
 
-    function filterCandidates(query, candidates) {
-      if (!query || query.trim() === '') return candidates;
-      const q = query.toLowerCase().trim();
-      return candidates.filter(c => (c.nama && c.nama.toLowerCase().includes(q)) || (c.kelas && String(c.kelas).toLowerCase().includes(q)));
-    }
-
-    function handleSearch(e) {
-      currentSearchQuery = e.target.value;
-      document.getElementById('searchClear').classList.toggle('visible', currentSearchQuery.length > 0);
-      const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
-      renderCandidates(filtered);
-    }
-
-    function clearSearch() {
-      const input = document.getElementById('searchInput');
-      input.value = '';
-      currentSearchQuery = '';
-      document.getElementById('searchClear').classList.remove('visible');
-      renderCandidates(allCandidatesData);
-      input.focus();
-    }
-
     function toggleMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('overlay');
@@ -348,8 +339,6 @@
       overlay.classList.toggle('show');
       document.body.style.overflow = isOpen ? '' : 'hidden';
     }
-
-    // --- Loaders ---
 
     async function loadQuotaConfig() {
       let result = getCached('quota_config');
@@ -364,28 +353,6 @@
       }
     }
 
-    async function loadFinalSummary() {
-      try {
-        const res = await fetch(`${API_BASE}?action=getFinalResultsSummary`);
-        const result = await res.json();
-        if (result.success) {
-          const container = document.getElementById('finalResultsList');
-          const d = result.data;
-          container.innerHTML = `
-            <button class="div-btn" onclick="loadFinalResults('Lolos')">
-              <span class="div-btn-icon">✅</span> <span>Lolos (${d.Lolos})</span>
-            </button>
-            <button class="div-btn" onclick="loadFinalResults('Cadangan')">
-              <span class="div-btn-icon">🟡</span> <span>Cadangan (${d.Cadangan})</span>
-            </button>
-            <button class="div-btn" onclick="loadFinalResults('TidakLolos')">
-              <span class="div-btn-icon">❌</span> <span>Tidak Lolos (${d.TidakLolos})</span>
-            </button>
-          `;
-        }
-      } catch (err) { console.error(err); }
-    }
-
     function updateQuotaTracker(divisiId, counts) {
       const config = quotaConfig[divisiId];
       if (!config) return;
@@ -396,11 +363,12 @@
       document.getElementById('quotaCadanganText').textContent = `${counts.cadangan||0}/${config.kuota_cadangan}`;
       document.getElementById('quotaAnggotaFill').style.width = `${Math.min(100, ((counts.terima||0) / config.kuota_anggota) * 100)}%`;
       document.getElementById('quotaCadanganFill').style.width = `${Math.min(100, ((counts.cadangan||0) / config.kuota_cadangan) * 100)}%`;
+      
       const sisa = config.kuota_anggota - (counts.terima||0);
       const statusEl = document.getElementById('quotaStatus');
-      if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot anggota tersedia`; statusEl.className = 'quota-status'; }
-      else if (sisa === 0) { statusEl.textContent = `✅ Kuota anggota terpenuhi!`; statusEl.className = 'quota-status full'; }
-      else { statusEl.textContent = `⚠️ Melebihi kuota (${Math.abs(sisa)} berlebih)`; statusEl.className = 'quota-status'; }
+      if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot tersedia`; statusEl.className = 'quota-status'; }
+      else if (sisa === 0) { statusEl.textContent = `✅ Kuota terpenuhi!`; statusEl.className = 'quota-status full'; }
+      else { statusEl.textContent = `⚠️ Overquota (${Math.abs(sisa)})`; statusEl.className = 'quota-status'; }
     }
 
     function openQuotaConfig() {
@@ -471,44 +439,13 @@
             if (!candidate.selectionStatus) candidate.selectionStatus = {};
             candidate.selectionStatus[divisi] = status;
           }
-          clearCache('dashboard_all');
           clearCache('dashboard_' + divisi);
           clearCache('counts_' + divisi);
           await loadSelectionCounts(divisi);
           renderCandidates(allCandidatesData);
-          showToast(`✅ Status diupdate: ${status}`, 'success');
+          showToast(`✅ Status divisi diupdate: ${status}`, 'success');
         } else { showToast(result.error || 'Gagal update status', 'error'); }
       } catch (err) { showToast('Error: ' + err.message, 'error'); }
-    }
-
-    // New: Update Global Status (Move Sheet)
-    async function changeGlobalStatus(newStatus) {
-      if (!selectedCandidate) return;
-      try {
-        const params = new URLSearchParams();
-        params.append('action', 'updateGlobalStatus');
-        params.append('nama', selectedCandidate.nama);
-        params.append('newStatus', newStatus);
-        params.append('avgScore', selectedCandidate.avgScore || 0);
-        params.append('divisiDilamar', selectedCandidate.divisiDilamar.join(','));
-        params.append('foto', selectedCandidate.foto || '');
-        params.append('ratingsDetail', JSON.stringify(selectedCandidate.ratings));
-        
-        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
-        const result = await res.json();
-        
-        if (result.success) {
-          showToast(`✅ Dipindahkan ke ${newStatus}`, 'success');
-          closeModal();
-          // Refresh list
-          loadFinalResults(currentCategory);
-          loadFinalSummary(); // Update counts in sidebar
-        } else {
-          showToast(result.message || 'Gagal update', 'error');
-        }
-      } catch (err) {
-        showToast('Error: ' + err.message, 'error');
-      }
     }
 
     function getSelectionButtons(candidate, divisi) {
@@ -518,13 +455,10 @@
       const rowIndex = ratingData?.rowIndex;
       if (!rowIndex) return '';
       const currentStatus = candidate.selectionStatus?.[divisi] || '';
-      
-      // Recalculate counts locally for responsiveness
       const counts = {
         terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
         cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
       };
-      
       const isTerimaDisabled = currentStatus !== 'terima' && counts.terima >= config.kuota_anggota;
       const isCadanganDisabled = currentStatus !== 'cadangan' && counts.cadangan >= config.kuota_cadangan;
       
@@ -544,18 +478,43 @@
       updateSelectionStatus(rowIndex, divisi, status);
     }
 
+    // --- FUNGSI BARU: GANTI STATUS AKHIR ---
+    async function changeFinalStatus(newStatus) {
+      if (!currentSelectedCandidate) return;
+      
+      const c = currentSelectedCandidate;
+      const params = new URLSearchParams();
+      params.append('action', 'syncCandidateToResultSheet');
+      params.append('nama', c.nama);
+      params.append('kelas', c.kelas);
+      params.append('foto', c.foto || '');
+      params.append('divisi', Array.isArray(c.divisi) ? c.divisi.join(',') : c.divisi);
+      params.append('avg', c.avg || 0);
+      params.append('status', newStatus);
+
+      try {
+        showToast('⏳ Menyimpan perubahan...', 'success');
+        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
+        const result = await res.json();
+        
+        if (result.success) {
+          showToast(`✅ Berhasil diubah menjadi: ${newStatus}`, 'success');
+          closeModal();
+          // Reload data kategori saat ini
+          if (currentCategory) loadFinalResults(currentCategory);
+        } else {
+          showToast('Gagal: ' + (result.message || 'Error'), 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       await loadQuotaConfig();
       await loadDivisions();
-      await loadFinalSummary(); // Load summary counts immediately
+      // Default load review all
       await loadCandidates('all');
-      
-      document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') { 
-          closeModal(); 
-          if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); 
-        } 
-      });
       
       const searchInput = document.getElementById('searchInput');
       if (searchInput) searchInput.addEventListener('input', debounce(handleSearch, 300));
@@ -568,33 +527,54 @@
         data = await res.json();
         if (data.success) setCache('dashboard_divisions', data);
       }
-      if (!data.success) throw new Error(data.error);
+      if (!data.success) return;
       
       const list = document.getElementById('divisionList');
+      const resultList = document.getElementById('resultCategoryList');
       list.innerHTML = '';
+      resultList.innerHTML = '';
       
       data.data.forEach(d => {
-        if (d.id === 'results_menu') return; // Skip, handled separately
-        const btn = document.createElement('button');
-        btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
-        btn.innerHTML = `<span class="div-btn-icon">${d.name.split(' ')[0] || '📋'}</span> <span>${d.name.split(' ').slice(1).join(' ') || d.name}</span>` + (d.id !== 'all' ? `<button class="div-btn-config" onclick="event.stopPropagation();openQuotaConfigFor('${d.id}')" title="Edit kuota">⚙️</button>` : '');
-        btn.onclick = async () => {
-          document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentDivisi = d.id;
-          currentView = 'division';
+        if (d.isCategory) {
+          // Buat submenu hasil akhir
+          const categories = [
+            {id: 'lolos', name: '✅ Lolos Seleksi', color: 'var(--star-3)'},
+            {id: 'cadangan', name: '🟡 Cadangan', color: 'var(--star-2)'},
+            {id: 'tidak_lolos', name: '❌ Tidak Lolos', color: 'var(--star-1)'}
+          ];
           
-          // UI Toggle
-          document.getElementById('searchWrapper').style.display = 'block';
-          document.getElementById('quotaTracker').style.display = (d.id === 'all') ? 'none' : 'block';
-          document.getElementById('pageTitle').innerText = '📊 Review Kandidat';
-          document.getElementById('pageDesc').innerText = 'Klik kartu untuk melihat detail rating & komentar';
-          
-          clearSearch();
-          await loadCandidates(d.id);
-          if (window.innerWidth <= 768) toggleMenu();
-        };
-        list.appendChild(btn);
+          categories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'div-btn';
+            btn.style.borderLeft = `3px solid ${cat.color}`;
+            btn.innerHTML = `<span>${cat.name}</span>`;
+            btn.onclick = async () => {
+              document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              currentMode = 'result';
+              currentCategory = cat.id;
+              await loadFinalResults(cat.id);
+              if (window.innerWidth <= 768) toggleMenu();
+            };
+            resultList.appendChild(btn);
+          });
+        } else {
+          // Tombol divisi biasa
+          const btn = document.createElement('button');
+          btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
+          btn.innerHTML = `<span class="div-btn-icon">${d.name.split(' ')[0] || '📋'}</span> <span>${d.name.split(' ').slice(1).join(' ') || d.name}</span>` + (d.id !== 'all' ? `<button class="div-btn-config" onclick="event.stopPropagation();openQuotaConfigFor('${d.id}')" title="Edit kuota">⚙️</button>` : '');
+          btn.onclick = async () => {
+            document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMode = 'review';
+            currentDivisi = d.id;
+            currentCategory = '';
+            clearSearch();
+            await loadCandidates(d.id);
+            if (window.innerWidth <= 768) toggleMenu();
+          };
+          list.appendChild(btn);
+        }
       });
     }
 
@@ -609,11 +589,22 @@
       document.getElementById('quotaConfigModal').classList.add('active');
     }
 
+    // Load Data Review Divisi
     async function loadCandidates(divisi) {
       const content = document.getElementById('content');
       const statsBar = document.getElementById('statsBar');
+      const searchWrapper = document.getElementById('searchWrapper');
+      const quotaTracker = document.getElementById('quotaTracker');
+      const resultCounter = document.getElementById('resultCounter');
+      
+      // UI Reset
+      document.getElementById('pageTitle').textContent = divisi === 'all' ? '📊 Review Semua Kandidat' : `📊 Review Divisi ${capitalizeFirst(divisi)}`;
+      document.getElementById('pageDesc').textContent = 'Klik kartu untuk melihat detail rating & komentar';
+      searchWrapper.style.display = 'block';
+      quotaTracker.style.display = divisi === 'all' ? 'none' : 'block';
+      resultCounter.style.display = 'none';
+      statsBar.style.display = 'grid';
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
-      statsBar.style.display = 'none';
       
       try {
         const cacheKey = 'dashboard_' + (divisi || 'all');
@@ -626,14 +617,9 @@
         if (!result.success) throw new Error(result.error);
         
         allCandidatesData = result.data || [];
-        
-        // Simple stats for division view
+        document.getElementById('statTotal').textContent = allCandidatesData.length;
         const reviewed = allCandidatesData.filter(c => Object.keys(c.ratings || {}).length > 0).length;
-        statsBar.innerHTML = `
-          <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">${allCandidatesData.length}</div></div>
-          <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value">${reviewed}</div></div>
-        `;
-        statsBar.style.display = 'grid';
+        document.getElementById('statReviewed').textContent = reviewed;
         
         if (allCandidatesData.length === 0) {
           content.innerHTML = '<div class="empty"><p>📭 Tidak ada data kandidat</p></div>';
@@ -645,50 +631,42 @@
       } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
     }
 
+    // Load Data Hasil Akhir (Dari Sheet)
     async function loadFinalResults(category) {
-      currentView = 'final';
-      currentCategory = category;
-      
-      // Update Active State in Sidebar
-      document.querySelectorAll('#finalResultsList .div-btn').forEach(b => b.classList.remove('active'));
-      // Find button clicked (hacky but works for now) or re-render list with active class
-      
-      document.getElementById('searchWrapper').style.display = 'none';
-      document.getElementById('quotaTracker').style.display = 'none';
-      document.getElementById('pageTitle').innerText = `🏆 Hasil Seleksi: ${category}`;
-      document.getElementById('pageDesc').innerText = 'Data tersimpan otomatis di Sheet terpisah. Klik untuk ubah status.';
-      
       const content = document.getElementById('content');
       const statsBar = document.getElementById('statsBar');
-      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
+      const searchWrapper = document.getElementById('searchWrapper');
+      const quotaTracker = document.getElementById('quotaTracker');
+      const resultCounter = document.getElementById('resultCounter');
+      
+      const titles = { 'lolos': '🏆 Kandidat Lolos', 'cadangan': '🟡 Kandidat Cadangan', 'tidak_lolos': '❌ Kandidat Tidak Lolos' };
+      document.getElementById('pageTitle').textContent = titles[category] || 'Hasil Seleksi';
+      document.getElementById('pageDesc').textContent = 'Data diambil dari sheet otomatis. Klik kartu untuk mengubah status.';
+      searchWrapper.style.display = 'none'; // Disable search for now in result view to keep it simple
+      quotaTracker.style.display = 'none';
       statsBar.style.display = 'none';
-
+      resultCounter.style.display = 'block';
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Mengambil data sheet...</p></div>';
+      
       try {
-        const res = await fetch(`${API_BASE}?action=getFinalResultsList&category=${category}`);
+        // No cache for results, always fresh
+        const res = await fetch(`${API_BASE}?action=getFinalResults&category=${category}`);
         const result = await res.json();
         if (!result.success) throw new Error(result.error);
         
         allCandidatesData = result.data || [];
+        document.getElementById('totalResultCount').textContent = result.total || 0;
         
-        // Stats for Final View
-        statsBar.innerHTML = `
-          <div class="stat-card ${category === 'Lolos' ? 'lolos' : category === 'Cadangan' ? 'cadangan' : 'tidak'}">
-            <div class="stat-label">Total ${category}</div>
-            <div class="stat-value">${allCandidatesData.length}</div>
-          </div>
-        `;
-        statsBar.style.display = 'grid';
-
         if (allCandidatesData.length === 0) {
           content.innerHTML = '<div class="empty"><p>📭 Belum ada data di kategori ini</p></div>';
           return;
         }
         
-        renderCandidates(allCandidatesData);
+        renderCandidates(allCandidatesData, true);
       } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
     }
 
-    function renderCandidates(candidates = allCandidatesData) {
+    function renderCandidates(candidates = allCandidatesData, isResultView = false) {
       const content = document.getElementById('content');
       if (!candidates || candidates.length === 0) {
         content.innerHTML = `<div class="empty"><p>Tidak ada kandidat ditemukan</p></div>`;
@@ -701,34 +679,56 @@
           ? `<img class="card-photo" src="${fotoUrl}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
           : '<div class="card-photo placeholder">👤</div>';
         
-        // Show Avg Score in Final View
-        let scoreBadge = '';
-        if (currentView === 'final' && c.avgScore) {
-          scoreBadge = `<div style="position:absolute; top:10px; right:10px; background:var(--accent); color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px;">Rata-rata: ${c.avgScore}</div>`;
+        // Badge Status
+        let statusBadge = '';
+        if (isResultView) {
+          let bgClass = 'bg-lolos';
+          if (c.status === 'Cadangan') bgClass = 'bg-cadangan';
+          if (c.status === 'Tidak Lolos') bgClass = 'bg-tolak';
+          statusBadge = `<span class="current-status-badge ${bgClass}" style="position:absolute; top:10px; right:10px; margin:0;">${c.status.toUpperCase()}</span>`;
         }
 
-        const ratingsHtml = Object.values(c.ratings || {}).map(r => 
-          `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
-        ).join('');
-        
-        const divText = (c.divisiDilamar || []).map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        
-        let actionArea = '';
-        if (currentView === 'division' && currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) {
-          actionArea = getSelectionButtons(c, currentDivisi);
+        // Ratings Display
+        let ratingsHtml = '';
+        if (c.ratings) {
+          ratingsHtml = Object.values(c.ratings).map(r => 
+            `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
+          ).join('');
+        } else if (c.avg) {
+           ratingsHtml = `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${c.avg >= 3 ? 4 : 2}">★ ${c.avg}</span><span class="rating-div">Rata-rata</span></div></div>`;
         }
-
-        // Pass index differently for final view since it's not from allCandidatesData global array in same way? 
-        // Actually we reassign allCandidatesData in loadFinalResults, so index is safe.
-        return `<div class="card" onclick="openModal(${idx})">
-          ${scoreBadge}
+        
+        const divText = Array.isArray(c.divisi) ? c.divisi.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ') : (c.divisi || '-');
+        
+        // Buttons Logic
+        let buttonsHtml = '';
+        if (isResultView) {
+          // No buttons on card for result view, action is inside modal
+        } else {
+          // Show divisi buttons if in review mode and specific divisi
+          if (currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) {
+             // We need to reconstruct the button HTML string here or pass data to modal
+             // For simplicity in grid, we just show a hint or rely on modal
+             buttonsHtml = `<div style="margin-top:8px; font-size:10px; color:var(--muted)">Klik untuk atur status</div>`;
+          }
+        }
+        
+        // Store full data in a way accessible by onclick (using index is risky if filtered, so we pass minimal ID or use global lookup)
+        // Better: attach data to window or use a unique ID. Here we use index of the filtered array passed to render
+        // But since we re-render, we need to find the candidate in the global allCandidatesData or pass the object via data attribute?
+        // Simplest: Use the index from the loop, but ensure openModal uses the correct source.
+        // Let's modify openModal to accept the object directly if possible, or rely on finding by name.
+        // Finding by name is safer for result view where index might differ from main array.
+        
+        return `<div class="card" onclick='openModalByName("${c.nama.replace(/"/g, '&quot;')}")'>
+          ${statusBadge}
           ${fotoHtml}
           <div class="card-info">
             <div class="card-name">${c.nama}</div>
             <span class="card-class">Kelas ${c.kelas}</span>
             <div class="card-divisi">🎯 ${divText}</div>
             <div class="rating-list">${ratingsHtml}</div>
-            ${actionArea}
+            ${buttonsHtml}
           </div>
         </div>`;
       });
@@ -736,52 +736,76 @@
       content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
     }
 
-    function openModal(idx) {
-      selectedCandidate = allCandidatesData[idx];
-      if (!selectedCandidate) return;
+    function openModalByName(nama) {
+      // Find candidate in current data
+      const c = allCandidatesData.find(x => x.nama === nama);
+      if (!c) return;
+      currentSelectedCandidate = c;
       
-      const fotoUrl = convertDriveUrl(selectedCandidate.foto);
+      const fotoUrl = convertDriveUrl(c.foto);
       document.getElementById('modalPhoto').innerHTML = fotoUrl 
         ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
         : '<div class="modal-photo placeholder">👤</div>';
       
-      document.getElementById('modalName').textContent = selectedCandidate.nama;
-      document.getElementById('modalClass').textContent = 'Kelas ' + selectedCandidate.kelas;
+      document.getElementById('modalName').textContent = c.nama;
+      document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
       
-      if (selectedCandidate.avgScore) {
-        document.getElementById('modalAvgScore').textContent = `Rata-rata Nilai: ${selectedCandidate.avgScore} (Dinamis)`;
-        document.getElementById('modalAvgScore').style.display = 'block';
-      } else {
-        document.getElementById('modalAvgScore').style.display = 'none';
-      }
-
-      document.getElementById('modalDivisi').innerHTML = (selectedCandidate.divisiDilamar || []).map(d => 
+      // Setup Divisi Tags
+      const divList = Array.isArray(c.divisi) ? c.divisi : (c.divisiDilamar || []);
+      document.getElementById('modalDivisi').innerHTML = divList.map(d => 
         `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`
       ).join('');
       
-      const ratingsHtml = Object.values(selectedCandidate.ratings || {}).map(r => 
-        `<div class="modal-rating-card">
-          <div class="modal-rating-header">
-            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
-            <span class="modal-rating-div">${r.divName}</span>
-          </div>
-          <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
-        </div>`
-      ).join('');
-      
-      document.getElementById('modalRatings').innerHTML = ratingsHtml;
-      
-      // Toggle Action Buttons
-      const divActions = document.getElementById('divisionActions');
-      const globActions = document.getElementById('globalActions');
-      
-      if (currentView === 'division' && currentDivisi && currentDivisi !== 'all') {
-        divActions.style.display = 'flex';
-        globActions.style.display = 'none';
-        divActions.innerHTML = getSelectionButtons(selectedCandidate, currentDivisi);
+      // Setup Status Badge in Modal
+      const badgeContainer = document.getElementById('modalStatusBadge');
+      if (currentMode === 'result' && c.status) {
+        let cls = 'bg-lolos';
+        if (c.status === 'Cadangan') cls = 'bg-cadangan';
+        if (c.status === 'Tidak Lolos') cls = 'bg-tolak';
+        badgeContainer.innerHTML = `<span class="current-status-badge ${cls}">STATUS: ${c.status.toUpperCase()}</span>`;
+        badgeContainer.style.display = 'block';
       } else {
-        divActions.style.display = 'none';
-        globActions.style.display = 'grid';
+        badgeContainer.style.display = 'none';
+      }
+
+      // Setup Ratings Section
+      const ratingsSection = document.getElementById('modalRatingsSection');
+      const ratingsContainer = document.getElementById('modalRatings');
+      if (c.ratings && Object.keys(c.ratings).length > 0) {
+        ratingsSection.style.display = 'block';
+        ratingsContainer.innerHTML = Object.values(c.ratings).map(r => 
+          `<div class="modal-rating-card">
+            <div class="modal-rating-header">
+              <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+              <span class="modal-rating-div">${r.divName}</span>
+            </div>
+            <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
+          </div>`
+        ).join('');
+      } else if (c.avg) {
+        ratingsSection.style.display = 'block';
+        ratingsContainer.innerHTML = `<div class="modal-rating-card"><div class="modal-rating-header"><span class="modal-rating-badge">★ ${c.avg}</span><span>Rata-rata Akhir</span></div></div>`;
+      } else {
+        ratingsSection.style.display = 'none';
+      }
+
+      // Toggle Action Sections
+      const resultActionSec = document.getElementById('resultActionSection');
+      const divisiActionSec = document.getElementById('divisiActionSection');
+      const divisiButtons = document.getElementById('modalSelectionButtons');
+      
+      if (currentMode === 'result') {
+        resultActionSec.style.display = 'block';
+        divisiActionSec.style.display = 'none';
+      } else {
+        resultActionSec.style.display = 'none';
+        divisiActionSec.style.display = 'block';
+        // Show buttons for current divisi if available
+        if (currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) {
+          divisiButtons.innerHTML = getSelectionButtons(c, currentDivisi);
+        } else {
+          divisiButtons.innerHTML = '<p style="font-size:12px; color:var(--muted)">Pilih divisi spesifik dari menu untuk memberikan status.</p>';
+        }
       }
 
       document.getElementById('detailModal').classList.add('active');
@@ -791,11 +815,34 @@
     function closeModal() {
       document.getElementById('detailModal').classList.remove('active');
       document.body.style.overflow = '';
-      selectedCandidate = null;
+      currentSelectedCandidate = null;
     }
     
     function closeModalOnBackdrop(e) { 
       if (e.target === e.currentTarget) closeModal(); 
+    }
+    
+    function filterCandidates(query, candidates) {
+      if (!query || query.trim() === '') return candidates;
+      const q = query.toLowerCase().trim();
+      return candidates.filter(c => (c.nama && c.nama.toLowerCase().includes(q)) || (c.kelas && String(c.kelas).toLowerCase().includes(q)));
+    }
+
+    function handleSearch(e) {
+      currentSearchQuery = e.target.value;
+      const clearBtn = document.getElementById('searchClear');
+      clearBtn.classList.toggle('visible', currentSearchQuery.length > 0);
+      const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
+      renderCandidates(filtered);
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      currentSearchQuery = '';
+      document.getElementById('searchClear').classList.remove('visible');
+      renderCandidates(allCandidatesData);
+      input.focus();
     }
     
     function convertDriveUrl(url) {
@@ -804,6 +851,11 @@
       return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
     }
     
+    function capitalizeFirst(str) {
+      if (!str) return "";
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
     function showToast(msg, type) {
       const t = document.getElementById('toast');
       t.textContent = msg; 
