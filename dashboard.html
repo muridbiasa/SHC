@@ -23,6 +23,12 @@
     .div-btn-icon{font-size:16px;flex-shrink:0}
     .div-btn-config{margin-left:auto;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px}
     .div-btn-config:hover{color:var(--accent)}
+    
+    /* Style khusus untuk menu Hasil Akhir */
+    .result-menu-btn { justify-content: space-between; }
+    .result-badge { background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+    .div-btn.active .result-badge { background: white; color: var(--accent); }
+
     .menu-toggle{display:none;position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:1100;width:48px;height:48px;background:var(--accent);border:none;border-radius:var(--radius-md);color:white;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,107,255,0.25)}
     .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.3s ease}
     .overlay.show{display:block;opacity:1}
@@ -64,6 +70,13 @@
     .card-name{font-size:15px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .card-class{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
     .card-divisi{font-size:11px;color:var(--muted)}
+    
+    /* Status Badge on Card */
+    .card-status-badge { position: absolute; top: 12px; right: 12px; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-lolos { background: rgba(46, 213, 115, 0.2); color: var(--star-3); border: 1px solid var(--star-3); }
+    .badge-cadangan { background: rgba(255, 159, 67, 0.2); color: var(--star-2); border: 1px solid var(--star-2); }
+    .badge-tidak_lolos { background: rgba(255, 71, 87, 0.2); color: var(--star-1); border: 1px solid var(--star-1); }
+
     .rating-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
     .rating-item{background:var(--card);border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
     .rating-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
@@ -105,6 +118,20 @@
     .modal-rating-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
     .modal-rating-badge{font-size:13px;font-weight:800;padding:4px 10px;border-radius:6px}
     .modal-rating-reason{font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
+    
+    /* Final Status Editor Styles */
+    .final-status-editor { background: var(--card); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-top: 20px; }
+    .final-status-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 12px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+    .final-status-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .btn-final { padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; color: white; font-family: inherit; }
+    .btn-final-lolos { background: var(--star-3); }
+    .btn-final-lolos:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .btn-final-cadangan { background: var(--star-2); }
+    .btn-final-cadangan:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .btn-final-tolak { background: var(--star-1); }
+    .btn-final-tolak:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .current-status-indicator { text-align: center; font-size: 11px; color: var(--muted); margin-top: 8px; font-style: italic; }
+
     .modal-config{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
     .modal-config.active{display:flex}
     .modal-config-content{background:var(--surface);width:100%;max-width:400px;border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
@@ -122,24 +149,6 @@
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
     .toast.success{border-left:4px solid var(--star-3);color:var(--star-3)}
     .toast.error{border-left:4px solid var(--star-1);color:var(--star-1)}
-    
-    /* Badge Status Akhir */
-    .final-status-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .badge-lolos { background: var(--star-3); color: #000; }
-    .badge-cadangan { background: var(--star-2); color: #000; }
-    .badge-tidak_lolos { background: var(--star-1); color: #fff; }
-
     @media(max-width:768px){
       .menu-toggle{display:flex!important}
       .sidebar{width:85vw;max-width:320px;transform:translateX(-100%);padding-top:calc(60px + var(--safe-top))}
@@ -157,6 +166,7 @@
       .quota-tracker-bars{grid-template-columns:1fr}
       .selection-buttons{flex-wrap:wrap}
       .btn-status{flex:1 1 45%}
+      .final-status-actions { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -174,25 +184,31 @@
       <div class="sidebar-title">Filter Divisi</div>
       <div id="divisionList"></div>
 
+      <!-- NEW SECTION: HASIL AKHIR SELEKSI -->
       <div class="sidebar-title" style="margin-top: 24px;">Hasil Akhir Seleksi</div>
-      <button class="div-btn" onclick="loadFinalResults('all')">
-        <span class="div-btn-icon">📊</span> <span>Semua Data</span>
+      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('all')">
+        <span><span class="div-btn-icon">📊</span> Semua Data</span>
+        <span class="result-badge" id="count-all">0</span>
       </button>
-      <button class="div-btn" onclick="loadFinalResults('lolos')">
-        <span class="div-btn-icon">✅</span> <span>Lolos (<span id="countLolos">0</span>)</span>
+      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('lolos')">
+        <span><span class="div-btn-icon">✅</span> Lolos</span>
+        <span class="result-badge" id="count-lolos" style="background:rgba(46,213,115,0.2); color:var(--star-3)">0</span>
       </button>
-      <button class="div-btn" onclick="loadFinalResults('cadangan')">
-        <span class="div-btn-icon">⚠️</span> <span>Cadangan (<span id="countCadangan">0</span>)</span>
+      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('cadangan')">
+        <span><span class="div-btn-icon">⏳</span> Cadangan</span>
+        <span class="result-badge" id="count-cadangan" style="background:rgba(255,159,67,0.2); color:var(--star-2)">0</span>
       </button>
-      <button class="div-btn" onclick="loadFinalResults('tidak_lolos')">
-        <span class="div-btn-icon">❌</span> <span>Tidak Lolos (<span id="countTolak">0</span>)</span>
+      <button class="div-btn result-menu-btn" onclick="loadFinalSelection('tidak_lolos')">
+        <span><span class="div-btn-icon">❌</span> Tidak Lolos</span>
+        <span class="result-badge" id="count-tidak_lolos" style="background:rgba(255,71,87,0.2); color:var(--star-1)">0</span>
       </button>
+
     </aside>
 
     <main class="main">
       <div class="header">
         <h1 id="pageTitle">📊 Review Kandidat</h1>
-        <p id="pageDesc">Klik kartu untuk melihat detail rating & komentar</p>
+        <p id="pageSubtitle">Klik kartu untuk melihat detail rating & komentar</p>
         
         <!-- Search only visible in division view -->
         <div class="search-wrapper" id="searchWrapper">
@@ -234,7 +250,6 @@
     </main>
   </div>
 
-  <!-- Modal Detail -->
   <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -242,7 +257,6 @@
         <div style="flex:1">
           <div class="modal-title" id="modalName">—</div>
           <div class="modal-subtitle" id="modalClass">—</div>
-          <div id="modalFinalStatusDisplay" style="margin-top:8px;"></div>
         </div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
@@ -252,22 +266,34 @@
           <div class="modal-divisi-list" id="modalDivisi"></div>
         </div>
         
-        <!-- Section Rating & Action Per Divisi -->
-        <div class="modal-section">
-          <div class="modal-label">📝 Rating & Aksi Per Divisi</div>
-          <div id="modalRatingsActions"></div>
+        <!-- Section for Division Specific Actions (Old Feature) -->
+        <div id="divisionActionSection" class="modal-section" style="display:none;">
+          <div class="modal-label">📝 Aksi Divisi (<span id="actionDivisiName"></span>)</div>
+          <div id="modalRatings"></div>
+          <div id="modalSelectionButtons"></div>
         </div>
 
-        <!-- Section Info Status Akhir -->
-        <div class="modal-section" id="finalStatusInfoSection" style="display:none; background: var(--card); padding: 16px; border-radius: var(--radius-md);">
+        <!-- Section for Final Status Editing (New Feature) -->
+        <div id="finalStatusSection" class="modal-section" style="display:none;">
           <div class="modal-label">🏆 Status Akhir Seleksi</div>
-          <div id="finalStatusReason" style="font-size: 13px; color: var(--text-secondary);"></div>
+          <div class="final-status-editor">
+            <div class="final-status-title">Ubah Status Kandidat Ini Menjadi:</div>
+            <div class="final-status-actions">
+              <button class="btn-final btn-final-lolos" onclick="updateFinalStatus('lolos')">✅ LOLoS</button>
+              <button class="btn-final btn-final-cadangan" onclick="updateFinalStatus('cadangan')">⏳ CADANGAN</button>
+              <button class="btn-final btn-final-tolak" onclick="updateFinalStatus('tidak_lolos')">❌ TIDAK LOLOS</button>
+            </div>
+            <div class="current-status-indicator" id="currentFinalStatusText">Status saat ini: Menghitung...</div>
+          </div>
+          <div style="margin-top:12px; font-size:11px; color:var(--muted); text-align:center;">
+            *Perubahan akan langsung memperbarui data di Sheet Divisi terkait dan memindahkan kandidat ke daftar yang sesuai.
+          </div>
         </div>
+
       </div>
     </div>
   </div>
 
-  <!-- Modal Config Kuota -->
   <div class="modal-config" id="quotaConfigModal" onclick="closeQuotaConfig(event)">
     <div class="modal-config-content" onclick="event.stopPropagation()">
       <div class="modal-config-title">⚙️ Atur Kuota - <span id="configDivisiName">Divisi</span></div>
@@ -290,21 +316,27 @@
 
   <script>
     const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
+    
+    // State Variables
+    let currentView = 'division'; // 'division' or 'final'
     let currentDivisi = 'all';
-    let currentViewMode = 'division'; // 'division' or 'final_result'
+    let currentFilterType = 'all'; // for final selection
     let allCandidatesData = [];
     let quotaConfig = {};
     let currentQuotaDivisi = null;
     let searchTimeout = null;
     let currentSearchQuery = '';
-    let finalResultCounts = { lolos: 0, cadangan: 0, tidak_lolos: 0 };
+    
+    // Variable to track which candidate is being edited in Final Selection mode
+    let editingCandidateIndex = -1; 
 
+    // ⚡ PERF: Cache helpers
     function getCached(key) {
       try {
         const cached = sessionStorage.getItem(key);
         if (cached) {
           const {data, timestamp} = JSON.parse(cached);
-          if (Date.now() - timestamp < 300000) return data;
+          if (Date.now() - timestamp < 300000) return data; 
         }
       } catch(e) {}
       return null;
@@ -333,7 +365,8 @@
 
     function handleSearch(e) {
       currentSearchQuery = e.target.value;
-      document.getElementById('searchClear').classList.toggle('visible', currentSearchQuery.length > 0);
+      const clearBtn = document.getElementById('searchClear');
+      clearBtn.classList.toggle('visible', currentSearchQuery.length > 0);
       const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
       renderCandidates(filtered);
     }
@@ -379,7 +412,6 @@
       document.getElementById('quotaCadanganText').textContent = `${counts.cadangan||0}/${config.kuota_cadangan}`;
       document.getElementById('quotaAnggotaFill').style.width = `${Math.min(100, ((counts.terima||0) / config.kuota_anggota) * 100)}%`;
       document.getElementById('quotaCadanganFill').style.width = `${Math.min(100, ((counts.cadangan||0) / config.kuota_cadangan) * 100)}%`;
-      
       const sisa = config.kuota_anggota - (counts.terima||0);
       const statusEl = document.getElementById('quotaStatus');
       if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot anggota tersedia`; statusEl.className = 'quota-status'; }
@@ -388,7 +420,7 @@
     }
 
     function openQuotaConfig() {
-      if (!currentDivisi || currentDivisi === 'all' || currentViewMode !== 'division') return;
+      if (!currentDivisi || currentDivisi === 'all') return;
       currentQuotaDivisi = currentDivisi;
       const config = quotaConfig[currentQuotaDivisi];
       if (config) {
@@ -430,17 +462,16 @@
 
     async function loadSelectionCounts(divisi) {
       if (!divisi || divisi === 'all') return;
-      try {
-        let result = getCached('counts_' + divisi);
-        if (!result) {
-          const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
-          result = await res.json();
-          if (result.success) setCache('counts_' + divisi, result);
-        }
-        if (result.success) updateQuotaTracker(divisi, result.data);
-      } catch (err) { console.error('Error loading selection counts:', err); }
+      let result = getCached('counts_' + divisi);
+      if (!result) {
+        const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
+        result = await res.json();
+        if (result.success) setCache('counts_' + divisi, result);
+      }
+      if (result.success) updateQuotaTracker(divisi, result.data);
     }
 
+    // --- CORE LOGIC FOR DIVISION VIEW ---
     async function updateSelectionStatus(rowIndex, divisi, status) {
       try {
         const params = new URLSearchParams();
@@ -465,43 +496,27 @@
           clearCache('dashboard_all');
           clearCache('dashboard_' + divisi);
           clearCache('counts_' + divisi);
-          clearCache('final_selection'); // Clear final result cache too
+          // Also clear final selection cache because status changed
+          clearCache('final_all'); clearCache('final_lolos'); clearCache('final_cadangan'); clearCache('final_tidak_lolos');
           
-          if (currentViewMode === 'division') {
-            await loadSelectionCounts(divisi);
-            renderCandidates(allCandidatesData);
-          } else {
-            // If in final result view, refresh the list to update status badges
-            loadFinalResults(currentFilterType);
-          }
-          
-          const msg = status === '' ? 'Status di-undo' : `Status diubah: ${status}`;
-          showToast('✅ ' + msg, 'success');
-          closeModal();
-        } else { 
-          showToast(result.error || 'Gagal update status', 'error'); 
-        }
-      } catch (err) {
-        showToast('Error: ' + err.message, 'error');
-      }
+          await loadSelectionCounts(divisi);
+          renderCandidates(allCandidatesData);
+          showToast(`✅ Status divisi diupdate: ${status}`, 'success');
+        } else { showToast(result.error || 'Gagal update status', 'error'); }
+      } catch (err) { showToast('Error: ' + err.message, 'error'); }
     }
 
     function getSelectionButtons(candidate, divisi) {
       const config = quotaConfig[divisi];
       if (!config) return '';
-      
       const ratingData = candidate.ratings?.[divisi];
       const rowIndex = ratingData?.rowIndex;
-      if (!rowIndex) return '<div style="font-size:11px;color:var(--muted);margin-top:12px;">Belum ada rating untuk divisi ini</div>';
-      
+      if (!rowIndex) return '';
       const currentStatus = candidate.selectionStatus?.[divisi] || '';
-      
-      // Calculate current counts from local data
       const counts = {
         terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
         cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
       };
-      
       const isTerimaDisabled = currentStatus !== 'terima' && counts.terima >= config.kuota_anggota;
       const isCadanganDisabled = currentStatus !== 'cadangan' && counts.cadangan >= config.kuota_cadangan;
       
@@ -514,8 +529,6 @@
                 ${isCadanganDisabled?'disabled':''}>🟡 Cadangan</button>
         <button class="btn-status btn-tolak${currentStatus==='tolak'?' active':''}" 
                 onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','tolak')">🔴 Tolak</button>
-        <button class="btn-status" style="background:var(--card);color:var(--muted);border:1px solid var(--border)"
-                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','')" title="Undo Status">↩️</button>
       </div>`;
     }
 
@@ -523,10 +536,68 @@
       updateSelectionStatus(rowIndex, divisi, status);
     }
 
+    // --- CORE LOGIC FOR FINAL SELECTION VIEW ---
+    async function updateFinalStatus(newStatus) {
+      if (editingCandidateIndex === -1) return;
+      const candidate = allCandidatesData[editingCandidateIndex];
+      
+      // We need to find AT LEAST ONE divisi where this candidate has a rating to update the status.
+      // Ideally, we update the status in their PRIORITY divisi or the first one they applied to.
+      // For simplicity and robustness: Update the status in the FIRST divisi they have a rating for.
+      
+      const ratings = candidate.ratings;
+      const divisiKeys = Object.keys(ratings);
+      
+      if (divisiKeys.length === 0) {
+        showToast('❌ Kandidat belum memiliki rating divisi apapun!', 'error');
+        return;
+      }
+
+      const targetDivisi = divisiKeys[0]; // Take first divisi
+      const rowIndex = ratings[targetDivisi].rowIndex;
+
+      try {
+        const params = new URLSearchParams();
+        params.append('action', 'updateSelectionStatus');
+        params.append('rowIndex', rowIndex);
+        params.append('divisi', targetDivisi);
+        params.append('status', newStatus === 'lolos' ? 'terima' : (newStatus === 'cadangan' ? 'cadangan' : 'tolak'));
+        
+        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
+        const result = await res.json();
+        
+        if (result.success) {
+          // Clear all caches to force refresh
+          clearCache('final_all'); clearCache('final_lolos'); clearCache('final_cadangan'); clearCache('final_tidak_lolos');
+          clearCache('dashboard_all'); clearCache('dashboard_' + targetDivisi);
+          clearCache('counts_' + targetDivisi);
+          
+          showToast(`✅ Status diubah menjadi ${newStatus.toUpperCase()}`, 'success');
+          closeModal();
+          // Reload current view
+          if (currentView === 'final') {
+            loadFinalSelection(currentFilterType);
+          }
+        } else {
+          showToast(result.error || 'Gagal update status', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // --- INIT & NAVIGATION ---
     document.addEventListener('DOMContentLoaded', async () => {
       await loadQuotaConfig();
       await loadDivisions();
-      await loadCandidates('all');
+      await loadCandidates('all'); // Default view
+      
+      document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') { 
+          closeModal(); 
+          if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); 
+        } 
+      });
       
       const searchInput = document.getElementById('searchInput');
       if (searchInput) searchInput.addEventListener('input', debounce(handleSearch, 300));
@@ -550,13 +621,19 @@
         btn.innerHTML = `<span class="div-btn-icon">${d.name.split(' ')[0] || '📋'}</span> <span>${d.name.split(' ').slice(1).join(' ') || d.name}</span>` + (d.id !== 'all' ? `<button class="div-btn-config" onclick="event.stopPropagation();openQuotaConfigFor('${d.id}')" title="Edit kuota">⚙️</button>` : '');
         btn.onclick = async () => {
           document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+          // Remove active from result buttons too
+          document.querySelectorAll('.result-menu-btn').forEach(b => b.classList.remove('active'));
+          
           btn.classList.add('active');
           currentDivisi = d.id;
-          currentViewMode = 'division';
-          clearSearch();
+          currentView = 'division';
+          
+          // UI Toggles
           document.getElementById('searchWrapper').style.display = 'block';
-          document.getElementById('pageTitle').innerText = '📊 Review Kandidat';
-          document.getElementById('pageDesc').innerText = 'Klik kartu untuk melihat detail rating & komentar';
+          document.getElementById('pageTitle').innerText = d.id === 'all' ? '📊 Semua Kandidat' : `🎭 Review ${d.name}`;
+          document.getElementById('pageSubtitle').innerText = 'Klik kartu untuk melihat detail rating & aksi divisi';
+          
+          clearSearch();
           await loadCandidates(d.id);
           if (window.innerWidth <= 768) toggleMenu();
         };
@@ -578,11 +655,11 @@
     async function loadCandidates(divisi) {
       const content = document.getElementById('content');
       const statsBar = document.getElementById('statsBar');
-      const tracker = document.getElementById('quotaTracker');
+      const quotaTracker = document.getElementById('quotaTracker');
       
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
       statsBar.style.display = 'none';
-      tracker.style.display = 'none';
+      quotaTracker.style.display = 'none';
       
       try {
         const cacheKey = 'dashboard_' + (divisi || 'all');
@@ -612,79 +689,80 @@
       } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
     }
 
-    // FUNGSI BARU: Load Hasil Akhir Seleksi
-    let currentFilterType = 'all';
-    async function loadFinalResults(filterType) {
-      currentViewMode = 'final_result';
+    // NEW FUNCTION: Load Final Selection Data
+    async function loadFinalSelection(filterType) {
+      currentView = 'final';
       currentFilterType = filterType;
       
-      // Update UI Sidebar Active State
+      // Update Active State in Sidebar
       document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
-      // Highlight the clicked button logic handled by onclick inline usually, but here we rely on visual feedback
-      
-      const titles = {
-        'all': '📊 Semua Data Hasil Seleksi',
-        'lolos': '✅ Kandidat Lolos',
-        'cadangan': '⚠️ Kandidat Cadangan',
-        'tidak_lolos': '❌ Kandidat Tidak Lolos'
-      };
-      
-      document.getElementById('pageTitle').innerText = titles[filterType];
-      document.getElementById('pageDesc').innerText = 'Status dihitung otomatis berdasarkan rata-rata nilai & keputusan panitia.';
-      document.getElementById('searchWrapper').style.display = 'none'; // Hide search for now in final view to simplify
-      document.getElementById('quotaTracker').style.display = 'none';
-      document.getElementById('statsBar').style.display = 'none';
+      document.querySelectorAll('.result-menu-btn').forEach(b => b.classList.remove('active'));
+      // Find the button clicked (approximate via onclick attribute match for simplicity in this scope)
+      const activeBtn = Array.from(document.querySelectorAll('.result-menu-btn')).find(b => b.getAttribute('onclick').includes(filterType));
+      if(activeBtn) activeBtn.classList.add('active');
 
       const content = document.getElementById('content');
+      const statsBar = document.getElementById('statsBar');
+      const quotaTracker = document.getElementById('quotaTracker');
+      const searchWrapper = document.getElementById('searchWrapper');
+      
+      // UI Updates
+      searchWrapper.style.display = 'none'; // Disable search in final view for now to keep it simple
+      quotaTracker.style.display = 'none';
+      statsBar.style.display = 'none';
+      
+      let title = "Hasil Akhir Seleksi";
+      if(filterType === 'lolos') title = "✅ Kandidat Lolos";
+      if(filterType === 'cadangan') title = "⏳ Kandidat Cadangan";
+      if(filterType === 'tidak_lolos') title = "❌ Kandidat Tidak Lolos";
+      
+      document.getElementById('pageTitle').innerText = title;
+      document.getElementById('pageSubtitle').innerText = 'Klik kartu untuk mengedit status kandidat';
+      
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Menghitung status akhir...</p></div>';
-
+      
       try {
-        // Force no cache for fresh calculation
-        const res = await fetch(`${API_BASE}?action=getFinalSelectionData&filterType=${filterType}`, { cache: 'no-store' });
-        const result = await res.json();
+        const cacheKey = 'final_' + filterType;
+        let result = getCached(cacheKey);
+        
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getFinalSelectionData&filterType=${filterType}`);
+          result = await res.json();
+          if (result.success) setCache(cacheKey, result);
+        }
         
         if (!result.success) throw new Error(result.error);
         
         allCandidatesData = result.data || [];
         
-        // Update Counts in Sidebar
-        if (filterType === 'all') {
-           // If viewing all, we need counts for others. 
-           // Ideally backend returns counts, but let's just fetch them or assume user clicks individually.
-           // For better UX, let's trigger a background fetch for counts if needed, 
-           // but for now, the buttons show static numbers until clicked? 
-           // No, let's update the global count object if backend returned it (not implemented yet in GS).
-           // Let's just display the length of current result.
+        // Update Badges in Sidebar
+        if(filterType === 'all') {
+           // If loading 'all', we should ideally fetch counts for others too, 
+           // but for performance, we just update the current one and let user click to refresh others.
+           // Or we can do a quick fetch for counts only. Let's just update the displayed count for now.
+           document.getElementById('count-all').innerText = result.total || 0;
+        } else if (filterType === 'lolos') {
+           document.getElementById('count-lolos').innerText = result.total || 0;
+        } else if (filterType === 'cadangan') {
+           document.getElementById('count-cadangan').innerText = result.total || 0;
+        } else if (filterType === 'tidak_lolos') {
+           document.getElementById('count-tidak_lolos').innerText = result.total || 0;
         }
-        
-        // Simple counter update for the button clicked
-        updateSidebarCounts(filterType, result.total);
 
         if (allCandidatesData.length === 0) {
-          content.innerHTML = '<div class="empty"><p>📭 Tidak ada kandidat dalam kategori ini.</p><p style="font-size:12px;margin-top:8px">Pastikan sudah ada rating masuk.</p></div>';
+          content.innerHTML = '<div class="empty"><p>📭 Tidak ada kandidat dalam kategori ini.</p></div>';
           return;
         }
         
-        renderCandidates(allCandidatesData, true);
-      } catch (err) { 
-        content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; 
-      }
+        renderCandidates(allCandidatesData);
+      } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
     }
 
-    function updateSidebarCounts(type, count) {
-      if (type === 'lolos') document.getElementById('countLolos').innerText = count;
-      if (type === 'cadangan') document.getElementById('countCadangan').innerText = count;
-      if (type === 'tidak_lolos') document.getElementById('countTolak').innerText = count;
-      
-      // Note: In a real app, we'd fetch all counts at once. 
-      // Here, the number updates when you click the button.
-    }
-
-    function renderCandidates(candidates = allCandidatesData, isFinalView = false) {
+    function renderCandidates(candidates = allCandidatesData) {
       const content = document.getElementById('content');
       
       if (!candidates || candidates.length === 0) {
-        content.innerHTML = `<div class="empty"><p>Tidak ada kandidat ditemukan</p></div>`;
+        content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Tidak ada kandidat ditemukan${currentSearchQuery ? ` untuk "<strong>${currentSearchQuery}</strong>"` : ''}</p>${currentSearchQuery ? `<button class="btn btn-secondary" onclick="clearSearch()">Tampilkan Semua</button>` : ''}</div>`;
         return;
       }
       
@@ -694,36 +772,35 @@
           ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
           : '<div class="card-photo placeholder">👤</div>';
         
-        // Show Ratings
+        // Determine Badge for Final View
+        let statusBadgeHtml = '';
+        if (currentView === 'final') {
+          if (c.finalStatus === 'lolos') statusBadgeHtml = '<div class="card-status-badge badge-lolos">LOLOS</div>';
+          else if (c.finalStatus === 'cadangan') statusBadgeHtml = '<div class="card-status-badge badge-cadangan">CADANGAN</div>';
+          else if (c.finalStatus === 'tidak_lolos') statusBadgeHtml = '<div class="card-status-badge badge-tidak_lolos">TIDAK LOLOS</div>';
+        }
+
         const ratingsHtml = Object.values(c.ratings).map(r => 
           `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
         ).join('');
         
         const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
         
-        // Determine Badge
-        let statusBadge = '';
-        if (isFinalView) {
-          if (c.finalStatus === 'lolos') statusBadge = '<div class="final-status-badge badge-lolos">LOLOS</div>';
-          else if (c.finalStatus === 'cadangan') statusBadge = '<div class="final-status-badge badge-cadangan">CADANGAN</div>';
-          else if (c.finalStatus === 'tidak_lolos') statusBadge = '<div class="final-status-badge badge-tidak_lolos">TIDAK LOLOS</div>';
+        // Logic for Buttons inside Card
+        let actionHtml = '';
+        if (currentView === 'division' && currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) {
+          actionHtml = getSelectionButtons(c, currentDivisi);
         }
 
-        // Buttons: Only show in Division View
-        let actionButtons = '';
-        if (!isFinalView && currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) {
-          actionButtons = getSelectionButtons(c, currentDivisi);
-        }
-        
-        return `<div class="card" onclick="openModalDetail(${idx}, ${isFinalView})">
-          ${statusBadge}
+        return `<div class="card" onclick="openModal(${idx})">
+          ${statusBadgeHtml}
           ${fotoHtml}
           <div class="card-info">
             <div class="card-name">${c.nama}</div>
             <span class="card-class">Kelas ${c.kelas}</span>
             <div class="card-divisi">🎯 ${divText}</div>
             <div class="rating-list">${ratingsHtml}</div>
-            ${actionButtons}
+            ${actionHtml}
           </div>
         </div>`;
       });
@@ -731,9 +808,11 @@
       content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
     }
 
-    function openModalDetail(idx, isFinalView) {
+    function openModal(idx) {
       const c = allCandidatesData[idx];
       if (!c) return;
+      
+      editingCandidateIndex = idx; // Set global index for editing
       
       const fotoUrl = convertDriveUrl(c.foto);
       document.getElementById('modalPhoto').innerHTML = fotoUrl 
@@ -746,47 +825,47 @@
         `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`
       ).join('');
       
-      // Render Ratings with Actions (Only if Division View)
-      const ratingsContainer = document.getElementById('modalRatingsActions');
-      ratingsContainer.innerHTML = '';
+      const divisionActionSection = document.getElementById('divisionActionSection');
+      const finalStatusSection = document.getElementById('finalStatusSection');
       
-      Object.values(c.ratings).forEach(r => {
-        let actionHtml = '';
-        if (!isFinalView && currentDivisi === r.divName.toLowerCase()) {
-           // Re-use logic to get buttons for this specific rating
-           // We need to reconstruct a mini candidate object for the helper
-           const miniCand = { ratings: { [r.divName.toLowerCase()]: r }, selectionStatus: c.selectionStatus };
-           actionHtml = getSelectionButtons(miniCand, r.divName.toLowerCase());
+      if (currentView === 'division') {
+        // Show Division Specific Actions
+        divisionActionSection.style.display = 'block';
+        finalStatusSection.style.display = 'none';
+        
+        if (currentDivisi && currentDivisi !== 'all') {
+          document.getElementById('actionDivisiName').innerText = quotaConfig[currentDivisi]?.nama_divisi || currentDivisi;
+          const r = c.ratings[currentDivisi];
+          if (r) {
+            const ratingsHtml = `<div class="modal-rating-card">
+              <div class="modal-rating-header">
+                <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+                <span class="modal-rating-div">${r.divName}</span>
+              </div>
+              <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
+            </div>`;
+            document.getElementById('modalRatings').innerHTML = ratingsHtml;
+            document.getElementById('modalSelectionButtons').innerHTML = getSelectionButtons(c, currentDivisi);
+          } else {
+            document.getElementById('modalRatings').innerHTML = '<p class="text-muted">Belum ada rating untuk divisi ini.</p>';
+            document.getElementById('modalSelectionButtons').innerHTML = '';
+          }
+        } else {
+          document.getElementById('modalRatings').innerHTML = '<p class="text-muted">Pilih divisi spesifik dari dashboard untuk memberikan nilai.</p>';
+          document.getElementById('modalSelectionButtons').innerHTML = '';
         }
         
-        const html = `<div class="modal-rating-card">
-          <div class="modal-rating-header">
-            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
-            <span class="modal-rating-div">${r.divName}</span>
-          </div>
-          <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
-          ${actionHtml ? '<div style="margin-top:12px;">'+actionHtml+'</div>' : ''}
-        </div>`;
-        ratingsContainer.innerHTML += html;
-      });
-
-      // Show Final Status Info if in Final View
-      const finalSection = document.getElementById('finalStatusInfoSection');
-      const finalReason = document.getElementById('finalStatusReason');
-      const finalDisplay = document.getElementById('modalFinalStatusDisplay');
-      
-      if (isFinalView) {
-        finalSection.style.display = 'block';
-        let badgeClass = '';
-        if (c.finalStatus === 'lolos') badgeClass = 'badge-lolos';
-        else if (c.finalStatus === 'cadangan') badgeClass = 'badge-cadangan';
-        else badgeClass = 'badge-tidak_lolos';
-        
-        finalDisplay.innerHTML = `<span class="final-status-badge ${badgeClass}" style="position:static; display:inline-block;">${c.finalStatus.toUpperCase()}</span>`;
-        finalReason.innerHTML = `<strong>Status:</strong> ${c.finalStatus.toUpperCase()}<br><strong>Alasan:</strong> ${c.statusReason}<br><strong>Rata-rata Nilai:</strong> ${c.averageScore}`;
       } else {
-        finalSection.style.display = 'none';
-        finalDisplay.innerHTML = '';
+        // Show Final Status Editor
+        divisionActionSection.style.display = 'none';
+        finalStatusSection.style.display = 'block';
+        
+        let statusText = "Belum ditentukan (Proses)";
+        if (c.finalStatus === 'lolos') statusText = "✅ LOLoS";
+        else if (c.finalStatus === 'cadangan') statusText = "⏳ CADANGAN";
+        else if (c.finalStatus === 'tidak_lolos') statusText = "❌ TIDAK LOLOS";
+        
+        document.getElementById('currentFinalStatusText').innerText = "Status saat ini: " + statusText + (c.statusReason ? ` - ${c.statusReason}` : '');
       }
       
       document.getElementById('detailModal').classList.add('active');
@@ -796,6 +875,7 @@
     function closeModal() {
       document.getElementById('detailModal').classList.remove('active');
       document.body.style.overflow = '';
+      editingCandidateIndex = -1;
     }
     
     function closeModalOnBackdrop(e) { 
