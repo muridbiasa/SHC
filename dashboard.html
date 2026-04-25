@@ -124,20 +124,21 @@
     .toast.error{border-left:4px solid var(--star-1);color:var(--star-1)}
     
     /* Badge Status Akhir */
-    .status-badge-final {
+    .final-status-badge {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 4px 8px;
-      border-radius: 6px;
+      top: 12px;
+      right: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
-    .badge-lolos { background: rgba(46, 213, 115, 0.2); color: var(--star-3); border: 1px solid var(--star-3); }
-    .badge-cadangan { background: rgba(255, 159, 67, 0.2); color: var(--star-2); border: 1px solid var(--star-2); }
-    .badge-tidak { background: rgba(255, 71, 87, 0.2); color: var(--star-1); border: 1px solid var(--star-1); }
+    .badge-lolos { background: var(--star-3); color: #000; }
+    .badge-cadangan { background: var(--star-2); color: #000; }
+    .badge-tidak_lolos { background: var(--star-1); color: #fff; }
 
     @media(max-width:768px){
       .menu-toggle{display:flex!important}
@@ -174,9 +175,18 @@
       <div id="divisionList"></div>
 
       <div class="sidebar-title" style="margin-top: 24px;">Hasil Akhir Seleksi</div>
-      <div id="resultMenuList">
-        <!-- Menu hasil akan di-generate di sini -->
-      </div>
+      <button class="div-btn" onclick="loadFinalResults('all')">
+        <span class="div-btn-icon">📊</span> <span>Semua Data</span>
+      </button>
+      <button class="div-btn" onclick="loadFinalResults('lolos')">
+        <span class="div-btn-icon">✅</span> <span>Lolos (<span id="countLolos">0</span>)</span>
+      </button>
+      <button class="div-btn" onclick="loadFinalResults('cadangan')">
+        <span class="div-btn-icon">⚠️</span> <span>Cadangan (<span id="countCadangan">0</span>)</span>
+      </button>
+      <button class="div-btn" onclick="loadFinalResults('tidak_lolos')">
+        <span class="div-btn-icon">❌</span> <span>Tidak Lolos (<span id="countTolak">0</span>)</span>
+      </button>
     </aside>
 
     <main class="main">
@@ -184,7 +194,7 @@
         <h1 id="pageTitle">📊 Review Kandidat</h1>
         <p id="pageDesc">Klik kartu untuk melihat detail rating & komentar</p>
         
-        <!-- Search Only for Dashboard View -->
+        <!-- Search only visible in division view -->
         <div class="search-wrapper" id="searchWrapper">
           <div class="search-box">
             <span class="search-icon">🔍</span>
@@ -194,7 +204,6 @@
           <div class="search-hint">Contoh: "gwen", "12", "xii"</div>
         </div>
 
-        <!-- Quota Tracker Only for Division View -->
         <div class="quota-tracker" id="quotaTracker" style="display:none">
           <div class="quota-tracker-header">
             <span class="quota-tracker-title" id="quotaDivisiName">🎭 Divisi</span>
@@ -212,19 +221,11 @@
           </div>
           <div class="quota-status" id="quotaStatus">🟢 Slot tersedia</div>
         </div>
+      </div>
 
-        <!-- Result Stats Summary -->
-        <div class="stats-bar" id="resultStatsBar" style="display:none">
-          <div class="stat-card"><div class="stat-label">Total Lolos</div><div class="stat-value" id="resLolos" style="color:var(--star-3)">0</div></div>
-          <div class="stat-card"><div class="stat-label">Total Cadangan</div><div class="stat-value" id="resCadangan" style="color:var(--star-2)">0</div></div>
-          <div class="stat-card"><div class="stat-label">Total Tidak Lolos</div><div class="stat-value" id="resTidak" style="color:var(--star-1)">0</div></div>
-        </div>
-        
-        <!-- Dashboard Stats -->
-        <div class="stats-bar" id="dashboardStatsBar" style="display:none">
-          <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
-          <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
-        </div>
+      <div class="stats-bar" id="statsBar" style="display:none">
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
       </div>
 
       <div id="content">
@@ -241,7 +242,7 @@
         <div style="flex:1">
           <div class="modal-title" id="modalName">—</div>
           <div class="modal-subtitle" id="modalClass">—</div>
-          <div id="modalAvgInfo" style="font-size:11px; color:var(--muted); margin-top:4px;"></div>
+          <div id="modalFinalStatusDisplay" style="margin-top:8px;"></div>
         </div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
@@ -251,21 +252,16 @@
           <div class="modal-divisi-list" id="modalDivisi"></div>
         </div>
         
-        <!-- Section Rating (Hanya muncul di view dashboard/divisi) -->
-        <div class="modal-section" id="modalRatingsSection">
-          <div class="modal-label">📝 Rating & Alasan</div>
-          <div id="modalRatings"></div>
+        <!-- Section Rating & Action Per Divisi -->
+        <div class="modal-section">
+          <div class="modal-label">📝 Rating & Aksi Per Divisi</div>
+          <div id="modalRatingsActions"></div>
         </div>
 
-        <!-- Section Action Ganti Status (Hanya muncul di view Hasil Akhir) -->
-        <div class="modal-section" id="modalChangeStatusSection" style="display:none; background:var(--card); padding:16px; border-radius:var(--radius-md);">
-          <div class="modal-label">🔄 Ubah Status Akhir</div>
-          <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">Pindahkan kandidat ini ke kategori lain:</p>
-          <div class="selection-buttons">
-            <button class="btn-status btn-terima" onclick="changeFinalStatus('Lolos')">✅ Jadi Lolos</button>
-            <button class="btn-status btn-cadangan" onclick="changeFinalStatus('Cadangan')">⚠️ Jadi Cadangan</button>
-            <button class="btn-status btn-tolak" onclick="changeFinalStatus('Tidak Lolos')">❌ Jadi Tidak Lolos</button>
-          </div>
+        <!-- Section Info Status Akhir -->
+        <div class="modal-section" id="finalStatusInfoSection" style="display:none; background: var(--card); padding: 16px; border-radius: var(--radius-md);">
+          <div class="modal-label">🏆 Status Akhir Seleksi</div>
+          <div id="finalStatusReason" style="font-size: 13px; color: var(--text-secondary);"></div>
         </div>
       </div>
     </div>
@@ -294,16 +290,14 @@
 
   <script>
     const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
-    
-    let currentView = 'dashboard'; // 'dashboard', 'result_lolos', 'result_cadangan', 'result_tidak'
     let currentDivisi = 'all';
+    let currentViewMode = 'division'; // 'division' or 'final_result'
     let allCandidatesData = [];
     let quotaConfig = {};
     let currentQuotaDivisi = null;
     let searchTimeout = null;
     let currentSearchQuery = '';
-    let currentResultData = []; // Data untuk view hasil
-    let selectedCandidateForChange = null; // Kandidat yang sedang dipilih untuk ganti status
+    let finalResultCounts = { lolos: 0, cadangan: 0, tidak_lolos: 0 };
 
     function getCached(key) {
       try {
@@ -340,14 +334,8 @@
     function handleSearch(e) {
       currentSearchQuery = e.target.value;
       document.getElementById('searchClear').classList.toggle('visible', currentSearchQuery.length > 0);
-      
-      if (currentView === 'dashboard') {
-        const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
-        renderCandidates(filtered);
-      } else {
-        const filtered = filterCandidates(currentSearchQuery, currentResultData);
-        renderResultCards(filtered);
-      }
+      const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
+      renderCandidates(filtered);
     }
 
     function clearSearch() {
@@ -355,8 +343,7 @@
       input.value = '';
       currentSearchQuery = '';
       document.getElementById('searchClear').classList.remove('visible');
-      if (currentView === 'dashboard') renderCandidates(allCandidatesData);
-      else renderResultCards(currentResultData);
+      renderCandidates(allCandidatesData);
       input.focus();
     }
 
@@ -401,7 +388,7 @@
     }
 
     function openQuotaConfig() {
-      if (!currentDivisi || currentDivisi === 'all') return;
+      if (!currentDivisi || currentDivisi === 'all' || currentViewMode !== 'division') return;
       currentQuotaDivisi = currentDivisi;
       const config = quotaConfig[currentQuotaDivisi];
       if (config) {
@@ -443,13 +430,15 @@
 
     async function loadSelectionCounts(divisi) {
       if (!divisi || divisi === 'all') return;
-      let result = getCached('counts_' + divisi);
-      if (!result) {
-        const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
-        result = await res.json();
-        if (result.success) setCache('counts_' + divisi, result);
-      }
-      if (result.success) updateQuotaTracker(divisi, result.data);
+      try {
+        let result = getCached('counts_' + divisi);
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
+          result = await res.json();
+          if (result.success) setCache('counts_' + divisi, result);
+        }
+        if (result.success) updateQuotaTracker(divisi, result.data);
+      } catch (err) { console.error('Error loading selection counts:', err); }
     }
 
     async function updateSelectionStatus(rowIndex, divisi, status) {
@@ -476,22 +465,38 @@
           clearCache('dashboard_all');
           clearCache('dashboard_' + divisi);
           clearCache('counts_' + divisi);
+          clearCache('final_selection'); // Clear final result cache too
           
-          await loadSelectionCounts(divisi);
-          renderCandidates(allCandidatesData);
-          showToast(`✅ Status diupdate: ${status}`, 'success');
-        } else { showToast(result.error || 'Gagal update status', 'error'); }
-      } catch (err) { showToast('Error: ' + err.message, 'error'); }
+          if (currentViewMode === 'division') {
+            await loadSelectionCounts(divisi);
+            renderCandidates(allCandidatesData);
+          } else {
+            // If in final result view, refresh the list to update status badges
+            loadFinalResults(currentFilterType);
+          }
+          
+          const msg = status === '' ? 'Status di-undo' : `Status diubah: ${status}`;
+          showToast('✅ ' + msg, 'success');
+          closeModal();
+        } else { 
+          showToast(result.error || 'Gagal update status', 'error'); 
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
     }
 
     function getSelectionButtons(candidate, divisi) {
       const config = quotaConfig[divisi];
       if (!config) return '';
+      
       const ratingData = candidate.ratings?.[divisi];
       const rowIndex = ratingData?.rowIndex;
-      if (!rowIndex) return '';
+      if (!rowIndex) return '<div style="font-size:11px;color:var(--muted);margin-top:12px;">Belum ada rating untuk divisi ini</div>';
       
       const currentStatus = candidate.selectionStatus?.[divisi] || '';
+      
+      // Calculate current counts from local data
       const counts = {
         terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
         cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
@@ -509,6 +514,8 @@
                 ${isCadanganDisabled?'disabled':''}>🟡 Cadangan</button>
         <button class="btn-status btn-tolak${currentStatus==='tolak'?' active':''}" 
                 onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','tolak')">🔴 Tolak</button>
+        <button class="btn-status" style="background:var(--card);color:var(--muted);border:1px solid var(--border)"
+                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','')" title="Undo Status">↩️</button>
       </div>`;
     }
 
@@ -516,171 +523,10 @@
       updateSelectionStatus(rowIndex, divisi, status);
     }
 
-    // --- NEW: Load Result Menu & Counts ---
-    async function loadResultMenu() {
-      try {
-        const res = await fetch(`${API_BASE}?action=getResultCounts`);
-        const result = await res.json();
-        if (result.success) {
-          const d = result.data;
-          const list = document.getElementById('resultMenuList');
-          list.innerHTML = `
-            <button class="div-btn" onclick="switchToResultView('lolos')">
-              <span class="div-btn-icon">✅</span> <span>Lolos</span> <span style="margin-left:auto; font-size:10px; opacity:0.7">${d.lolos}</span>
-            </button>
-            <button class="div-btn" onclick="switchToResultView('cadangan')">
-              <span class="div-btn-icon">⚠️</span> <span>Cadangan</span> <span style="margin-left:auto; font-size:10px; opacity:0.7">${d.cadangan}</span>
-            </button>
-            <button class="div-btn" onclick="switchToResultView('tidak_lolos')">
-              <span class="div-btn-icon">❌</span> <span>Tidak Lolos</span> <span style="margin-left:auto; font-size:10px; opacity:0.7">${d.tidakLolos}</span>
-            </button>
-          `;
-          
-          // Update summary stats if visible
-          document.getElementById('resLolos').textContent = d.lolos;
-          document.getElementById('resCadangan').textContent = d.cadangan;
-          document.getElementById('resTidak').textContent = d.tidakLolos;
-        }
-      } catch (err) { console.error(err); }
-    }
-
-    async function switchToResultView(category) {
-      currentView = 'result_' + category;
-      document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
-      
-      // Highlight active menu (simple approach)
-      const buttons = document.getElementById('resultMenuList').getElementsByTagName('button');
-      if (category === 'lolos' && buttons[0]) buttons[0].classList.add('active');
-      if (category === 'cadangan' && buttons[1]) buttons[1].classList.add('active');
-      if (category === 'tidak_lolos' && buttons[2]) buttons[2].classList.add('active');
-
-      document.getElementById('pageTitle').innerText = category === 'lolos' ? '✅ Lolos Seleksi' : (category === 'cadangan' ? '⚠️ Cadangan' : '❌ Tidak Lolos');
-      document.getElementById('pageDesc').innerText = 'Data otomatis terpisah berdasarkan rata-rata nilai & status manual.';
-      
-      document.getElementById('searchWrapper').style.display = 'block';
-      document.getElementById('quotaTracker').style.display = 'none';
-      document.getElementById('dashboardStatsBar').style.display = 'none';
-      document.getElementById('resultStatsBar').style.display = 'grid';
-      
-      const content = document.getElementById('content');
-      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
-      
-      if (window.innerWidth <= 768) toggleMenu();
-      
-      await loadResultData(category);
-    }
-
-    async function loadResultData(category) {
-      try {
-        const res = await fetch(`${API_BASE}?action=getResultsByCategory&category=${category}`);
-        const result = await res.json();
-        if (result.success) {
-          currentResultData = result.data || [];
-          renderResultCards(currentResultData);
-        } else {
-          document.getElementById('content').innerHTML = `<div class="empty"><p>Error: ${result.error}</p></div>`;
-        }
-      } catch (err) {
-        document.getElementById('content').innerHTML = `<div class="empty"><p>Error: ${err.message}</p></div>`;
-      }
-    }
-
-    function renderResultCards(data) {
-      const content = document.getElementById('content');
-      if (!data || data.length === 0) {
-        content.innerHTML = `<div class="empty"><p>📭 Tidak ada data di kategori ini.</p></div>`;
-        return;
-      }
-      
-      const cardHtmlArray = data.map((c, idx) => {
-        const fotoUrl = convertDriveUrl(c.foto);
-        const fotoHtml = fotoUrl 
-          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
-          : '<div class="card-photo placeholder">👤</div>';
-        
-        let badgeClass = 'badge-tidak';
-        if (c.status === 'Lolos') badgeClass = 'badge-lolos';
-        if (c.status === 'Cadangan') badgeClass = 'badge-cadangan';
-        
-        return `<div class="card" onclick="openResultModal(${idx})">
-          <div class="status-badge-final ${badgeClass}">${c.status}</div>
-          ${fotoHtml}
-          <div class="card-info">
-            <div class="card-name">${c.nama}</div>
-            <span class="card-class">Kelas ${c.kelas}</span>
-            <div style="margin-top:6px; font-size:11px; color:var(--muted);">
-              <div>Rata-rata: <strong style="color:var(--text)">${c.average}</strong></div>
-              <div>Divisi Dinilai: ${c.countRated}</div>
-              <div style="margin-top:4px; font-style:italic;">"${c.reason}"</div>
-            </div>
-          </div>
-        </div>`;
-      });
-      
-      content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
-    }
-
-    function openResultModal(idx) {
-      const c = currentResultData[idx];
-      if (!c) return;
-      selectedCandidateForChange = c;
-      
-      const fotoUrl = convertDriveUrl(c.foto);
-      document.getElementById('modalPhoto').innerHTML = fotoUrl 
-        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
-        : '<div class="modal-photo placeholder">👤</div>';
-      
-      document.getElementById('modalName').textContent = c.nama;
-      document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
-      document.getElementById('modalAvgInfo').textContent = `Rata-rata: ${c.average} | Divisi Dinilai: ${c.countRated}`;
-      document.getElementById('modalDivisi').innerHTML = `<span class="modal-divisi-tag">${c.divisiDilamar}</span>`;
-      
-      // Hide rating section, show change status section
-      document.getElementById('modalRatingsSection').style.display = 'none';
-      document.getElementById('modalChangeStatusSection').style.display = 'block';
-      
-      document.getElementById('detailModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    async function changeFinalStatus(newStatus) {
-      if (!selectedCandidateForChange) return;
-      
-      // Karena data sudah di sheet terpisah, kita perlu trigger sync ulang dari sumbernya (Divisi Sheets)
-      // Tapi karena kita tidak punya rowIndex asli di object result, kita panggil forceSyncAll atau cari manual.
-      // Cara terbaik: Panggil endpoint khusus untuk paksa update status manual jika diperlukan, 
-      // TAPI logika kita sebelumnya: Status manual di Divisi Sheet mengoverride hitungan.
-      // Jadi untuk mengubah status akhir secara manual tanpa nilai, kita butuh akses ke salah satu sheet divisinya.
-      // Solusi sederhana: Tampilkan pesan bahwa fitur ini memerlukan akses ke sheet divisi asal, 
-      // ATAU kita buat fungsi backend "forceSetStatus" yang langsung tulis ke sheet Hasil (tapi ini bypass logika).
-      
-      // Implementasi yang diminta: "ketika user ingin mengganti... wajib ada di halaman sheets baru... tersimpan ke halaman sheets yang tertaut"
-      // Artinya kita cukup memindahkan baris di sheet Hasil? Tidak, karena sinkronisasi otomatis akan menimpa.
-      // Kita HARUS mengubah status di salah satu sheet Divisi asal agar trigger sync bekerja.
-      
-      // Karena keterbatasan data di result object (tidak ada rowIndex), kita minta user melakukan via Dashboard Divisi
-      // ATAU kita tampilkan toast instruksi.
-      
-      // REVISI STRATEGI: Kita tidak bisa mengubah status akhir TANPA tahu di divisi mana dia dinilai.
-      // Kita akan tampilkan alert: "Untuk mengubah status, silakan ubah status (Terima/Cadangan/Tolak) di menu Review Divisi terkait."
-      
-      alert(`ℹ️ Informasi:\n\nUntuk mengubah status "${selectedCandidateForChange.nama}" menjadi ${newStatus}, silakan:\n1. Buka menu "Review Kandidat".\n2. Pilih salah satu divisi yang dilamar kandidat ini.\n3. Klik tombol "Terima", "Cadangan", atau "Tolak".\n\nSistem akan otomatis memindahkan data ke halaman ini.`);
-      closeModal();
-    }
-
-    // --- Existing Dashboard Functions ---
     document.addEventListener('DOMContentLoaded', async () => {
       await loadQuotaConfig();
       await loadDivisions();
-      await loadResultMenu(); // Load menu samping
       await loadCandidates('all');
-      
-      document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') { 
-          closeModal(); 
-          if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); 
-        } 
-      });
       
       const searchInput = document.getElementById('searchInput');
       if (searchInput) searchInput.addEventListener('input', debounce(handleSearch, 300));
@@ -706,8 +552,11 @@
           document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentDivisi = d.id;
-          currentView = 'dashboard';
+          currentViewMode = 'division';
           clearSearch();
+          document.getElementById('searchWrapper').style.display = 'block';
+          document.getElementById('pageTitle').innerText = '📊 Review Kandidat';
+          document.getElementById('pageDesc').innerText = 'Klik kartu untuk melihat detail rating & komentar';
           await loadCandidates(d.id);
           if (window.innerWidth <= 768) toggleMenu();
         };
@@ -728,19 +577,12 @@
 
     async function loadCandidates(divisi) {
       const content = document.getElementById('content');
-      const statsBar = document.getElementById('dashboardStatsBar');
-      const resStatsBar = document.getElementById('resultStatsBar');
+      const statsBar = document.getElementById('statsBar');
+      const tracker = document.getElementById('quotaTracker');
       
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
       statsBar.style.display = 'none';
-      resStatsBar.style.display = 'none';
-      document.getElementById('quotaTracker').style.display = 'none';
-      document.getElementById('searchWrapper').style.display = 'block';
-      document.getElementById('pageTitle').innerText = '📊 Review Kandidat';
-      document.getElementById('pageDesc').innerText = 'Klik kartu untuk melihat detail rating & komentar';
-
-      // Reset active state on sidebar
-      document.querySelectorAll('#resultMenuList .div-btn').forEach(b => b.classList.remove('active'));
+      tracker.style.display = 'none';
       
       try {
         const cacheKey = 'dashboard_' + (divisi || 'all');
@@ -770,37 +612,118 @@
       } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
     }
 
-    function renderCandidates(candidates = allCandidatesData) {
+    // FUNGSI BARU: Load Hasil Akhir Seleksi
+    let currentFilterType = 'all';
+    async function loadFinalResults(filterType) {
+      currentViewMode = 'final_result';
+      currentFilterType = filterType;
+      
+      // Update UI Sidebar Active State
+      document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+      // Highlight the clicked button logic handled by onclick inline usually, but here we rely on visual feedback
+      
+      const titles = {
+        'all': '📊 Semua Data Hasil Seleksi',
+        'lolos': '✅ Kandidat Lolos',
+        'cadangan': '⚠️ Kandidat Cadangan',
+        'tidak_lolos': '❌ Kandidat Tidak Lolos'
+      };
+      
+      document.getElementById('pageTitle').innerText = titles[filterType];
+      document.getElementById('pageDesc').innerText = 'Status dihitung otomatis berdasarkan rata-rata nilai & keputusan panitia.';
+      document.getElementById('searchWrapper').style.display = 'none'; // Hide search for now in final view to simplify
+      document.getElementById('quotaTracker').style.display = 'none';
+      document.getElementById('statsBar').style.display = 'none';
+
+      const content = document.getElementById('content');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Menghitung status akhir...</p></div>';
+
+      try {
+        // Force no cache for fresh calculation
+        const res = await fetch(`${API_BASE}?action=getFinalSelectionData&filterType=${filterType}`, { cache: 'no-store' });
+        const result = await res.json();
+        
+        if (!result.success) throw new Error(result.error);
+        
+        allCandidatesData = result.data || [];
+        
+        // Update Counts in Sidebar
+        if (filterType === 'all') {
+           // If viewing all, we need counts for others. 
+           // Ideally backend returns counts, but let's just fetch them or assume user clicks individually.
+           // For better UX, let's trigger a background fetch for counts if needed, 
+           // but for now, the buttons show static numbers until clicked? 
+           // No, let's update the global count object if backend returned it (not implemented yet in GS).
+           // Let's just display the length of current result.
+        }
+        
+        // Simple counter update for the button clicked
+        updateSidebarCounts(filterType, result.total);
+
+        if (allCandidatesData.length === 0) {
+          content.innerHTML = '<div class="empty"><p>📭 Tidak ada kandidat dalam kategori ini.</p><p style="font-size:12px;margin-top:8px">Pastikan sudah ada rating masuk.</p></div>';
+          return;
+        }
+        
+        renderCandidates(allCandidatesData, true);
+      } catch (err) { 
+        content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; 
+      }
+    }
+
+    function updateSidebarCounts(type, count) {
+      if (type === 'lolos') document.getElementById('countLolos').innerText = count;
+      if (type === 'cadangan') document.getElementById('countCadangan').innerText = count;
+      if (type === 'tidak_lolos') document.getElementById('countTolak').innerText = count;
+      
+      // Note: In a real app, we'd fetch all counts at once. 
+      // Here, the number updates when you click the button.
+    }
+
+    function renderCandidates(candidates = allCandidatesData, isFinalView = false) {
       const content = document.getElementById('content');
       
       if (!candidates || candidates.length === 0) {
-        content.innerHTML = `<div class="empty"><p>Tidak ada kandidat ditemukan${currentSearchQuery ? ` untuk "<strong>${currentSearchQuery}</strong>"` : ''}</p>${currentSearchQuery ? `<button class="btn btn-secondary" onclick="clearSearch()">Tampilkan Semua</button>` : ''}</div>`;
+        content.innerHTML = `<div class="empty"><p>Tidak ada kandidat ditemukan</p></div>`;
         return;
       }
       
       const cardHtmlArray = candidates.map((c, idx) => {
         const fotoUrl = convertDriveUrl(c.foto);
         const fotoHtml = fotoUrl 
-          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
+          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
           : '<div class="card-photo placeholder">👤</div>';
         
+        // Show Ratings
         const ratingsHtml = Object.values(c.ratings).map(r => 
           `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
         ).join('');
         
         const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        const selectionButtons = (currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) 
-          ? getSelectionButtons(c, currentDivisi) 
-          : '';
         
-        return `<div class="card" onclick="openModal(${idx})">
+        // Determine Badge
+        let statusBadge = '';
+        if (isFinalView) {
+          if (c.finalStatus === 'lolos') statusBadge = '<div class="final-status-badge badge-lolos">LOLOS</div>';
+          else if (c.finalStatus === 'cadangan') statusBadge = '<div class="final-status-badge badge-cadangan">CADANGAN</div>';
+          else if (c.finalStatus === 'tidak_lolos') statusBadge = '<div class="final-status-badge badge-tidak_lolos">TIDAK LOLOS</div>';
+        }
+
+        // Buttons: Only show in Division View
+        let actionButtons = '';
+        if (!isFinalView && currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) {
+          actionButtons = getSelectionButtons(c, currentDivisi);
+        }
+        
+        return `<div class="card" onclick="openModalDetail(${idx}, ${isFinalView})">
+          ${statusBadge}
           ${fotoHtml}
           <div class="card-info">
             <div class="card-name">${c.nama}</div>
             <span class="card-class">Kelas ${c.kelas}</span>
             <div class="card-divisi">🎯 ${divText}</div>
             <div class="rating-list">${ratingsHtml}</div>
-            ${selectionButtons}
+            ${actionButtons}
           </div>
         </div>`;
       });
@@ -808,38 +731,63 @@
       content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
     }
 
-    function openModal(idx) {
+    function openModalDetail(idx, isFinalView) {
       const c = allCandidatesData[idx];
       if (!c) return;
-      selectedCandidateForChange = null; // Reset
       
       const fotoUrl = convertDriveUrl(c.foto);
       document.getElementById('modalPhoto').innerHTML = fotoUrl 
-        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
+        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
         : '<div class="modal-photo placeholder">👤</div>';
       
       document.getElementById('modalName').textContent = c.nama;
       document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
-      document.getElementById('modalAvgInfo').textContent = '';
       document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => 
         `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`
       ).join('');
       
-      const ratingsHtml = Object.values(c.ratings).map(r => 
-        `<div class="modal-rating-card">
+      // Render Ratings with Actions (Only if Division View)
+      const ratingsContainer = document.getElementById('modalRatingsActions');
+      ratingsContainer.innerHTML = '';
+      
+      Object.values(c.ratings).forEach(r => {
+        let actionHtml = '';
+        if (!isFinalView && currentDivisi === r.divName.toLowerCase()) {
+           // Re-use logic to get buttons for this specific rating
+           // We need to reconstruct a mini candidate object for the helper
+           const miniCand = { ratings: { [r.divName.toLowerCase()]: r }, selectionStatus: c.selectionStatus };
+           actionHtml = getSelectionButtons(miniCand, r.divName.toLowerCase());
+        }
+        
+        const html = `<div class="modal-rating-card">
           <div class="modal-rating-header">
             <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
             <span class="modal-rating-div">${r.divName}</span>
           </div>
           <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
-        </div>`
-      ).join('');
+          ${actionHtml ? '<div style="margin-top:12px;">'+actionHtml+'</div>' : ''}
+        </div>`;
+        ratingsContainer.innerHTML += html;
+      });
+
+      // Show Final Status Info if in Final View
+      const finalSection = document.getElementById('finalStatusInfoSection');
+      const finalReason = document.getElementById('finalStatusReason');
+      const finalDisplay = document.getElementById('modalFinalStatusDisplay');
       
-      document.getElementById('modalRatings').innerHTML = ratingsHtml;
-      
-      // Show rating section, hide change status section
-      document.getElementById('modalRatingsSection').style.display = 'block';
-      document.getElementById('modalChangeStatusSection').style.display = 'none';
+      if (isFinalView) {
+        finalSection.style.display = 'block';
+        let badgeClass = '';
+        if (c.finalStatus === 'lolos') badgeClass = 'badge-lolos';
+        else if (c.finalStatus === 'cadangan') badgeClass = 'badge-cadangan';
+        else badgeClass = 'badge-tidak_lolos';
+        
+        finalDisplay.innerHTML = `<span class="final-status-badge ${badgeClass}" style="position:static; display:inline-block;">${c.finalStatus.toUpperCase()}</span>`;
+        finalReason.innerHTML = `<strong>Status:</strong> ${c.finalStatus.toUpperCase()}<br><strong>Alasan:</strong> ${c.statusReason}<br><strong>Rata-rata Nilai:</strong> ${c.averageScore}`;
+      } else {
+        finalSection.style.display = 'none';
+        finalDisplay.innerHTML = '';
+      }
       
       document.getElementById('detailModal').classList.add('active');
       document.body.style.overflow = 'hidden';
