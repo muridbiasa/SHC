@@ -1,725 +1,671 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <base target="_top">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0f13">
   <title>Dashboard Review SHC 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
-    :root{--primary:#4361ee;--success:#06d6a0;--warning:#ffd166;--danger:#ef476f;--dark:#1a1a2e;--light:#f8f9fa;--gray:#6c757d;--card:#fff;--shadow:0 2px 10px rgba(0,0,0,0.1);--radius:12px}
-    body{background:var(--light);color:var(--dark);line-height:1.6}
-    
-    /* 🍔 Sidebar */
-    .sidebar{position:fixed;left:-280px;top:0;width:280px;height:100vh;background:var(--card);box-shadow:var(--shadow);transition:left 0.3s;z-index:1000;padding:20px;overflow-y:auto}
-    .sidebar.active{left:0}
-    .sidebar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #eee}
-    .sidebar-title{font-size:1.3rem;font-weight:600;color:var(--primary)}
-    .sidebar-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--gray)}
-    
-    .sidebar-menu{list-style:none}
-    .sidebar-item{margin-bottom:8px}
-    .sidebar-link{display:flex;align-items:center;gap:10px;padding:12px 15px;border-radius:var(--radius);text-decoration:none;color:var(--dark);transition:all 0.2s;cursor:pointer}
-    .sidebar-link:hover,.sidebar-link.active{background:var(--primary);color:#fff}
-    .sidebar-link .icon{font-size:1.2rem}
-    
-    .submenu{list-style:none;margin-left:25px;display:none}
-    .submenu.show{display:block}
-    .submenu .sidebar-link{padding:8px 15px;font-size:0.9rem}
-    
-    /* 🎯 Main Content */
-    .main{margin-left:0;transition:margin-left 0.3s;padding:20px}
-    .main.sidebar-open{margin-left:280px}
-    
-    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;flex-wrap:wrap;gap:15px}
-    .header-title{font-size:1.5rem;font-weight:700}
-    .header-actions{display:flex;gap:10px;align-items:center}
-    
-    .menu-toggle{background:var(--primary);color:#fff;border:none;padding:10px 15px;border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:1rem}
-    .filter-select{padding:10px 15px;border:1px solid #ddd;border-radius:var(--radius);background:#fff;min-width:200px}
-    
-    /* 📊 Stats Cards */
-    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:25px}
-    .stat-card{background:var(--card);padding:15px 20px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center}
-    .stat-value{font-size:1.8rem;font-weight:700;color:var(--primary)}
-    .stat-label{font-size:0.9rem;color:var(--gray);margin-top:5px}
-    
-    /* 👥 Candidate Cards */
-    .candidates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-    .candidate-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:transform 0.2s;cursor:pointer;position:relative}
-    .candidate-card:hover{transform:translateY(-3px)}
-    .candidate-card.selected{outline:3px solid var(--success)}
-    
-    /* 🎖️ Status Badge */
-    .status-badge{position:absolute;top:12px;right:12px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;text-transform:uppercase}
-    .status-badge.terima{background:var(--success);color:#fff}
-    .status-badge.cadangan{background:var(--warning);color:var(--dark)}
-    .status-badge.tolak{background:var(--danger);color:#fff}
-    .status-badge.pending{background:var(--gray);color:#fff}
-    
-    .card-header{display:flex;gap:15px;padding:20px;border-bottom:1px solid #eee;align-items:center}
-    .card-foto{width:70px;height:70px;border-radius:50%;object-fit:cover;background:#eee;border:3px solid var(--primary)}
-    .card-info{flex:1}
-    .card-nama{font-size:1.1rem;font-weight:600;margin-bottom:3px}
-    .card-kelas{color:var(--gray);font-size:0.9rem}
-    .card-rating{display:flex;align-items:center;gap:5px;margin-top:8px}
-    .rating-stars{color:#ffc107;font-size:1.1rem}
-    .rating-value{font-weight:600;color:var(--primary)}
-    
-    .card-body{padding:20px}
-    .card-divisi{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px}
-    .divisi-tag{background:#e9ecef;padding:4px 12px;border-radius:20px;font-size:0.8rem;color:var(--dark)}
-    .divisi-tag.prioritas{background:var(--primary);color:#fff}
-    
-    .card-alasan{background:#f8f9fa;padding:12px;border-radius:8px;font-size:0.9rem;color:var(--gray);margin-bottom:15px;max-height:80px;overflow:hidden}
-    .card-alasan.expanded{max-height:none}
-    
-    .card-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;font-weight:500;transition:all 0.2s;display:flex;align-items:center;gap:5px}
-    .btn-primary{background:var(--primary);color:#fff}
-    .btn-success{background:var(--success);color:#fff}
-    .btn-warning{background:var(--warning);color:var(--dark)}
-    .btn-danger{background:var(--danger);color:#fff}
-    .btn-outline{background:transparent;border:1px solid var(--gray);color:var(--dark)}
-    .btn:hover{opacity:0.9;transform:scale(1.02)}
-    .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-    
-    .btn-undo{background:#6c757d;color:#fff;font-size:0.8rem;padding:5px 10px}
-    
-    /* 🎭 Modal */
-    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;padding:20px}
-    .modal.show{display:flex}
-    .modal-content{background:var(--card);border-radius:var(--radius);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.2)}
-    .modal-header{padding:20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
-    .modal-title{font-size:1.3rem;font-weight:600}
-    .modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--gray)}
-    .modal-body{padding:20px}
-    .modal-footer{padding:15px 20px;border-top:1px solid #eee;display:flex;justify-content:flex-end;gap:10px}
-    
-    .form-group{margin-bottom:15px}
-    .form-label{display:block;margin-bottom:5px;font-weight:500}
-    .form-input,.form-textarea{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:1rem}
-    .form-textarea{min-height:100px;resize:vertical}
-    .form-help{font-size:0.8rem;color:var(--gray);margin-top:5px}
-    
-    .rating-input{display:flex;gap:10px;align-items:center}
-    .rating-input input{width:60px;padding:8px;text-align:center}
-    
-    /* 🔄 Loading */
-    .loading{text-align:center;padding:40px;color:var(--gray)}
-    .spinner{width:40px;height:40px;border:4px solid #eee;border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
+    :root{--bg:#0a0a0f;--surface:#14141c;--surface-2:#1e1e2a;--card:#232330;--border:#2a2a3a;--accent:#7c6bff;--accent-light:#9b8eff;--text:#f0eeff;--text-secondary:#b8b5d0;--muted:#7a7794;--star-1:#ff4757;--star-2:#ff9f43;--star-3:#2ed573;--star-4:#7c6bff;--radius-md:12px;--radius-lg:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;font-size:14px}
+    body{background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+    .dashboard{display:flex;min-height:100dvh}
+    .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);padding:calc(20px + var(--safe-top)) 12px 20px;position:fixed;height:100dvh;overflow-y:auto;z-index:1000;left:0;top:0;transition:transform 0.3s ease}
+    .sidebar-header{padding:8px 8px 16px;border-bottom:1px solid var(--border);margin-bottom:16px}
+    .sidebar-logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent-light),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .sidebar-subtitle{font-size:11px;color:var(--muted)}
+    .sidebar-title{font-size:10px;font-weight:700;color:var(--muted);margin:10px 0;text-transform:uppercase;letter-spacing:0.8px;padding:0 8px}
+    .div-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;margin-bottom:4px;background:transparent;border:1px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary);font-size:13px;font-weight:500;text-align:left;cursor:pointer;transition:all 0.2s ease;min-height:44px;font-family:inherit}
+    .div-btn:hover{background:rgba(124,107,255,0.08);color:var(--text)}
+    .div-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600}
+    .div-btn-icon{font-size:16px;flex-shrink:0}
+    .div-btn-config{margin-left:auto;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px}
+    .div-btn-config:hover{color:var(--accent)}
+    .menu-toggle{display:none;position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:1100;width:48px;height:48px;background:var(--accent);border:none;border-radius:var(--radius-md);color:white;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,107,255,0.25)}
+    .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.3s ease}
+    .overlay.show{display:block;opacity:1}
+    .main{margin-left:260px;flex:1;padding:calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom));min-height:100dvh}
+    .header{margin-bottom:24px}
+    .header h1{font-size:22px;font-weight:800}
+    .header p{color:var(--muted);font-size:13px;margin-top:8px}
+    .search-wrapper{margin:16px 0 20px}
+    .search-box{position:relative;max-width:100%}
+    .search-input{width:100%;padding:10px 14px 10px 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:13px;transition:border-color 0.2s ease}
+    .search-input:focus{outline:none;border-color:var(--accent)}
+    .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+    .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;display:none}
+    .search-clear.visible{display:block}
+    .search-clear:hover{color:var(--text)}
+    .search-hint{font-size:11px;color:var(--muted);margin-top:6px}
+    .quota-tracker{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;margin-bottom:16px}
+    .quota-tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .quota-tracker-title{font-size:13px;font-weight:600;color:var(--text)}
+    .quota-tracker-bars{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .quota-bar{display:flex;flex-direction:column;gap:4px}
+    .quota-bar-label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+    .quota-bar-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+    .quota-bar-fill{height:100%;background:var(--accent);transition:width 0.3s ease;border-radius:3px}
+    .quota-bar-fill.cadangan{background:var(--star-2)}
+    .quota-status{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
+    .quota-status.full{color:var(--star-3);font-weight:600}
+    .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px}
+    .stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
+    .stat-value{font-size:24px;font-weight:800;color:var(--accent-light);margin-top:4px}
+    .candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.25s ease;position:relative}
+    .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
+    .card:active{transform:scale(0.985)}
+    .card-photo{width:70px;height:90px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
+    .card-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:32px}
+    .card-info{flex:1;min-width:0}
+    .card-name{font-size:15px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .card-class{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
+    .card-divisi{font-size:11px;color:var(--muted)}
+    .rating-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+    .rating-item{background:var(--card);border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
+    .rating-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+    .rating-badge{font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px}
+    .rating-badge[data-rating="1"]{background:rgba(255,71,87,0.15);color:var(--star-1)}
+    .rating-badge[data-rating="2"]{background:rgba(255,159,67,0.15);color:var(--star-2)}
+    .rating-badge[data-rating="3"]{background:rgba(46,213,115,0.15);color:var(--star-3)}
+    .rating-badge[data-rating="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
+    .rating-div{font-size:11px;font-weight:600;color:var(--text-secondary)}
+    .rating-reason{font-size:11px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .selection-buttons{display:flex;gap:8px;margin-top:12px}
+    .btn-status{flex:1;padding:8px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit}
+    .btn-status:disabled{opacity:0.4;cursor:not-allowed}
+    .btn-terima{background:rgba(46,213,115,0.2);color:var(--star-3);border:1px solid var(--star-3)}
+    .btn-terima:hover:not(:disabled){background:var(--star-3);color:white}
+    .btn-cadangan{background:rgba(255,159,67,0.2);color:var(--star-2);border:1px solid var(--star-2)}
+    .btn-cadangan:hover:not(:disabled){background:var(--star-2);color:white}
+    .btn-tolak{background:rgba(255,71,87,0.2);color:var(--star-1);border:1px solid var(--star-1)}
+    .btn-tolak:hover:not(:disabled){background:var(--star-1);color:white}
+    .btn-status.active{font-weight:700;box-shadow:0 0 0 2px currentColor}
+    .loading,.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;color:var(--muted);text-align:center}
+    .spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:16px}
     @keyframes spin{to{transform:rotate(360deg)}}
-    
-    /* 📱 Responsive */
+    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s ease}
+    .modal-overlay.active{display:flex;opacity:1}
+    .modal-content{background:var(--surface);width:100%;max-width:680px;max-height:85dvh;border-radius:var(--radius-lg);display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.5);border:1px solid var(--border)}
+    .modal-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;flex-shrink:0}
+    .modal-close{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .modal-photo{width:72px;height:92px;border-radius:var(--radius-md);object-fit:cover;background:var(--card);flex-shrink:0;border:1px solid var(--border)}
+    .modal-photo.placeholder{display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted)}
+    .modal-title{font-size:18px;font-weight:800;line-height:1.3}
+    .modal-subtitle{font-size:13px;color:var(--accent-light);margin-top:4px;font-weight:600}
+    .modal-body{padding:20px;overflow-y:auto;flex:1}
+    .modal-section{margin-bottom:24px}
+    .modal-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:12px;letter-spacing:0.6px}
+    .modal-divisi-list{display:flex;flex-wrap:wrap;gap:8px}
+    .modal-divisi-tag{background:rgba(124,107,255,0.12);color:var(--accent-light);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600}
+    .modal-rating-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
+    .modal-rating-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .modal-rating-badge{font-size:13px;font-weight:800;padding:4px 10px;border-radius:6px}
+    .modal-rating-reason{font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
+    .modal-config{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal-config.active{display:flex}
+    .modal-config-content{background:var(--surface);width:100%;max-width:400px;border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
+    .modal-config-title{font-size:16px;font-weight:700;margin-bottom:16px}
+    .config-input-group{margin-bottom:16px}
+    .config-input-label{font-size:12px;color:var(--muted);margin-bottom:6px;display:block}
+    .config-input{width:100%;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:14px}
+    .config-input:focus{outline:none;border-color:var(--accent)}
+    .config-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+    .btn{padding:10px 16px;border:none;border-radius:var(--radius-md);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+    .btn:active{transform:scale(0.96)}
+    .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+    .btn-primary{background:var(--accent);color:white}
+    .toast{position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:9999}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .toast.success{border-left:4px solid var(--star-3);color:var(--star-3)}
+    .toast.error{border-left:4px solid var(--star-1);color:var(--star-1)}
     @media(max-width:768px){
-      .sidebar{left:-100%;width:100%;max-width:320px}
-      .main.sidebar-open{margin-left:0}
-      .header{flex-direction:column;align-items:flex-start}
-      .candidates-grid{grid-template-columns:1fr}
+      .menu-toggle{display:flex!important}
+      .sidebar{width:85vw;max-width:320px;transform:translateX(-100%);padding-top:calc(60px + var(--safe-top))}
+      .sidebar.open{transform:translateX(0);box-shadow:4px 0 32px rgba(0,0,0,0.5)}
+      .main{margin-left:0;width:100%;padding:calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom))}
+      .candidate-grid{grid-template-columns:1fr;gap:12px}
+      .card{padding:14px;gap:12px}
+      .card-photo{width:64px;height:82px}
+      .modal-overlay{align-items:flex-end;padding:0}
+      .modal-content{max-width:100%;max-height:92dvh;border-radius:var(--radius-lg) var(--radius-lg) 0 0;margin-bottom:var(--safe-bottom)}
+      .modal-header{padding:18px 16px}
+      .modal-body{padding:16px}
+      .modal-photo{width:60px;height:78px}
+      .search-wrapper{margin:12px 0 16px}
+      .quota-tracker-bars{grid-template-columns:1fr}
+      .selection-buttons{flex-wrap:wrap}
+      .btn-status{flex:1 1 45%}
     }
-    
-    /* ✨ Animations */
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .fade-in{animation:fadeIn 0.3s ease-out}
-    
-    .hidden{display:none!important}
-    .text-center{text-align:center}
-    .mt-2{margin-top:10px}
-    .mb-2{margin-bottom:10px}
   </style>
 </head>
 <body>
-  <!-- 🍔 Sidebar -->
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="sidebar-title">🎯 Filter Kandidat</span>
-      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
-    </div>
-    <ul class="sidebar-menu">
-      <li class="sidebar-item">
-        <a class="sidebar-link active" data-filter="all" onclick="filterCandidates('all', this)">
-          <span class="icon">🏠</span> Semua Kandidat
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a class="sidebar-link" data-filter="berkas" onclick="filterCandidates('berkas', this)">
-          <span class="icon">📋</span> Lolos Seleksi Berkas
-        </a>
-        <ul class="submenu" id="submenu-berkas">
-          <li><a class="sidebar-link" onclick="filterByRating(3, '>=')">⭐ Rating ≥ 3</a></li>
-          <li><a class="sidebar-link" onclick="filterByRating(3, '<')">⭐ Rating < 3</a></li>
-        </ul>
-      </li>
-      <li class="sidebar-item">
-        <a class="sidebar-link" data-filter="lolos" onclick="filterCandidates('lolos', this)">
-          <span class="icon">✅</span> Lolos Final
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a class="sidebar-link" data-filter="tidak_lolos" onclick="filterCandidates('tidak_lolos', this)">
-          <span class="icon">❌</span> Tidak Lolos
-        </a>
-      </li>
-      <li class="sidebar-item" style="margin-top:20px;border-top:1px solid #eee;padding-top:15px">
-        <span style="font-size:0.85rem;color:var(--gray);font-weight:600;text-transform:uppercase">Divisi</span>
-      </li>
-      <!-- Division items will be injected here -->
-      <div id="division-list"></div>
-    </ul>
-  </nav>
+  <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-  <!-- 🎯 Main Content -->
-  <main class="main" id="main">
-    <div class="header">
-      <button class="menu-toggle" onclick="toggleSidebar()">☰ Filter Divisi</button>
-      <h1 class="header-title">📊 Review Kandidat SHC 2026</h1>
-      <div class="header-actions">
-        <select class="filter-select" id="quickFilter" onchange="quickFilterChange()">
-          <option value="all">🏠 Semua</option>
-          <option value="berkas">📋 Lolos Berkas</option>
-          <option value="lolos">✅ Lolos Final</option>
-          <option value="tidak_lolos">❌ Tidak Lolos</option>
-        </select>
+  <div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">SHC 2026</div>
+        <div class="sidebar-subtitle">Dashboard Review</div>
       </div>
-    </div>
+      <div class="sidebar-title">Filter Divisi</div>
+      <div id="divisionList"></div>
+    </aside>
 
-    <!-- 📈 Stats -->
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-value" id="stat-total">-</div>
-        <div class="stat-label">Total Kandidat</div>
+    <main class="main">
+      <div class="header">
+        <h1>📊 Review Kandidat</h1>
+        <p>Klik kartu untuk melihat detail rating & komentar</p>
+        <div class="search-wrapper">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau kelas..." autocomplete="off">
+            <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+          </div>
+          <div class="search-hint">Contoh: "gwen", "12", "xii"</div>
+        </div>
+        <div class="quota-tracker" id="quotaTracker" style="display:none">
+          <div class="quota-tracker-header">
+            <span class="quota-tracker-title" id="quotaDivisiName">🎭 Divisi</span>
+            <button class="div-btn-config" onclick="openQuotaConfig()" title="Edit kuota">⚙️</button>
+          </div>
+          <div class="quota-tracker-bars">
+            <div class="quota-bar">
+              <div class="quota-bar-label"><span>👥 Anggota</span><span id="quotaAnggotaText">0/6</span></div>
+              <div class="quota-bar-progress"><div class="quota-bar-fill" id="quotaAnggotaFill" style="width:0%"></div></div>
+            </div>
+            <div class="quota-bar">
+              <div class="quota-bar-label"><span>📦 Cadangan</span><span id="quotaCadanganText">0/4</span></div>
+              <div class="quota-bar-progress"><div class="quota-bar-fill cadangan" id="quotaCadanganFill" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="quota-status" id="quotaStatus">🟢 Slot tersedia</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-reviewed">-</div>
-        <div class="stat-label">Sudah Direview</div>
+      <div class="stats-bar" id="statsBar" style="display:none">
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat-card"><div class="stat-label">Direview</div><div class="stat-value" id="statReviewed">0</div></div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-terima" style="color:var(--success)">-</div>
-        <div class="stat-label">Diterima</div>
+      <div id="content">
+        <div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-cadangan" style="color:var(--warning)">-</div>
-        <div class="stat-label">Cadangan</div>
-      </div>
-    </div>
+    </main>
+  </div>
 
-    <!-- 👥 Candidates Grid -->
-    <div id="candidates-container">
-      <div class="loading">
-        <div class="spinner"></div>
-        <p>Memuat data kandidat...</p>
-      </div>
-    </div>
-  </main>
-
-  <!-- 🎭 Detail Modal -->
-  <div class="modal" id="detailModal">
-    <div class="modal-content">
+  <div class="modal-overlay" id="detailModal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <h3 class="modal-title" id="modalNama">Detail Kandidat</h3>
+        <div id="modalPhoto"></div>
+        <div style="flex:1">
+          <div class="modal-title" id="modalName">—</div>
+          <div class="modal-subtitle" id="modalClass">—</div>
+        </div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
-      <div class="modal-body" id="modalBody">
-        <!-- Content injected by JS -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal()">Tutup</button>
-        <button class="btn btn-primary" id="btnSaveRating">💾 Simpan Rating</button>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-label">🎯 Divisi Dilamar</div>
+          <div class="modal-divisi-list" id="modalDivisi"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-label">📝 Rating & Alasan</div>
+          <div id="modalRatings"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ⚙️ Quota Modal -->
-  <div class="modal" id="quotaModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">⚙️ Atur Kuota - <span id="quotaDivisiName"></span></h3>
-        <button class="modal-close" onclick="closeQuotaModal()">✕</button>
+  <div class="modal-config" id="quotaConfigModal" onclick="closeQuotaConfig(event)">
+    <div class="modal-config-content" onclick="event.stopPropagation()">
+      <div class="modal-config-title">⚙️ Atur Kuota - <span id="configDivisiName">Divisi</span></div>
+      <div class="config-input-group">
+        <label class="config-input-label">👥 Jumlah Anggota Dibutuhkan</label>
+        <input type="number" class="config-input" id="inputKuotaAnggota" min="0" max="50" value="6">
       </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">👥 Jumlah Anggota Dibutuhkan</label>
-          <input type="number" class="form-input" id="quotaAnggota" min="0" max="50">
-        </div>
-        <div class="form-group">
-          <label class="form-label">📦 Jumlah Cadangan Dibutuhkan</label>
-          <input type="number" class="form-input" id="quotaCadangan" min="0" max="20">
-        </div>
+      <div class="config-input-group">
+        <label class="config-input-label">📦 Jumlah Cadangan Dibutuhkan</label>
+        <input type="number" class="config-input" id="inputKuotaCadangan" min="0" max="20" value="4">
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeQuotaModal()">Batal</button>
-        <button class="btn btn-primary" onclick="saveQuota()">💾 Simpan</button>
+      <div class="config-actions">
+        <button class="btn btn-secondary" onclick="closeQuotaConfig()">Batal</button>
+        <button class="btn btn-primary" onclick="saveQuotaConfig()">💾 Simpan</button>
       </div>
     </div>
   </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
-    // 🌐 Global State
+    const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
     let currentDivisi = 'all';
-    let currentFilter = 'all'; // all, berkas, lolos, tidak_lolos
-    let candidatesData = [];
-    let selectedCandidate = null;
+    let allCandidatesData = [];
     let quotaConfig = {};
-    let divisionsList = [];
+    let currentQuotaDivisi = null;
+    let searchTimeout = null;
+    let currentSearchQuery = '';
 
-    // 🚀 Init
-    document.addEventListener('DOMContentLoaded', function() {
-      loadDivisions();
-      loadDashboardData();
-      loadQuotaConfig();
+    // ⚡ PERF: sessionStorage cache helpers
+    function getCached(key) {
+      try {
+        const cached = sessionStorage.getItem(key);
+        if (cached) {
+          const {data, timestamp} = JSON.parse(cached);
+          if (Date.now() - timestamp < 300000) return data; // 5min TTL
+        }
+      } catch(e) {}
+      return null;
+    }
+    
+    function setCache(key, data) {
+      try {
+        sessionStorage.setItem(key, JSON.stringify({data, timestamp: Date.now()}));
+      } catch(e) {}
+    }
+    
+    function clearCache(key) {
+      try {
+        sessionStorage.removeItem(key);
+      } catch(e) {}
+    }
+
+    // ⚡ PERF: Debounce function (300ms delay)
+    function debounce(func, delay) {
+      return function(...args) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    function filterCandidates(query, candidates) {
+      if (!query || query.trim() === '') return candidates;
+      const q = query.toLowerCase().trim();
+      return candidates.filter(c => (c.nama && c.nama.toLowerCase().includes(q)) || (c.kelas && String(c.kelas).toLowerCase().includes(q)));
+    }
+
+    function handleSearch(e) {
+      currentSearchQuery = e.target.value;
+      const clearBtn = document.getElementById('searchClear');
+      clearBtn.classList.toggle('visible', currentSearchQuery.length > 0);
+      const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
+      renderCandidates(filtered);
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      currentSearchQuery = '';
+      document.getElementById('searchClear').classList.remove('visible');
+      renderCandidates(allCandidatesData);
+      input.focus();
+    }
+
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const isOpen = sidebar.classList.contains('open');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      document.body.style.overflow = isOpen ? '' : 'hidden';
+    }
+
+    async function loadQuotaConfig() {
+      try {
+        // ⚡ PERF: Check cache first
+        let result = getCached('quota_config');
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getQuotaConfig`);
+          result = await res.json();
+          if (result.success) setCache('quota_config', result);
+        }
+        if (result.success) {
+          quotaConfig = {};
+          result.data.forEach(q => { quotaConfig[q.divisi_id] = q; });
+        }
+      } catch (err) { console.error('Error loading quota config:', err); }
+    }
+
+    function updateQuotaTracker(divisiId, counts) {
+      const config = quotaConfig[divisiId];
+      if (!config) return;
+      const tracker = document.getElementById('quotaTracker');
+      tracker.style.display = 'block';
+      document.getElementById('quotaDivisiName').textContent = `🎭 ${config.nama_divisi}`;
+      document.getElementById('quotaAnggotaText').textContent = `${counts.terima||0}/${config.kuota_anggota}`;
+      document.getElementById('quotaCadanganText').textContent = `${counts.cadangan||0}/${config.kuota_cadangan}`;
+      document.getElementById('quotaAnggotaFill').style.width = `${Math.min(100, ((counts.terima||0) / config.kuota_anggota) * 100)}%`;
+      document.getElementById('quotaCadanganFill').style.width = `${Math.min(100, ((counts.cadangan||0) / config.kuota_cadangan) * 100)}%`;
+      const sisa = config.kuota_anggota - (counts.terima||0);
+      const statusEl = document.getElementById('quotaStatus');
+      if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot anggota tersedia`; statusEl.className = 'quota-status'; }
+      else if (sisa === 0) { statusEl.textContent = `✅ Kuota anggota terpenuhi!`; statusEl.className = 'quota-status full'; }
+      else { statusEl.textContent = `⚠️ Melebihi kuota (${Math.abs(sisa)} berlebih)`; statusEl.className = 'quota-status'; }
+    }
+
+    function openQuotaConfig() {
+      if (!currentDivisi || currentDivisi === 'all') return;
+      currentQuotaDivisi = currentDivisi;
+      const config = quotaConfig[currentQuotaDivisi];
+      if (config) {
+        document.getElementById('configDivisiName').textContent = config.nama_divisi;
+        document.getElementById('inputKuotaAnggota').value = config.kuota_anggota;
+        document.getElementById('inputKuotaCadangan').value = config.kuota_cadangan;
+      }
+      document.getElementById('quotaConfigModal').classList.add('active');
+    }
+
+    function closeQuotaConfig(e) {
+      if (!e || e.target === e.currentTarget) document.getElementById('quotaConfigModal').classList.remove('active');
+    }
+
+    async function saveQuotaConfig() {
+      const kuotaAnggota = parseInt(document.getElementById('inputKuotaAnggota').value);
+      const kuotaCadangan = parseInt(document.getElementById('inputKuotaCadangan').value);
+      if (!currentQuotaDivisi || isNaN(kuotaAnggota) || isNaN(kuotaCadangan)) return;
+      try {
+        const params = new URLSearchParams();
+        params.append('action', 'updateQuotaConfig');
+        params.append('divisiId', currentQuotaDivisi);
+        params.append('kuotaAnggota', kuotaAnggota);
+        params.append('kuotaCadangan', kuotaCadangan);
+        
+        // ⚡ PERF: Explicit cache bypass for POST
+        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
+        const result = await res.json();
+        
+        if (result.success) {
+          quotaConfig[currentQuotaDivisi].kuota_anggota = kuotaAnggota;
+          quotaConfig[currentQuotaDivisi].kuota_cadangan = kuotaCadangan;
+          
+          // ⚡ PERF: Clear quota cache after update
+          clearCache('quota_config');
+          
+          await loadSelectionCounts(currentQuotaDivisi);
+          closeQuotaConfig();
+          showToast('✅ Kuota berhasil diupdate', 'success');
+        } else { showToast(result.error || 'Gagal update kuota', 'error'); }
+      } catch (err) { showToast('Error: ' + err.message, 'error'); }
+    }
+
+    async function loadSelectionCounts(divisi) {
+      if (!divisi || divisi === 'all') return;
+      try {
+        // ⚡ PERF: Check cache first
+        let result = getCached('counts_' + divisi);
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getSelectionCounts&divisi=${divisi}`);
+          result = await res.json();
+          if (result.success) setCache('counts_' + divisi, result);
+        }
+        if (result.success) updateQuotaTracker(divisi, result.data);
+      } catch (err) { console.error('Error loading selection counts:', err); }
+    }
+
+    async function updateSelectionStatus(rowIndex, divisi, status) {
+      try {
+        const params = new URLSearchParams();
+        params.append('action', 'updateSelectionStatus');
+        params.append('rowIndex', rowIndex);
+        params.append('divisi', divisi);
+        params.append('status', status);
+        
+        // ⚡ PERF: Explicit cache bypass for POST
+        const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
+        const result = await res.json();
+        
+        if (result.success) {
+          // Update local state
+          const candidate = allCandidatesData.find(c => {
+            const r = c.ratings?.[divisi];
+            return r && r.rowIndex === parseInt(rowIndex);
+          });
+          if (candidate) {
+            if (!candidate.selectionStatus) candidate.selectionStatus = {};
+            candidate.selectionStatus[divisi] = status;
+          }
+          
+          // ⚡ PERF: Clear related caches
+          clearCache('dashboard_all');
+          clearCache('dashboard_' + divisi);
+          clearCache('counts_' + divisi);
+          
+          await loadSelectionCounts(divisi);
+          renderCandidates(allCandidatesData);
+          showToast(`✅ Status diupdate: ${status}`, 'success');
+        } else { 
+          console.error('Backend error:', result);
+          showToast(result.error || 'Gagal update status', 'error'); 
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    function getSelectionButtons(candidate, divisi) {
+      const config = quotaConfig[divisi];
+      if (!config) return '';
+      
+      const ratingData = candidate.ratings?.[divisi];
+      const rowIndex = ratingData?.rowIndex;
+      
+      if (!rowIndex) return '';
+      
+      const currentStatus = candidate.selectionStatus?.[divisi] || '';
+      
+      const counts = {
+        terima: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'terima').length, 
+        cadangan: allCandidatesData.filter(c => c.selectionStatus?.[divisi] === 'cadangan').length
+      };
+      
+      const isTerimaDisabled = currentStatus !== 'terima' && counts.terima >= config.kuota_anggota;
+      const isCadanganDisabled = currentStatus !== 'cadangan' && counts.cadangan >= config.kuota_cadangan;
+      
+      return `<div class="selection-buttons">
+        <button class="btn-status btn-terima${currentStatus==='terima'?' active':''}" 
+                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','terima')" 
+                ${isTerimaDisabled?'disabled':''} 
+                title="${isTerimaDisabled?'Kuota anggota penuh':''}">🟢 Terima</button>
+        <button class="btn-status btn-cadangan${currentStatus==='cadangan'?' active':''}" 
+                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','cadangan')" 
+                ${isCadanganDisabled?'disabled':''} 
+                title="${isCadanganDisabled?'Kuota cadangan penuh':''}">🟡 Cadangan</button>
+        <button class="btn-status btn-tolak${currentStatus==='tolak'?' active':''}" 
+                onclick="event.stopPropagation();setSelection(${rowIndex},'${divisi}','tolak')">🔴 Tolak</button>
+      </div>`;
+    }
+
+    function setSelection(rowIndex, divisi, status) {
+      updateSelectionStatus(rowIndex, divisi, status);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadQuotaConfig();
+      await loadDivisions();
+      await loadCandidates('all');
+      document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') { 
+          closeModal(); 
+          if (document.getElementById('sidebar').classList.contains('open')) toggleMenu(); 
+        } 
+      });
+      
+      // ⚡ PERF: Debounced search input (300ms)
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) searchInput.addEventListener('input', debounce(handleSearch, 300));
     });
 
-    // 🍔 Sidebar Toggle
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('active');
-      document.getElementById('main').classList.toggle('sidebar-open');
-    }
-
-    // 🔄 Load Divisions
-    function loadDivisions() {
-      fetch(getApiUrl('getDashboardDivisions'))
-        .then(r => r.json())
-        .then(res => {
-          if (res.success) {
-            divisionsList = res.data;
-            renderDivisionList();
-          }
-        })
-        .catch(err => console.error('Load divisions error:', err));
-    }
-
-    function renderDivisionList() {
-      const container = document.getElementById('division-list');
-      container.innerHTML = '';
-      divisionsList.filter(d => d.type === 'division').forEach(div => {
-        const li = document.createElement('li');
-        li.className = 'sidebar-item';
-        li.innerHTML = `<a class="sidebar-link" data-filter="${div.id}" onclick="filterCandidates('${div.id}', this)">${div.name}</a>`;
-        container.appendChild(li);
-      });
-    }
-
-    // 📊 Load Dashboard Data
-    function loadDashboardData(divisi = null, filter = 'all') {
-      const container = document.getElementById('candidates-container');
-      container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>`;
-      
-      const params = new URLSearchParams({action: 'getDashboardData'});
-      if (divisi) params.append('divisi', divisi);
-      if (filter && filter !== 'all') params.append('filterStatus', filter);
-      
-      fetch(getApiUrl() + '?' + params.toString())
-        .then(r => r.json())
-        .then(res => {
-          if (res.success) {
-            candidatesData = res.data;
-            renderCandidates(res.data);
-            updateStats(res.data);
-          } else {
-            container.innerHTML = `<p style="text-align:center;color:var(--danger)">❌ ${res.error || 'Gagal memuat data'}</p>`;
-          }
-        })
-        .catch(err => {
-          container.innerHTML = `<p style="text-align:center;color:var(--danger)">❌ Error: ${err.message}</p>`;
-          console.error('Load dashboard error:', err);
+    async function loadDivisions() {
+      try {
+        // ⚡ PERF: Check cache first
+        let data = getCached('dashboard_divisions');
+        if (!data) {
+          const res = await fetch(`${API_BASE}?action=getDashboardDivisions`);
+          data = await res.json();
+          if (data.success) setCache('dashboard_divisions', data);
+        }
+        if (!data.success) throw new Error(data.error);
+        
+        const list = document.getElementById('divisionList');
+        list.innerHTML = '';
+        
+        data.data.forEach(d => {
+          const btn = document.createElement('button');
+          btn.className = 'div-btn' + (d.id === 'all' ? ' active' : '');
+          btn.innerHTML = `<span class="div-btn-icon">${d.name.split(' ')[0] || '📋'}</span> <span>${d.name.split(' ').slice(1).join(' ') || d.name}</span>` + (d.id !== 'all' ? `<button class="div-btn-config" onclick="event.stopPropagation();openQuotaConfigFor('${d.id}')" title="Edit kuota">⚙️</button>` : '');
+          btn.onclick = async () => {
+            document.querySelectorAll('.div-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentDivisi = d.id;
+            clearSearch();
+            await loadCandidates(d.id);
+            if (window.innerWidth <= 768) toggleMenu();
+          };
+          list.appendChild(btn);
         });
+      } catch (err) { console.error(err); }
     }
 
-    // 👥 Render Candidates
-    function renderCandidates(data) {
-      const container = document.getElementById('candidates-container');
+    function openQuotaConfigFor(divisiId) {
+      currentQuotaDivisi = divisiId;
+      const config = quotaConfig[divisiId];
+      if (config) {
+        document.getElementById('configDivisiName').textContent = config.nama_divisi;
+        document.getElementById('inputKuotaAnggota').value = config.kuota_anggota;
+        document.getElementById('inputKuotaCadangan').value = config.kuota_cadangan;
+      }
+      document.getElementById('quotaConfigModal').classList.add('active');
+    }
+
+    async function loadCandidates(divisi) {
+      const content = document.getElementById('content');
+      const statsBar = document.getElementById('statsBar');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
+      statsBar.style.display = 'none';
       
-      if (!data || data.length === 0) {
-        container.innerHTML = `<p class="text-center" style="padding:40px;color:var(--gray)">Tidak ada kandidat untuk ditampilkan</p>`;
+      try {
+        // ⚡ PERF: Check cache first
+        const cacheKey = 'dashboard_' + (divisi || 'all');
+        let result = getCached(cacheKey);
+        
+        if (!result) {
+          const res = await fetch(`${API_BASE}?action=getDashboardData&divisi=${divisi}`);
+          result = await res.json();
+          if (result.success) setCache(cacheKey, result);
+        }
+        
+        if (!result.success) throw new Error(result.error);
+        
+        allCandidatesData = result.data || [];
+        document.getElementById('statTotal').textContent = allCandidatesData.length;
+        const reviewed = allCandidatesData.filter(c => Object.keys(c.ratings || {}).length > 0).length;
+        document.getElementById('statReviewed').textContent = reviewed;
+        statsBar.style.display = 'grid';
+        
+        if (allCandidatesData.length === 0) {
+          content.innerHTML = '<div class="empty"><p>📭 Tidak ada data kandidat</p></div>';
+          return;
+        }
+        
+        renderCandidates(allCandidatesData);
+        if (divisi && divisi !== 'all') await loadSelectionCounts(divisi);
+      } catch (err) { content.innerHTML = `<div class="empty"><p>⚠️ ${err.message}</p></div>`; }
+    }
+
+    function renderCandidates(candidates = allCandidatesData) {
+      const content = document.getElementById('content');
+      
+      if (!candidates || candidates.length === 0) {
+        content.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Tidak ada kandidat ditemukan${currentSearchQuery ? ` untuk "<strong>${currentSearchQuery}</strong>"` : ''}</p>${currentSearchQuery ? `<button class="btn btn-secondary" onclick="clearSearch()">Tampilkan Semua</button>` : ''}</div>`;
         return;
       }
       
-      container.innerHTML = `<div class="candidates-grid">
-        ${data.map(c => renderCandidateCard(c)).join('')}
-      </div>`;
-      
-      // Add click handlers
-      document.querySelectorAll('.candidate-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-          if (!e.target.closest('.btn')) {
-            openCandidateDetail(card.dataset.nama);
-          }
-        });
-      });
-    }
-
-    function renderCandidateCard(c) {
-      const status = c.selectionStatus?.[c.currentDivisi] || 'pending';
-      const statusLabel = status === 'terima' ? '✅ Diterima' : status === 'cadangan' ? '🔄 Cadangan' : status === 'tolak' ? '❌ Ditolak' : '⏳ Pending';
-      const statusClass = status === 'terima' ? 'terima' : status === 'cadangan' ? 'cadangan' : status === 'tolak' ? 'tolak' : 'pending';
-      
-      const ratingDisplay = c.currentRating ? `⭐ ${c.currentRating.toFixed(1)}` : 'Belum direview';
-      const isLolos = c.ratingAvg >= 3;
-      
-      return `
-        <div class="candidate-card fade-in ${status === 'terima' ? 'selected' : ''}" 
-             data-nama="${escapeHtml(c.nama)}" 
-             data-divisi="${c.currentDivisi || ''}"
-             data-row="${c.currentRowIndex || ''}">
-          
-          <span class="status-badge ${statusClass}">${statusLabel}</span>
-          
-          <div class="card-header">
-            <img class="card-foto" src="${c.foto || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👤</text></svg>'}" 
-                 alt="${escapeHtml(c.nama)}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👤</text></svg>'">
-            <div class="card-info">
-              <div class="card-nama">${escapeHtml(c.nama)}</div>
-              <div class="card-kelas">🎓 ${escapeHtml(c.kelas)}</div>
-              <div class="card-rating">
-                <span class="rating-stars">⭐</span>
-                <span class="rating-value">${ratingDisplay}</span>
-                ${c.ratingAvg ? `<span style="margin-left:8px;font-size:0.85rem;color:var(--gray)">Rata2: ${c.ratingAvg}</span>` : ''}
-              </div>
-            </div>
+      // ⚡ PERF: Batch DOM construction with array join
+      const cardHtmlArray = candidates.map((c, idx) => {
+        const fotoUrl = convertDriveUrl(c.foto);
+        const fotoHtml = fotoUrl 
+          ? `<img class="card-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'card-photo placeholder\\'>👤</div>'">`
+          : '<div class="card-photo placeholder">👤</div>';
+        
+        const ratingsHtml = Object.values(c.ratings).map(r => 
+          `<div class="rating-item"><div class="rating-header"><span class="rating-badge" data-rating="${r.rating}">★ ${r.rating}</span><span class="rating-div">${r.divName}</span></div>${r.alasan ? `<div class="rating-reason">${r.alasan}</div>` : ''}</div>`
+        ).join('');
+        
+        const divText = c.divisiDilamar.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+        const selectionButtons = (currentDivisi && currentDivisi !== 'all' && c.ratings?.[currentDivisi]) 
+          ? getSelectionButtons(c, currentDivisi) 
+          : '';
+        
+        return `<div class="card" onclick="openModal(${idx})">
+          ${fotoHtml}
+          <div class="card-info">
+            <div class="card-name">${c.nama}</div>
+            <span class="card-class">Kelas ${c.kelas}</span>
+            <div class="card-divisi">🎯 ${divText}</div>
+            <div class="rating-list">${ratingsHtml}</div>
+            ${selectionButtons}
           </div>
-          
-          <div class="card-body">
-            <div class="card-divisi">
-              ${(c.divisiDilamar || []).map(d => 
-                `<span class="divisi-tag ${d === c.currentDivisi ? 'prioritas' : ''}">${escapeHtml(d)}</span>`
-              ).join('')}
-            </div>
-            
-            ${c.currentAlasan ? `<div class="card-alasan" title="${escapeHtml(c.currentAlasan)}">${escapeHtml(c.currentAlasan.substring(0, 100))}${c.currentAlasan.length > 100 ? '...' : ''}</div>` : ''}
-            
-            <div class="card-actions">
-              <button class="btn btn-primary" onclick="event.stopPropagation(); openRatingModal('${escapeHtml(c.nama)}', '${c.currentDivisi}', ${c.currentRowIndex})">✍️ Review</button>
-              
-              ${status !== 'pending' ? 
-                `<button class="btn btn-undo" onclick="event.stopPropagation(); undoStatus('${escapeHtml(c.nama)}', '${c.currentDivisi}', ${c.currentRowIndex})">↩️ Undo</button>` 
-                : ''}
-              
-              <select class="filter-select" style="padding:8px 12px;font-size:0.85rem" 
-                      onchange="event.stopPropagation(); updateStatus('${escapeHtml(c.nama)}', '${c.currentDivisi}', ${c.currentRowIndex}, this.value, ${c.ratingAvg}, '${escapeHtml(c.currentAlasan || '').replace(/'/g, "\\'")}', '${escapeHtml(c.foto || '')}', '${escapeHtml((c.divisiDilamar || []).join(','))}')">
-                <option value="">Status...</option>
-                <option value="terima" ${status === 'terima' ? 'selected' : ''}>✅ Terima</option>
-                <option value="cadangan" ${status === 'cadangan' ? 'selected' : ''}>🔄 Cadangan</option>
-                <option value="tolak" ${status === 'tolak' ? 'selected' : ''}>❌ Tolak</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // 📈 Update Stats
-    function updateStats(data) {
-      document.getElementById('stat-total').textContent = data.length;
-      document.getElementById('stat-reviewed').textContent = data.filter(c => c.currentRating).length;
-      document.getElementById('stat-terima').textContent = data.filter(c => c.selectionStatus?.[c.currentDivisi] === 'terima').length;
-      document.getElementById('stat-cadangan').textContent = data.filter(c => c.selectionStatus?.[c.currentDivisi] === 'cadangan').length;
-    }
-
-    // 🔍 Filter Functions
-    function filterCandidates(filter, el) {
-      // Update UI
-      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-      if (el) el.classList.add('active');
-      
-      currentFilter = filter;
-      
-      // Toggle submenu for "berkas"
-      if (filter === 'berkas') {
-        document.getElementById('submenu-berkas').classList.add('show');
-      } else {
-        document.querySelectorAll('.submenu').forEach(s => s.classList.remove('show'));
-      }
-      
-      // Handle division vs status filter
-      if (['berkas', 'lolos', 'tidak_lolos'].includes(filter)) {
-        currentDivisi = 'all';
-        loadDashboardData('all', filter);
-      } else {
-        currentDivisi = filter;
-        loadDashboardData(filter, 'all');
-      }
-      
-      // Update quick filter dropdown
-      document.getElementById('quickFilter').value = filter;
-      
-      // Close sidebar on mobile
-      if (window.innerWidth <= 768) toggleSidebar();
-    }
-
-    function filterByRating(threshold, operator) {
-      // This is a client-side filter for demo; in production, filter via backend
-      const filtered = candidatesData.filter(c => {
-        if (operator === '>=') return c.ratingAvg >= threshold;
-        if (operator === '<') return c.ratingAvg < threshold;
-        return true;
+        </div>`;
       });
-      renderCandidates(filtered);
-      updateStats(filtered);
+      
+      // ⚡ PERF: Single innerHTML update
+      content.innerHTML = `<div class="candidate-grid">${cardHtmlArray.join('')}</div>`;
     }
 
-    function quickFilterChange() {
-      const val = document.getElementById('quickFilter').value;
-      const link = document.querySelector(`.sidebar-link[data-filter="${val}"]`);
-      if (link) filterCandidates(val, link);
-    }
-
-    // 🎭 Modal Functions
-    function openCandidateDetail(nama) {
-      const c = candidatesData.find(x => x.nama === nama);
+    function openModal(idx) {
+      const c = allCandidatesData[idx];
       if (!c) return;
       
-      selectedCandidate = c;
-      document.getElementById('modalNama').textContent = c.nama;
+      const fotoUrl = convertDriveUrl(c.foto);
+      document.getElementById('modalPhoto').innerHTML = fotoUrl 
+        ? `<img class="modal-photo" src="${fotoUrl}" alt="Foto ${c.nama}" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
+        : '<div class="modal-photo placeholder">👤</div>';
       
-      const body = document.getElementById('modalBody');
-      body.innerHTML = `
-        <div style="display:flex;gap:20px;align-items:center;margin-bottom:20px">
-          <img src="${c.foto || ''}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;background:#eee" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👤</text></svg>'">
-          <div>
-            <p><strong>🎓 Kelas:</strong> ${escapeHtml(c.kelas)}</p>
-            <p><strong>🎯 Divisi Dilamar:</strong> ${(c.divisiDilamar || []).map(d => `<span class="divisi-tag">${escapeHtml(d)}</span>`).join(' ')}</p>
-            <p><strong>⭐ Rating Rata-rata:</strong> <span style="color:var(--primary);font-weight:600">${c.ratingAvg || '-'}</span></p>
-            <p><strong>📊 Status Lolos:</strong> <span style="color:${c.isLolos ? 'var(--success)' : 'var(--danger)'};font-weight:600">${c.isLolos ? '✅ LOLOS (≥3)' : '❌ Tidak Lolos (<3)'}</span></p>
-          </div>
-        </div>
-        
-        <h4 style="margin:15px 0 10px">📝 Jawaban Penting:</h4>
-        <div style="background:#f8f9fa;padding:15px;border-radius:8px;font-size:0.95rem">
-          <p><strong>🎯 Tujuan:</strong><br>${escapeHtml(c.answers?.[5] || '-')}</p>
-          <p><strong>✨ Kelebihan/Kekurangan:</strong><br>${escapeHtml(c.answers?.[6] || '-')}</p>
-          <p><strong>💡 Skill Pendukung:</strong><br>${escapeHtml(c.answers?.[11] || '-')}</p>
-        </div>
-        
-        <h4 style="margin:20px 0 10px">📋 Review per Divisi:</h4>
-        ${Object.entries(c.ratings || {}).map(([div, r]) => `
-          <div style="background:#e9ecef;padding:12px;border-radius:8px;margin-bottom:10px">
-            <strong>${escapeHtml(r.divName)}</strong> - ⭐ ${r.rating}
-            ${r.alasan ? `<br><small style="color:var(--gray)">${escapeHtml(r.alasan.substring(0, 150))}${r.alasan.length > 150 ? '...' : ''}</small>` : ''}
-          </div>
-        `).join('') || '<p style="color:var(--gray)">Belum ada review</p>'}
-      `;
+      document.getElementById('modalName').textContent = c.nama;
+      document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
+      document.getElementById('modalDivisi').innerHTML = c.divisiDilamar.map(d => 
+        `<span class="modal-divisi-tag">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`
+      ).join('');
       
-      document.getElementById('detailModal').classList.add('show');
+      const ratingsHtml = Object.values(c.ratings).map(r => 
+        `<div class="modal-rating-card">
+          <div class="modal-rating-header">
+            <span class="modal-rating-badge" data-rating="${r.rating}">★ ${r.rating}</span>
+            <span class="modal-rating-div">${r.divName}</span>
+          </div>
+          <div class="modal-rating-reason">${r.alasan || 'Tidak ada alasan'}</div>
+        </div>`
+      ).join('');
+      
+      document.getElementById('modalRatings').innerHTML = ratingsHtml;
+      document.getElementById('detailModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
-      document.getElementById('detailModal').classList.remove('show');
-      selectedCandidate = null;
+      document.getElementById('detailModal').classList.remove('active');
+      document.body.style.overflow = '';
     }
-
-    // ✍️ Rating Modal
-    function openRatingModal(nama, divisi, rowIndex) {
-      const c = candidatesData.find(x => x.nama === nama);
-      if (!c) return;
-      
-      const modal = document.getElementById('detailModal');
-      document.getElementById('modalNama').textContent = `✍️ Review: ${nama}`;
-      
-      const existingRating = c.ratings?.[divisi]?.rating || '';
-      const existingCatatan = c.ratings?.[divisi]?.alasan || '';
-      
-      document.getElementById('modalBody').innerHTML = `
-        <div class="form-group">
-          <label class="form-label">⭐ Rating (1-4)</label>
-          <div class="rating-input">
-            <input type="number" id="inputRating" class="form-input" min="1" max="4" value="${existingRating}" required>
-            <span style="font-size:0.9rem;color:var(--gray)">• 1: Kurang • 2: Cukup • 3: Baik • 4: Sangat Baik</span>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">📝 Alasan / Komentar <span style="color:var(--danger)">*</span></label>
-          <textarea id="inputCatatan" class="form-textarea" required minlength="${MIN_CATATAN_LENGTH}">${escapeHtml(existingCatatan)}</textarea>
-          <div class="form-help">Minimal ${MIN_CATATAN_LENGTH} karakter. Saat ini: <span id="charCount">${existingCatatan.length}</span></div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">🎯 Divisi</label>
-          <input type="text" class="form-input" value="${escapeHtml(divisi)}" disabled>
-        </div>
-        
-        <input type="hidden" id="inputRowIndex" value="${rowIndex}">
-        <input type="hidden" id="inputDivisiDilamar" value="${escapeHtml(c.divisiDilamarRaw || '')}">
-      `;
-      
-      // Char counter
-      document.getElementById('inputCatatan').addEventListener('input', function() {
-        document.getElementById('charCount').textContent = this.value.length;
-      });
-      
-      // Update save button
-      document.getElementById('btnSaveRating').onclick = () => saveRating(nama, divisi);
-      document.getElementById('btnSaveRating').style.display = 'flex';
-      
-      modal.classList.add('show');
+    
+    function closeModalOnBackdrop(e) { 
+      if (e.target === e.currentTarget) closeModal(); 
     }
-
-    function saveRating(nama, divisi) {
-      const rating = document.getElementById('inputRating').value;
-      const catatan = document.getElementById('inputCatatan').value.trim();
-      const rowIndex = document.getElementById('inputRowIndex').value;
-      const divisiDilamarRaw = document.getElementById('inputDivisiDilamar').value;
-      
-      if (!rating || !catatan) {
-        alert('⚠️ Rating dan alasan wajib diisi!');
-        return;
-      }
-      
-      if (catatan.length < MIN_CATATAN_LENGTH) {
-        alert(`⚠️ Komentar minimal ${MIN_CATATAN_LENGTH} karakter!`);
-        return;
-      }
-      
-      const btn = document.getElementById('btnSaveRating');
-      btn.disabled = true;
-      btn.textContent = '💾 Menyimpan...';
-      
-      const params = new URLSearchParams({
-        action: 'saveRating',
-        rowIndex,
-        rating,
-        catatan,
-        divisi,
-        divisiDilamarRaw
-      });
-      
-      fetch(getApiUrl(), {method: 'POST', body: params})
-        .then(r => r.json())
-        .then(res => {
-          alert(res.success ? `✅ ${res.message}` : `❌ ${res.message}`);
-          if (res.success) {
-            closeModal();
-            loadDashboardData(currentDivisi, currentFilter);
-          }
-        })
-        .catch(err => {
-          alert('❌ Error: ' + err.message);
-          console.error(err);
-        })
-        .finally(() => {
-          btn.disabled = false;
-          btn.textContent = '💾 Simpan Rating';
-        });
+    
+    function convertDriveUrl(url) {
+      if (!url) return '';
+      const match = url.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || url.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
+      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
     }
-
-    // ✅ Update Status (Terima/Cadangan/Tolak)
-    function updateStatus(nama, divisi, rowIndex, status, ratingAvg, alasan, foto, divisiDilamar) {
-      if (!status) return;
-      
-      if (!confirm(`Yakin ingin mengubah status "${nama}" menjadi "${status.toUpperCase()}"?`)) {
-        // Revert select
-        event.target.value = '';
-        return;
-      }
-      
-      const params = new URLSearchParams({
-        action: 'updateSelectionStatus',
-        rowIndex,
-        divisi,
-        status,
-        nama,
-        kelas: candidatesData.find(c => c.nama === nama)?.kelas || '',
-        ratingAvg,
-        alasan,
-        foto,
-        divisiDilamar
-      });
-      
-      fetch(getApiUrl(), {method: 'POST', body: params})
-        .then(r => r.json())
-        .then(res => {
-          alert(res.success ? `✅ ${res.message}` : `❌ ${res.message}`);
-          if (res.success) loadDashboardData(currentDivisi, currentFilter);
-        })
-        .catch(err => {
-          alert('❌ Error: ' + err.message);
-          console.error(err);
-        });
+    
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; 
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3000);
     }
-
-    // ↩️ Undo Status
-    function undoStatus(nama, divisi, rowIndex) {
-      if (!confirm(`↩️ Undo status untuk "${nama}"? Status akan dikembalikan ke awal.`)) return;
-      
-      const params = new URLSearchParams({
-        action: 'undoSelectionStatus',
-        rowIndex,
-        divisi
-      });
-      
-      fetch(getApiUrl(), {method: 'POST', body: params})
-        .then(r => r.json())
-        .then(res => {
-          alert(res.success ? `✅ ${res.message}` : `❌ ${res.message}`);
-          if (res.success) loadDashboardData(currentDivisi, currentFilter);
-        })
-        .catch(err => {
-          alert('❌ Error: ' + err.message);
-          console.error(err);
-        });
-    }
-
-    // ⚙️ Quota Functions
-    function loadQuotaConfig() {
-      fetch(getApiUrl('getQuotaConfig'))
-        .then(r => r.json())
-        .then(res => {
-          if (res.success) quotaConfig = res.data;
-        });
-    }
-
-    function openQuotaModal(divisiId, divisiName) {
-      const config = quotaConfig.find(q => q.divisi_id === divisiId) || {};
-      document.getElementById('quotaDivisiName').textContent = divisiName;
-      document.getElementById('quotaAnggota').value = config.kuota_anggota || 0;
-      document.getElementById('quotaCadangan').value = config.kuota_cadangan || 0;
-      document.getElementById('quotaModal').classList.add('show');
-    }
-
-    function closeQuotaModal() {
-      document.getElementById('quotaModal').classList.remove('show');
-    }
-
-    function saveQuota() {
-      const divisiId = document.getElementById('quotaDivisiName').textContent.toLowerCase();
-      const kuotaAnggota = document.getElementById('quotaAnggota').value;
-      const kuotaCadangan = document.getElementById('quotaCadangan').value;
-      
-      const params = new URLSearchParams({
-        action: 'updateQuotaConfig',
-        divisiId,
-        kuotaAnggota,
-        kuotaCadangan
-      });
-      
-      fetch(getApiUrl(), {method: 'POST', body: params})
-        .then(r => r.json())
-        .then(res => {
-          alert(res.success ? `✅ ${res.message}` : `❌ ${res.message}`);
-          if (res.success) {
-            closeQuotaModal();
-            loadQuotaConfig();
-          }
-        });
-    }
-
-    // 🔗 API Helper
-    function getApiUrl(action) {
-      // 🔥 GANTI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA
-      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec';
-      return action ? `${SCRIPT_URL}?action=${action}` : SCRIPT_URL;
-    }
-
-    // 🔒 Escape HTML
-    function escapeHtml(str) {
-      if (!str) return '';
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
-    }
-
-    // ⚙️ Constants (sync with backend)
-    const MIN_CATATAN_LENGTH = 100;
   </script>
 </body>
 </html>
