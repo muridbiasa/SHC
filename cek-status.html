@@ -2,714 +2,617 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#080b10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Cek Status Seleksi — SHC 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:        #080b10;
-    --bg2:       #0d1117;
-    --bg3:       #111827;
-    --border:    #1e2a3a;
-    --border2:   #243044;
-    --text:      #e2e8f0;
-    --muted:     #64748b;
-    --accent:    #3b82f6;
-    --accent2:   #60a5fa;
-    --green:     #22c55e;
-    --green-bg:  #052e16;
-    --green-bd:  #166534;
-    --red:       #ef4444;
-    --red-bg:    #1c0a09;
-    --red-bd:    #7f1d1d;
-    --gold:      #f59e0b;
+    --bg:       #080b10;
+    --bg2:      #0d1117;
+    --bg3:      #111827;
+    --bg4:      #161e2e;
+    --border:   #1e2a3a;
+    --border2:  #243044;
+    --text:     #e2e8f0;
+    --muted:    #64748b;
+    --accent:   #3b82f6;
+    --accent2:  #60a5fa;
+    --green:    #22c55e;
+    --green-bg: #052e16;
+    --green-bd: #166534;
+    --red:      #ef4444;
+    --red-bg:   #1c0a09;
+    --red-bd:   #7f1d1d;
+    --gold:     #f59e0b;
+    --gold-bg:  #1c1400;
+    --gold-bd:  #713f12;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
+  html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
+    min-height: 100dvh;
     overflow-x: hidden;
   }
 
-  /* ── Background noise + grid ── */
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(59,130,246,.12) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 110%, rgba(99,102,241,.10) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 90% 55% at 15% -5%,  rgba(59,130,246,.12) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 45% at 85% 110%, rgba(99,102,241,.09) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
   }
 
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231e2a3a' stroke-width='0.5'%3E%3Cline x1='60' y1='0' x2='0' y2='60'/%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 0;
+  /* ─── Layout ─── */
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center;
   }
 
-  /* ── Layout ── */
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 16px 80px;
+  /* ─── Top bar ─── */
+  .topbar {
+    width: 100%; max-width: 480px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 22px 20px 0; gap: 10px;
   }
 
-  /* ── Header ── */
-  .header {
-    text-align: center;
-    margin-bottom: 48px;
-    animation: fadeDown .7s ease both;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(59,130,246,.12);
-    border: 1px solid rgba(59,130,246,.25);
-    border-radius: 100px;
-    padding: 6px 16px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 20px;
-  }
-
-  .badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .4; }
-  }
-
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 6vw, 3.2rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -.03em;
-    background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 12px;
-  }
-
-  .subtitle {
-    color: var(--muted);
-    font-size: 15px;
-    font-weight: 300;
-    max-width: 400px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  /* ── Card ── */
-  .card {
-    width: 100%;
-    max-width: 480px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 36px 32px;
-    box-shadow: 0 24px 48px rgba(0,0,0,.4);
-    animation: fadeUp .7s .15s ease both;
-  }
-
-  .form-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  .input-wrap {
-    position: relative;
-    margin-bottom: 20px;
-  }
-
-  .input-wrap svg {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--muted);
-    pointer-events: none;
+  .logo {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--accent), #6366f1);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    box-shadow: 0 4px 12px rgba(59,130,246,.35);
     flex-shrink: 0;
   }
 
-  input[type="text"], input[type="date"] {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 13px 14px 13px 44px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-    -webkit-appearance: none;
-    appearance: none;
+  .logo-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; color: var(--text);
   }
 
-  input[type="text"]::placeholder,
-  input[type="date"]::placeholder { color: var(--muted); }
+  /* ─── Main ─── */
+  .main {
+    flex: 1; width: 100%; max-width: 480px;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px;
+  }
+
+  /* ─── Header ─── */
+  .hdr {
+    text-align: center; margin-bottom: 28px;
+    animation: dn .55s ease both;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(34,197,94,.08);
+    border: 1px solid rgba(34,197,94,.2);
+    border-radius: 100px; padding: 5px 14px;
+    font-size: 10.5px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 14px;
+  }
+
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 7px var(--green);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.65rem, 6.5vw, 2.4rem);
+    font-weight: 800; line-height: 1.12; letter-spacing: -.03em;
+    background: linear-gradient(145deg, #f1f5f9 0%, #94a3b8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 10px;
+  }
+
+  .sub {
+    color: var(--muted); font-size: 13.5px; line-height: 1.6;
+    max-width: 290px; margin: 0 auto;
+  }
+
+  /* ─── Card ─── */
+  .card {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.4);
+    animation: up .55s .08s ease both;
+  }
+
+  /* ─── Field ─── */
+  .field { margin-bottom: 15px; }
+
+  .flbl {
+    display: block; font-size: 10.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .1em;
+    color: var(--muted); margin-bottom: 7px;
+  }
+
+  .iwrap { position: relative; }
+
+  .iico {
+    position: absolute; left: 13px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted); pointer-events: none;
+    display: flex; align-items: center;
+  }
+
+  input[type="text"],
+  input[type="date"] {
+    width: 100%;
+    background: var(--bg3);
+    border: 1.5px solid var(--border2); border-radius: 12px;
+    padding: 13px 13px 13px 41px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px; /* 16px = no iOS zoom */
+    outline: none;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+    -webkit-appearance: none; appearance: none;
+  }
+
+  input::placeholder { color: var(--muted); }
 
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.5);
-    cursor: pointer;
+    filter: invert(.4); cursor: pointer;
   }
 
   input:focus {
     border-color: var(--accent);
+    background: var(--bg4);
     box-shadow: 0 0 0 3px rgba(59,130,246,.15);
   }
 
-  /* date hint */
-  .hint {
-    font-size: 11.5px;
-    color: var(--muted);
-    margin-top: -12px;
-    margin-bottom: 20px;
-    padding-left: 2px;
-    opacity: .75;
+  /* Date preview */
+  .date-preview {
+    margin-top: 7px;
+    font-size: 12px; color: var(--accent2); opacity: 0;
+    transition: opacity .2s;
+    display: flex; align-items: center; gap: 5px;
   }
 
-  /* ── Button ── */
+  .date-preview.show { opacity: 1; }
+
+  /* ─── Button ─── */
   .btn {
-    width: 100%;
+    width: 100%; margin-top: 18px;
     padding: 14px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 12px;
     font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: .04em;
+    font-size: 15px; font-weight: 700; letter-spacing: .04em;
     cursor: pointer;
-    transition: background .2s, transform .15s, box-shadow .2s;
-    box-shadow: 0 4px 20px rgba(59,130,246,.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .18s, transform .12s, box-shadow .18s;
+    box-shadow: 0 4px 18px rgba(59,130,246,.3);
+    touch-action: manipulation;
+    min-height: 50px;
   }
 
-  .btn:hover:not(:disabled) {
-    background: var(--accent2);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(59,130,246,.35);
-  }
+  .btn:hover:not(:disabled) { background: #2563eb; box-shadow: 0 6px 22px rgba(59,130,246,.4); }
+  .btn:active:not(:disabled) { transform: scale(.975); }
+  .btn:disabled { opacity: .6; cursor: not-allowed; }
 
-  .btn:active:not(:disabled) { transform: translateY(0); }
-
-  .btn:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-  }
-
-  /* ── Spinner ── */
-  .spinner {
-    width: 18px; height: 18px;
+  /* ─── Spinner ─── */
+  .spin {
+    width: 17px; height: 17px;
     border: 2px solid rgba(255,255,255,.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
+    border-top-color: #fff; border-radius: 50%;
+    animation: rot .6s linear infinite; flex-shrink: 0;
   }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes rot { to { transform: rotate(360deg); } }
 
-  /* ── Divider ── */
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 28px 0;
-  }
-
-  /* ── Result block ── */
+  /* ─── Result ─── */
   #result {
-    width: 100%;
-    max-width: 480px;
-    margin-top: 24px;
-    animation: fadeUp .5s ease both;
+    width: 100%; margin-top: 18px;
   }
 
-  /* Error/info alert */
+  /* Alert */
   .alert {
-    border-radius: 12px;
-    padding: 16px 18px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 14px;
-    line-height: 1.5;
-    border: 1px solid;
+    border-radius: 14px; padding: 14px 16px;
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13.5px; line-height: 1.55; border: 1px solid;
+    animation: up .4s ease both;
   }
 
-  .alert.error {
-    background: var(--red-bg);
-    border-color: var(--red-bd);
-    color: #fca5a5;
+  .alert.error { background: var(--red-bg); border-color: var(--red-bd); color: #fca5a5; }
+  .alert.warn  { background: var(--gold-bg); border-color: var(--gold-bd); color: #fcd34d; }
+  .alert-i     { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Result card */
+  .rcard {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+    animation: up .4s ease both;
   }
 
-  .alert.info {
-    background: rgba(59,130,246,.08);
-    border-color: rgba(59,130,246,.25);
-    color: var(--accent2);
+  /* Banner */
+  .banner {
+    padding: 17px 20px;
+    display: flex; align-items: center; gap: 13px;
+    position: relative; overflow: hidden;
   }
 
-  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .banner.lolos       { background: linear-gradient(135deg, var(--green-bg), #064e2a); border-bottom: 1px solid var(--green-bd); }
+  .banner.tidak_lolos { background: linear-gradient(135deg, var(--red-bg), #2d0909);   border-bottom: 1px solid var(--red-bd); }
+  .banner.menunggu    { background: linear-gradient(135deg, var(--gold-bg), #292000);   border-bottom: 1px solid var(--gold-bd); }
 
-  /* Profile result */
-  .result-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 24px 48px rgba(0,0,0,.45);
+  .banner::after {
+    content: ''; position: absolute; right: -22px; top: -22px;
+    width: 100px; height: 100px; border-radius: 50%; opacity: .07;
   }
 
-  /* Status banner */
-  .status-banner {
-    padding: 20px 28px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    position: relative;
-    overflow: hidden;
-  }
+  .banner.lolos::after       { background: var(--green); }
+  .banner.tidak_lolos::after { background: var(--red); }
+  .banner.menunggu::after    { background: var(--gold); }
 
-  .status-banner.lolos {
-    background: linear-gradient(135deg, var(--green-bg) 0%, #064e2a 100%);
-    border-bottom: 1px solid var(--green-bd);
-  }
-
-  .status-banner.tidak_lolos {
-    background: linear-gradient(135deg, var(--red-bg) 0%, #2d0909 100%);
-    border-bottom: 1px solid var(--red-bd);
-  }
-
-  .status-banner.menunggu {
-    background: linear-gradient(135deg, #1c1400 0%, #292000 100%);
-    border-bottom: 1px solid #713f12;
-  }
-
-  .status-banner::before {
-    content: '';
-    position: absolute;
-    right: -20px; top: -20px;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    opacity: .08;
-  }
-
-  .status-banner.lolos::before { background: var(--green); }
-  .status-banner.tidak_lolos::before { background: var(--red); }
-  .status-banner.menunggu::before { background: var(--gold); }
-
-  .status-icon-wrap {
-    width: 48px; height: 48px;
-    border-radius: 12px;
+  .bico {
+    width: 48px; height: 48px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
+    font-size: 22px; flex-shrink: 0;
   }
 
-  .status-banner.lolos .status-icon-wrap {
-    background: rgba(34,197,94,.15);
-    border: 1px solid rgba(34,197,94,.3);
+  .lolos       .bico { background: rgba(34,197,94,.12);  border: 1px solid rgba(34,197,94,.28); }
+  .tidak_lolos .bico { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.28); }
+  .menunggu    .bico { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.28); }
+
+  .blbl {
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .1em;
+    opacity: .6; margin-bottom: 3px;
   }
 
-  .status-banner.tidak_lolos .status-icon-wrap {
-    background: rgba(239,68,68,.15);
-    border: 1px solid rgba(239,68,68,.3);
-  }
-
-  .status-banner.menunggu .status-icon-wrap {
-    background: rgba(245,158,11,.15);
-    border: 1px solid rgba(245,158,11,.3);
-  }
-
-  .status-label {
+  .btxt {
     font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    opacity: .65;
-    margin-bottom: 2px;
+    font-size: 1.2rem; font-weight: 800; line-height: 1.1;
   }
 
-  .status-text {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.35rem;
-    font-weight: 800;
-    line-height: 1.1;
+  .lolos       .btxt { color: var(--green); }
+  .tidak_lolos .btxt { color: var(--red); }
+  .menunggu    .btxt { color: var(--gold); }
+
+  /* Profile */
+  .prof {
+    padding: 18px 20px;
+    display: flex; gap: 15px; align-items: flex-start;
   }
 
-  .status-banner.lolos .status-text { color: var(--green); }
-  .status-banner.tidak_lolos .status-text { color: var(--red); }
-  .status-banner.menunggu .status-text { color: var(--gold); }
-
-  /* Profile section */
-  .profile-section {
-    padding: 28px;
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-  }
-
-  .photo-wrap {
-    flex-shrink: 0;
-    width: 96px; height: 96px;
-    border-radius: 14px;
-    overflow: hidden;
-    background: var(--bg3);
-    border: 2px solid var(--border2);
+  .pbox {
+    flex-shrink: 0; width: 82px; height: 82px;
+    border-radius: 12px; overflow: hidden;
+    background: var(--bg3); border: 2px solid var(--border2);
     position: relative;
   }
 
-  .photo-wrap img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: opacity .3s;
-  }
+  .pbox img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  .photo-placeholder {
+  .pph {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 36px;
-    color: var(--muted);
+    font-size: 32px; color: var(--muted);
   }
 
-  .photo-loading {
-    position: absolute;
-    inset: 0;
-    background: var(--bg3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .pspin {
+    position: absolute; inset: 0; background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
   }
 
-  .info-grid { flex: 1; min-width: 0; }
+  .pinfo { flex: 1; min-width: 0; }
 
-  .info-row {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-bottom: 14px;
+  .irow { margin-bottom: 11px; }
+  .irow:last-child { margin-bottom: 0; }
+
+  .ilbl {
+    font-size: 9.5px; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--muted); font-weight: 600; margin-bottom: 2px;
   }
 
-  .info-row:last-child { margin-bottom: 0; }
+  .ival { font-size: 13.5px; font-weight: 500; color: var(--text); word-break: break-word; }
 
-  .info-row .lbl {
-    font-size: 10.5px;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: var(--muted);
-    font-weight: 500;
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+
+  .tag {
+    background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.22);
+    color: var(--accent2); border-radius: 7px;
+    padding: 2px 9px; font-size: 11px; font-weight: 500;
   }
 
-  .info-row .val {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .rfooter {
+    padding: 11px 20px; border-top: 1px solid var(--border);
+    font-size: 11.5px; color: var(--muted); text-align: center; line-height: 1.55;
   }
 
-  /* Divisi tags */
-  .divisi-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 4px;
+  /* ─── Page footer ─── */
+  .pfooter {
+    padding: 20px 16px;
+    text-align: center; color: var(--muted);
+    font-size: 11px; opacity: .45;
   }
 
-  .divisi-tag {
-    background: rgba(59,130,246,.1);
-    border: 1px solid rgba(59,130,246,.2);
-    color: var(--accent2);
-    border-radius: 6px;
-    padding: 3px 10px;
-    font-size: 12px;
-    font-weight: 500;
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .pfooter { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
   }
 
-  /* Footer note */
-  .result-footer {
-    padding: 14px 28px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.5;
-  }
+  /* ─── Animations ─── */
+  @keyframes dn { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:none} }
+  @keyframes up { from{opacity:0;transform:translateY(14px)}  to{opacity:1;transform:none} }
 
-  /* ── Page footer ── */
-  .page-footer {
-    margin-top: 48px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 12.5px;
-    opacity: .6;
-    animation: fadeUp .7s .4s ease both;
-  }
-
-  /* ── Animations ── */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── Responsive ── */
-  @media (max-width: 520px) {
-    .card { padding: 28px 20px; }
-    .profile-section { flex-direction: column; align-items: center; text-align: center; }
-    .divisi-tags { justify-content: center; }
-    .info-row .val { white-space: normal; }
+  /* ─── Desktop ─── */
+  @media (min-width: 560px) {
+    .topbar { padding: 28px 24px 0; }
+    .main   { padding: 36px 24px 60px; }
+    .card   { padding: 32px 28px; }
+    h1      { font-size: 2.4rem; }
+    .sub    { max-width: 340px; font-size: 14.5px; }
+    .prof   { gap: 20px; padding: 22px 24px; }
+    .pbox   { width: 96px; height: 96px; }
+    .banner { padding: 19px 24px; }
+    .rfooter { padding: 13px 24px; font-size: 12px; }
   }
 </style>
 </head>
 <body>
+<div class="page">
 
-<div class="wrapper">
-
-  <!-- Header -->
-  <header class="header">
-    <div class="badge">Seleksi Berkas SHC 2026</div>
-    <h1>Cek Status<br>Kelulusanmu</h1>
-    <p class="subtitle">Masukkan nama lengkap dan tanggal lahir sesuai data pendaftaran.</p>
-  </header>
-
-  <!-- Form Card -->
-  <div class="card">
-    <label class="form-label" for="nama">Nama Lengkap</label>
-    <div class="input-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-      </svg>
-      <input type="text" id="nama" placeholder="Contoh: Budi Santoso" autocomplete="off" autocorrect="off" spellcheck="false">
-    </div>
-
-    <label class="form-label" for="tgl">Tanggal Lahir</label>
-    <div class="input-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-      </svg>
-      <input type="date" id="tgl" max="2015-12-31" min="2006-01-01">
-    </div>
-    <p class="hint">* Gunakan tanggal lahir sesuai data yang diisikan saat mendaftar.</p>
-
-    <button class="btn" id="cekBtn" onclick="cekStatus()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
-      </svg>
-      Cek Status Saya
-    </button>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="logo">🎭</div>
+    <span class="logo-title">SHC 2026 — Seleksi Panitia</span>
   </div>
 
-  <!-- Result Area -->
-  <div id="result" style="display:none;"></div>
+  <div class="main">
 
-  <footer class="page-footer">
-    SHC 2026 — Sistem Informasi Seleksi Panitia &nbsp;·&nbsp; Hasil bersifat final
-  </footer>
+    <!-- Header -->
+    <div class="hdr">
+      <div class="badge"><div class="dot"></div>Pengumuman Seleksi Berkas</div>
+      <h1>Cek Status<br>Kelulusanmu</h1>
+      <p class="sub">Masukkan nama lengkap dan tanggal lahir sesuai formulir pendaftaran.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card">
+
+      <div class="field">
+        <label class="flbl" for="nama">Nama Lengkap</label>
+        <div class="iwrap">
+          <span class="iico">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </span>
+          <input type="text" id="nama"
+            placeholder="Tulis nama persis seperti di formulir..."
+            autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="flbl" for="tgl">Tanggal Lahir</label>
+        <div class="iwrap">
+          <span class="iico">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </span>
+          <input type="date" id="tgl" min="2005-01-01" max="2015-12-31"
+            onchange="previewDate(this.value)">
+        </div>
+        <!-- Live preview to avoid DD/MM confusion -->
+        <div class="date-preview" id="datePreview">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span id="datePreviewText"></span>
+        </div>
+      </div>
+
+      <button class="btn" id="cekBtn" onclick="cekStatus()">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+        </svg>
+        Cek Status Saya
+      </button>
+
+    </div>
+
+    <!-- Result -->
+    <div id="result" style="display:none;"></div>
+
+  </div>
+
+  <footer class="pfooter">SHC 2026 &nbsp;·&nbsp; Sistem Informasi Seleksi Panitia &nbsp;·&nbsp; Hasil bersifat final</footer>
 
 </div>
 
 <script>
-  // ── GANTI URL INI dengan URL Web App Google Apps Script kamu ──
+  // ─── GANTI URL INI ────────────────────────────────────────────────────────
   const GAS_URL = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
+  // ─────────────────────────────────────────────────────────────────────────
 
-  const resultEl = document.getElementById('result');
-  const btn      = document.getElementById('cekBtn');
+  const resultEl  = document.getElementById('result');
+  const btn       = document.getElementById('cekBtn');
+  const BULAN_ID  = ['Januari','Februari','Maret','April','Mei','Juni',
+                     'Juli','Agustus','September','Oktober','November','Desember'];
 
-  // Enter key support
-  document.getElementById('nama').addEventListener('keydown', e => { if(e.key === 'Enter') cekStatus(); });
-  document.getElementById('tgl').addEventListener('keydown',  e => { if(e.key === 'Enter') cekStatus(); });
+  // Enter key
+  ['nama','tgl'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); cekStatus(); }
+    });
+  });
+
+  // Show human-readable date preview so user confirms they picked the right date
+  function previewDate(val) {
+    const el  = document.getElementById('datePreview');
+    const txt = document.getElementById('datePreviewText');
+    if (!val) { el.classList.remove('show'); return; }
+    const [y, m, d] = val.split('-').map(Number);
+    txt.textContent = `${d} ${BULAN_ID[m-1]} ${y}`;
+    el.classList.add('show');
+  }
 
   async function cekStatus() {
     const nama = document.getElementById('nama').value.trim();
     const tgl  = document.getElementById('tgl').value;
 
     if (!nama) return showAlert('error', '⚠️', 'Nama lengkap tidak boleh kosong.');
-    if (!tgl)  return showAlert('error', '⚠️', 'Tanggal lahir belum dipilih.');
+    if (!tgl)  return showAlert('error', '⚠️', 'Pilih tanggal lahir terlebih dahulu.');
 
-    // Convert date input (YYYY-MM-DD) to DDMMYYYY
+    // YYYY-MM-DD → DDMMYYYY  (matching normalizeDate() in Code.gs)
     const [y, m, d] = tgl.split('-');
-    const birthDate  = d + m + y;  // DDMMYYYY
+    const birthDate  = d + m + y;   // e.g. 12092010
 
     setLoading(true);
     resultEl.style.display = 'none';
 
     try {
-      const url = `${GAS_URL}?action=checkStatus&name=${encodeURIComponent(nama)}&birthDate=${birthDate}`;
-      const resp = await fetch(url);
-
+      const url  = `${GAS_URL}?action=checkStatus&name=${encodeURIComponent(nama)}&birthDate=${birthDate}`;
+      const resp = await fetch(url, { mode: 'cors' });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
       const json = await resp.json();
 
       if (!json.success) {
-        showAlert('error', '❌', json.message || 'Data tidak ditemukan.');
+        const msg = String(json.message || '').toLowerCase();
+        if (msg.includes('nama ditemukan') || msg.includes('tanggal lahir tidak cocok')) {
+          showAlert('warn', '🔍',
+            '<b>Nama ditemukan, tapi tanggal lahir tidak cocok.</b><br>' +
+            'Pastikan kamu memilih tanggal yang benar. ' +
+            'Lihat konfirmasi di bawah field tanggal sebelum menekan tombol.');
+        } else {
+          showAlert('error', '❌',
+            '<b>Data tidak ditemukan.</b><br>' +
+            'Nama harus ditulis <b>persis sama</b> seperti di formulir pendaftaran, ' +
+            'termasuk huruf kapital dan ejaan lengkap.');
+        }
         return;
       }
 
       renderResult(json.data);
 
     } catch (err) {
-      showAlert('error', '🔌', 'Gagal menghubungi server. Periksa koneksi internet atau coba lagi nanti.<br><small style="opacity:.6">' + err.message + '</small>');
+      showAlert('error', '🔌',
+        '<b>Tidak dapat terhubung ke server.</b><br>' +
+        'Cek koneksi internet atau coba lagi nanti.<br>' +
+        `<small style="opacity:.5">${err.message}</small>`);
     } finally {
       setLoading(false);
     }
   }
 
   function renderResult(data) {
-    const status = (data.status || 'MENUNGGU').toUpperCase();
+    const raw    = String(data.status || 'MENUNGGU').toUpperCase().replace(/ /g,'_');
+    const status = ['LOLOS','TIDAK_LOLOS','MENUNGGU'].includes(raw) ? raw : 'MENUNGGU';
 
-    const statusMap = {
-      'LOLOS':       { cls: 'lolos',       icon: '✅', label: 'Status Seleksi', text: 'LOLOS' },
-      'TIDAK_LOLOS': { cls: 'tidak_lolos', icon: '❌', label: 'Status Seleksi', text: 'TIDAK LOLOS' },
-      'MENUNGGU':    { cls: 'menunggu',    icon: '⏳', label: 'Status Seleksi', text: 'MENUNGGU PENILAIAN' },
+    const MAP = {
+      LOLOS:       { cls:'lolos',       icon:'✅', lbl:'Status Seleksi', txt:'LOLOS' },
+      TIDAK_LOLOS: { cls:'tidak_lolos', icon:'❌', lbl:'Status Seleksi', txt:'TIDAK LOLOS' },
+      MENUNGGU:    { cls:'menunggu',    icon:'⏳', lbl:'Status Seleksi', txt:'BELUM DINILAI' },
     };
+    const s = MAP[status];
 
-    const s = statusMap[status] || statusMap['MENUNGGU'];
-
-    // Format divisi
-    let divisiHtml = '';
-    if (data.divisi && data.divisi !== '-') {
-      const divList = data.divisi.split(',').map(d => d.trim()).filter(Boolean);
-      divisiHtml = `<div class="divisi-tags">
-        ${divList.map(d => `<span class="divisi-tag">${capitalizeFirst(d)}</span>`).join('')}
-      </div>`;
-    } else {
-      divisiHtml = `<span class="val">-</span>`;
+    // Divisi tags
+    const divisiRaw = String(data.divisi || '').trim();
+    let divisiHTML = '<span class="ival">-</span>';
+    if (divisiRaw && divisiRaw !== '-') {
+      const list = divisiRaw.split(',').map(x => x.trim()).filter(Boolean);
+      if (list.length) {
+        divisiHTML = `<div class="tags">${list.map(d => `<span class="tag">${esc(cap(d))}</span>`).join('')}</div>`;
+      }
     }
 
-    // Foto
-    const fotoHtml = data.foto
-      ? `<div class="photo-loading" id="photoLoading">
-           <div class="spinner"></div>
-         </div>
-         <img src="${escHtml(data.foto)}" alt="Foto ${escHtml(data.nama)}"
-              onload="document.getElementById('photoLoading')?.remove()"
-              onerror="this.parentElement.innerHTML='<div class=\\'photo-placeholder\\'>👤</div>'">`
-      : `<div class="photo-placeholder">👤</div>`;
+    // Photo
+    const fotoURL = String(data.foto || '').trim();
+    const fotoHTML = fotoURL
+      ? `<div class="pspin" id="ps"><div class="spin" style="width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,.2);border-top-color:var(--accent2)"></div></div>
+         <img src="${esc(fotoURL)}" alt="Foto"
+           onload="document.getElementById('ps')?.remove()"
+           onerror="this.parentElement.innerHTML='<div class=\\'pph\\'>👤</div>'">`
+      : `<div class="pph">👤</div>`;
 
-    // Footer note
-    const footerNote = status === 'LOLOS'
-      ? '🎉 Selamat! Kamu dinyatakan lolos seleksi berkas. Pantau informasi selanjutnya melalui panitia.'
-      : status === 'TIDAK_LOLOS'
-      ? '😔 Maaf, kamu belum berhasil lolos seleksi berkas kali ini. Tetap semangat!'
-      : '⏳ Seleksi sedang berlangsung. Cek kembali beberapa saat lagi.';
+    const note = {
+      LOLOS:       '🎉 Selamat! Kamu dinyatakan <b>lolos seleksi berkas</b>. Pantau info lanjutan dari panitia.',
+      TIDAK_LOLOS: '😔 Kamu belum berhasil lolos seleksi berkas kali ini. Tetap semangat ya!',
+      MENUNGGU:    '⏳ Proses penilaian sedang berlangsung. Cek kembali beberapa saat lagi.',
+    }[status];
 
     resultEl.innerHTML = `
-      <div class="result-card">
-        <!-- Status Banner -->
-        <div class="status-banner ${s.cls}">
-          <div class="status-icon-wrap">${s.icon}</div>
+      <div class="rcard">
+        <div class="banner ${s.cls}">
+          <div class="bico">${s.icon}</div>
           <div>
-            <div class="status-label">${s.label}</div>
-            <div class="status-text">${s.text}</div>
+            <div class="blbl">${s.lbl}</div>
+            <div class="btxt">${s.txt}</div>
           </div>
         </div>
-
-        <!-- Profile -->
-        <div class="profile-section">
-          <div class="photo-wrap">${fotoHtml}</div>
-          <div class="info-grid">
-            <div class="info-row">
-              <span class="lbl">Nama Lengkap</span>
-              <span class="val">${escHtml(data.nama || '-')}</span>
+        <div class="prof">
+          <div class="pbox">${fotoHTML}</div>
+          <div class="pinfo">
+            <div class="irow">
+              <div class="ilbl">Nama Lengkap</div>
+              <div class="ival">${esc(data.nama||'-')}</div>
             </div>
-            <div class="info-row">
-              <span class="lbl">Kelas</span>
-              <span class="val">${escHtml(data.kelas || '-')}</span>
+            <div class="irow">
+              <div class="ilbl">Kelas</div>
+              <div class="ival">${esc(data.kelas||'-')}</div>
             </div>
-            <div class="info-row">
-              <span class="lbl">Divisi Dilamar</span>
-              ${divisiHtml}
+            <div class="irow">
+              <div class="ilbl">Divisi Dilamar</div>
+              ${divisiHTML}
             </div>
           </div>
         </div>
-
-        <!-- Footer note -->
-        <div class="result-footer">${footerNote}</div>
+        <div class="rfooter">${note}</div>
       </div>
     `;
 
     resultEl.style.display = 'block';
-    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => resultEl.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
   }
 
   function showAlert(type, icon, msg) {
     resultEl.innerHTML = `
       <div class="alert ${type}">
-        <span class="alert-icon">${icon}</span>
+        <span class="alert-i">${icon}</span>
         <div>${msg}</div>
-      </div>
-    `;
+      </div>`;
     resultEl.style.display = 'block';
-    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => resultEl.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
   }
 
   function setLoading(on) {
     btn.disabled = on;
     btn.innerHTML = on
-      ? `<div class="spinner"></div> Sedang Mengecek...`
-      : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg> Cek Status Saya`;
+      ? `<div class="spin"></div> Sedang Mengecek...`
+      : `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg> Cek Status Saya`;
   }
 
-  function capitalizeFirst(str) {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1);
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function escHtml(str) {
-    return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 </script>
 </body>
 </html>
