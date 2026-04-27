@@ -439,6 +439,7 @@
     // ============================================================
     let currentDivisi = 'all';
     let allCandidatesData = [];
+    let filteredCandidates = []; // Store filtered results for correct modal access
     let quotaConfig = {};
     let currentQuotaDivisi = null;
     let searchTimeout = null;
@@ -507,14 +508,15 @@
       document.getElementById('searchClear').classList.toggle('visible', currentSearchQuery.length > 0);
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
-        const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
-        renderCandidates(filtered);
+        filteredCandidates = filterCandidates(currentSearchQuery, allCandidatesData);
+        renderCandidates(filteredCandidates);
       }, 250);
     }
 
     function clearSearch() {
       document.getElementById('searchInput').value = '';
       currentSearchQuery = '';
+      filteredCandidates = [];
       document.getElementById('searchClear').classList.remove('visible');
       renderCandidates(allCandidatesData);
       document.getElementById('searchInput').focus();
@@ -792,6 +794,8 @@
         return;
       }
 
+      // Store the filtered candidates globally so modal can access correct index
+      filteredCandidates = candidates;
       const html = candidates.map((c, idx) => buildCandidateCard(c, idx)).join('');
       content.innerHTML = `<div class="candidate-grid">${html}</div>`;
     }
@@ -860,7 +864,9 @@
     async function quickSetStatus(rowIndex, divisi, status, cardIdx) {
       const result = await apiPost({action: 'updateSelectionStatus', rowIndex, divisi, status});
       if (result.success) {
-        const c = allCandidatesData[cardIdx];
+        // Use filteredCandidates if available (when searching), otherwise use allCandidatesData
+        const candidatesList = filteredCandidates.length > 0 ? filteredCandidates : allCandidatesData;
+        const c = candidatesList[cardIdx];
         if (c) {
           if (!c.selectionStatus) c.selectionStatus = {};
           c.selectionStatus[divisi] = status;
@@ -1002,7 +1008,9 @@
     // MODAL DETAIL
     // ============================================================
     function openModalDetail(idx) {
-      const c = allCandidatesData[idx];
+      // Use filteredCandidates if available (when searching), otherwise use allCandidatesData
+      const candidatesList = filteredCandidates.length > 0 ? filteredCandidates : allCandidatesData;
+      const c = candidatesList[idx];
       if (!c) return;
       currentModalCandidate = c;
 
