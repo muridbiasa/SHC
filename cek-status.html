@@ -90,9 +90,24 @@
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid var(--accent);
-            background: #000;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* SVG Icon Style */
+        .user-icon {
+            width: 60px;
+            height: 60px;
+            fill: var(--text-secondary);
+        }
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
         
         .student-name { font-size: 1.4rem; font-weight: bold; margin-bottom: 0.2rem; }
         .student-class { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
@@ -109,6 +124,7 @@
         }
         .status-lolos { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
         .status-tidak { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .status-menunggu { background: rgba(234, 179, 8, 0.2); color: #eab308; border: 1px solid #eab308; }
 
         .share-section {
             border-top: 1px solid var(--border);
@@ -161,7 +177,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Responsive */
         @media (max-width: 400px) {
             .container { padding: 1.5rem; }
             h1 { font-size: 1.3rem; }
@@ -184,7 +199,7 @@
             
             <div class="form-group">
                 <label for="tglLahir">Tanggal Lahir (Kata Sandi)</label>
-                <input type="text" id="tglLahir" placeholder="DDMMYYYY (Contoh: 05082008)" required maxlength="8" pattern="[0-9]*" inputmode="numeric">
+                <input type="text" id="tglLahir" placeholder="DDMMYYYY (Contoh: 09122010)" required maxlength="8" pattern="[0-9]*" inputmode="numeric">
                 <small style="color:var(--text-secondary); font-size:0.75rem; margin-top:4px; display:block;">*Format: HariBulanTahun tanpa spasi</small>
             </div>
 
@@ -197,8 +212,13 @@
 
     <!-- Result Section -->
     <div id="resultCard" class="result-card">
-        <div class="photo-container">
-            <img id="resFoto" src="" alt="Foto Siswa" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+        <div class="photo-container" id="photoContainer">
+            <!-- Default SVG Icon (Internal, No Internet Needed) -->
+            <svg class="user-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            <!-- Image will replace SVG if URL exists -->
+            <img id="resFoto" src="" alt="Foto Siswa" style="display:none;" onerror="this.style.display='none'; document.querySelector('.user-icon').style.display='block';">
         </div>
         
         <h2 class="student-name" id="resNama"></h2>
@@ -224,7 +244,7 @@
 </div>
 
 <script>
-    // GANTI URL INI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA
+    // PENTING: GANTI URL INI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec'; 
 
     const form = document.getElementById('checkStatusForm');
@@ -232,10 +252,13 @@
     const errorMsg = document.getElementById('errorMsg');
     const searchForm = document.getElementById('searchForm');
     const resultCard = document.getElementById('resultCard');
+    const photoContainer = document.getElementById('photoContainer');
+    const userIcon = photoContainer.querySelector('.user-icon');
+    const resFoto = document.getElementById('resFoto');
     
     let currentData = null;
 
-    // Format input tanggal lahir otomatis
+    // Format input tanggal lahir otomatis (hanya angka)
     document.getElementById('tglLahir').addEventListener('input', function(e) {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
@@ -254,6 +277,10 @@
         loader.style.display = 'block';
         errorMsg.style.display = 'none';
         resultCard.style.display = 'none';
+        
+        // Reset foto state
+        resFoto.style.display = 'none';
+        userIcon.style.display = 'block';
 
         try {
             // Panggil Apps Script
@@ -272,7 +299,7 @@
 
         } catch (err) {
             console.error(err);
-            showError("Terjadi kesalahan koneksi. Coba lagi nanti.");
+            showError("Gagal terhubung ke server. Periksa koneksi internet Anda.");
         } finally {
             loader.style.display = 'none';
             document.getElementById('btnSubmit').disabled = false;
@@ -287,17 +314,29 @@
         document.getElementById('resKelas').innerText = data.kelas;
         document.getElementById('resDivisi').innerText = data.divisi;
         
-        const fotoEl = document.getElementById('resFoto');
+        // Handle Foto
         if(data.foto && data.foto !== "") {
-            fotoEl.src = data.foto;
+            resFoto.src = data.foto;
+            resFoto.onload = () => {
+                resFoto.style.display = 'block';
+                userIcon.style.display = 'none';
+            };
+            resFoto.onerror = () => {
+                resFoto.style.display = 'none';
+                userIcon.style.display = 'block';
+            };
         } else {
-            fotoEl.src = 'https://via.placeholder.com/150?text=No+Image';
+            resFoto.style.display = 'none';
+            userIcon.style.display = 'block';
         }
 
         const badge = document.getElementById('resStatusBadge');
         if (data.status === 'LOLOS') {
             badge.className = 'status-badge status-lolos';
             badge.innerText = '✅ LOLOS SELEKSI';
+        } else if (data.status === 'MENUNGGU') {
+            badge.className = 'status-badge status-menunggu';
+            badge.innerText = '⏳ MENUNGGU KEPUTUSAN';
         } else {
             badge.className = 'status-badge status-tidak';
             badge.innerText = '❌ BELUM LOLOS';
