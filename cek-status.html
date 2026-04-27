@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Status Seleksi SHC 2026</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #38bdf8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --input-bg: #334155;
+            --border: #475569;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at top right, #1e293b 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #0f172a 0%, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 { text-align: center; margin-bottom: 0.5rem; font-size: 1.5rem; color: var(--accent); }
+        p.subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem; }
+
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+
+        button.btn-check {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--accent), #0ea5e9);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button.btn-check:hover { transform: translateY(-2px); opacity: 0.9; }
+        button.btn-check:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Result Card */
+        .result-card {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .photo-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+            background: #000;
+        }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .student-name { font-size: 1.4rem; font-weight: bold; margin-bottom: 0.2rem; }
+        .student-class { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .status-lolos { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .status-tidak { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        .share-section {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+        }
+        .share-title { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem; text-align: center; }
+        
+        .btn-share {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-share:hover { background: var(--input-bg); color: white; border-color: var(--text-secondary); }
+        .btn-wa { color: #25D366; border-color: #25D366; }
+        .btn-wa:hover { background: rgba(37, 211, 102, 0.1); color: white; }
+
+        .error-msg {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .loader {
+            display: none;
+            border: 3px solid var(--input-bg);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            .container { padding: 1.5rem; }
+            h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Form Section -->
+    <div id="searchForm">
+        <h1>Cek Kelulusan SHC 2026</h1>
+        <p class="subtitle">Masukkan nama lengkap dan tanggal lahir untuk melihat status seleksi.</p>
+        
+        <form id="checkStatusForm">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" placeholder="Contoh: Tristan" required autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="tglLahir">Tanggal Lahir (Kata Sandi)</label>
+                <input type="text" id="tglLahir" placeholder="DDMMYYYY (Contoh: 05082008)" required maxlength="8" pattern="[0-9]*" inputmode="numeric">
+                <small style="color:var(--text-secondary); font-size:0.75rem; margin-top:4px; display:block;">*Format: HariBulanTahun tanpa spasi</small>
+            </div>
+
+            <button type="submit" class="btn-check" id="btnSubmit">Cek Status Sekarang</button>
+        </form>
+
+        <div class="loader" id="loader"></div>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <!-- Result Section -->
+    <div id="resultCard" class="result-card">
+        <div class="photo-container">
+            <img id="resFoto" src="" alt="Foto Siswa" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+        </div>
+        
+        <h2 class="student-name" id="resNama"></h2>
+        <p class="student-class" id="resKelas"></p>
+        <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:5px;">Divisi Dilamar</p>
+        <p style="font-weight:bold; color:var(--accent); margin-bottom:15px;" id="resDivisi"></p>
+
+        <div id="resStatusBadge" class="status-badge"></div>
+
+        <div class="share-section">
+            <p class="share-title">Bagikan hasil ini:</p>
+            <button class="btn-share btn-wa" onclick="shareToWA()">
+                <span>📱</span> Bagikan ke WhatsApp
+            </button>
+            <button class="btn-share" onclick="copyResult()">
+                <span>📋</span> Salin Teks Hasil
+            </button>
+            <button class="btn-share" onclick="resetSearch()" style="margin-top:10px; border-color:var(--danger); color:var(--danger)">
+                🔍 Cek Nama Lain
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // GANTI URL INI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec'; 
+
+    const form = document.getElementById('checkStatusForm');
+    const loader = document.getElementById('loader');
+    const errorMsg = document.getElementById('errorMsg');
+    const searchForm = document.getElementById('searchForm');
+    const resultCard = document.getElementById('resultCard');
+    
+    let currentData = null;
+
+    // Format input tanggal lahir otomatis
+    document.getElementById('tglLahir').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const nama = document.getElementById('nama').value.trim();
+        const tglLahir = document.getElementById('tglLahir').value.trim();
+
+        if(!nama || !tglLahir) return;
+
+        // UI Loading
+        document.getElementById('btnSubmit').disabled = true;
+        document.getElementById('btnSubmit').innerText = 'Memuat...';
+        loader.style.display = 'block';
+        errorMsg.style.display = 'none';
+        resultCard.style.display = 'none';
+
+        try {
+            // Panggil Apps Script
+            const response = await fetch(`${SCRIPT_URL}?action=checkStatus&name=${encodeURIComponent(nama)}&birthDate=${encodeURIComponent(tglLahir)}`, {
+                method: 'GET',
+                mode: 'cors'
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.data) {
+                showResult(data.data);
+            } else {
+                showError(data.message || "Data tidak ditemukan.");
+            }
+
+        } catch (err) {
+            console.error(err);
+            showError("Terjadi kesalahan koneksi. Coba lagi nanti.");
+        } finally {
+            loader.style.display = 'none';
+            document.getElementById('btnSubmit').disabled = false;
+            document.getElementById('btnSubmit').innerText = 'Cek Status Sekarang';
+        }
+    });
+
+    function showResult(data) {
+        currentData = data;
+        
+        document.getElementById('resNama').innerText = data.nama;
+        document.getElementById('resKelas').innerText = data.kelas;
+        document.getElementById('resDivisi').innerText = data.divisi;
+        
+        const fotoEl = document.getElementById('resFoto');
+        if(data.foto && data.foto !== "") {
+            fotoEl.src = data.foto;
+        } else {
+            fotoEl.src = 'https://via.placeholder.com/150?text=No+Image';
+        }
+
+        const badge = document.getElementById('resStatusBadge');
+        if (data.status === 'LOLOS') {
+            badge.className = 'status-badge status-lolos';
+            badge.innerText = '✅ LOLOS SELEKSI';
+        } else {
+            badge.className = 'status-badge status-tidak';
+            badge.innerText = '❌ BELUM LOLOS';
+        }
+
+        searchForm.style.display = 'none';
+        resultCard.style.display = 'block';
+    }
+
+    function showError(msg) {
+        errorMsg.innerText = msg;
+        errorMsg.style.display = 'block';
+    }
+
+    function resetSearch() {
+        resultCard.style.display = 'none';
+        searchForm.style.display = 'block';
+        document.getElementById('nama').value = '';
+        document.getElementById('tglLahir').value = '';
+        document.getElementById('nama').focus();
+        currentData = null;
+    }
+
+    function shareToWA() {
+        if(!currentData) return;
+        const text = `Halo! Saya ${currentData.nama} dari kelas ${currentData.kelas}.%0AHasil Seleksi SHC 2026 saya:%0AStatus: *${currentData.status}*%0ADivisi: ${currentData.divisi}%0A%0A#SHC2026`;
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    function copyResult() {
+        if(!currentData) return;
+        const text = `Hasil Seleksi SHC 2026\nNama: ${currentData.nama}\nKelas: ${currentData.kelas}\nDivisi: ${currentData.divisi}\nStatus: ${currentData.status}`;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Hasil berhasil disalin!');
+        }).catch(err => {
+            alert('Gagal menyalin teks.');
+        });
+    }
+</script>
+
+</body>
+</html>
