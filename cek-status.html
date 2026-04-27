@@ -197,13 +197,8 @@
 
     <!-- Result Section -->
     <div id="resultCard" class="result-card">
-        <div class="photo-container" id="resFotoContainer">
-            <!-- SVG Default User Icon (Internal, no external request) -->
-            <svg id="resFotoSvg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;color:#94a3b8;">
-                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
-                <path d="M6 20C6 16.6863 8.68629 14 12 14C15.3137 14 18 16.6863 18 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            <img id="resFotoImg" src="" alt="Foto Siswa" style="display:none; width:100%; height:100%; object-fit: cover;">
+        <div class="photo-container">
+            <img id="resFoto" src="" alt="Foto Siswa" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
         </div>
         
         <h2 class="student-name" id="resNama"></h2>
@@ -292,22 +287,11 @@
         document.getElementById('resKelas').innerText = data.kelas;
         document.getElementById('resDivisi').innerText = data.divisi;
         
-        const fotoSvg = document.getElementById('resFotoSvg');
-        const fotoImg = document.getElementById('resFotoImg');
-        
+        const fotoEl = document.getElementById('resFoto');
         if(data.foto && data.foto !== "") {
-            fotoImg.src = data.foto;
-            fotoImg.style.display = 'block';
-            fotoSvg.style.display = 'none';
-            
-            // Handle image load error silently by showing SVG again
-            fotoImg.onerror = function() {
-                fotoImg.style.display = 'none';
-                fotoSvg.style.display = 'block';
-            };
+            fotoEl.src = data.foto;
         } else {
-            fotoImg.style.display = 'none';
-            fotoSvg.style.display = 'block';
+            fotoEl.src = 'https://via.placeholder.com/150?text=No+Image';
         }
 
         const badge = document.getElementById('resStatusBadge');
