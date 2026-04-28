@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHC 2026 - Hasil Seleksi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0a0a0f;--surface:#14141c;--card:#1e1e2a;
+      --border:#2a2a3a;--accent:#7c6bff;
+      --text:#f0eeff;--text-secondary:#b8b5d0;--muted:#7a7794;
+      --success:#2ed573;--danger:#ff4757;
+      --radius-md:12px;--radius-lg:16px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh}
+    
+    .container{display:flex;min-height:100dvh}
+    
+    /* SIDEBAR */
+    .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);padding:24px 16px;position:fixed;height:100dvh;left:0;top:0}
+    .logo{font-size:24px;font-weight:800;background:linear-gradient(135deg,#9b8eff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:32px}
+    .menu-title{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.8px}
+    .menu-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px;background:var(--accent);border:none;border-radius:var(--radius-md);color:white;font-size:14px;font-weight:600;cursor:pointer}
+    .menu-btn-icon{font-size:18px}
+    
+    /* MAIN */
+    .main{margin-left:260px;flex:1;padding:32px}
+    .header{margin-bottom:32px}
+    .header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+    .header p{color:var(--muted)}
+    
+    /* STATS */
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+    .stat-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px}
+    .stat-value{font-size:32px;font-weight:800}
+    .stat-value.green{color:var(--success)}
+    .stat-value.red{color:var(--danger)}
+    .stat-value.purple{color:var(--accent)}
+    
+    /* SEARCH */
+    .search-box{position:relative;margin-bottom:24px}
+    .search-input{width:100%;padding:14px 16px 14px 44px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-size:14px;font-family:inherit}
+    .search-input:focus{outline:none;border-color:var(--accent)}
+    .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    
+    /* GRID */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;cursor:pointer;transition:all 0.3s}
+    .card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 12px 32px rgba(124,107,255,0.15)}
+    .card-header{display:flex;gap:16px;margin-bottom:16px}
+    .photo{width:72px;height:92px;border-radius:var(--radius-md);object-fit:cover;background:var(--card);border:1px solid var(--border)}
+    .photo.placeholder{display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted)}
+    .info{flex:1}
+    .name{font-size:16px;font-weight:700;margin-bottom:6px}
+    .class{font-size:12px;color:var(--accent);font-weight:600;background:rgba(124,107,255,0.1);padding:4px 10px;border-radius:6px;display:inline-block}
+    .status{padding-top:16px;border-top:1px solid var(--border);margin-top:12px}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700}
+    .badge.lolos{background:rgba(46,213,115,0.15);color:var(--success);border:1px solid rgba(46,107,255,0.3)}
+    .badge.tidak{background:rgba(255,71,87,0.15);color:var(--danger);border:1px solid rgba(255,71,87,0.3)}
+    
+    /* MODAL */
+    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.active{display:flex}
+    .modal{background:var(--surface);width:100%;max-width:450px;border-radius:var(--radius-lg);padding:32px;text-align:center;border:1px solid var(--border);animation:slideUp 0.3s ease}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .modal-photo{width:100px;height:128px;border-radius:var(--radius-lg);object-fit:cover;margin:0 auto 20px;background:var(--card);border:2px solid var(--border)}
+    .modal-photo.placeholder{display:flex;align-items:center;justify-content:center;font-size:48px}
+    .modal-name{font-size:22px;font-weight:800;margin-bottom:8px}
+    .modal-class{font-size:14px;color:var(--accent);margin-bottom:24px}
+    .result-box{background:var(--card);border-radius:var(--radius-lg);padding:24px;margin-bottom:24px}
+    .result-icon{font-size:64px;margin-bottom:16px}
+    .result-title{font-size:24px;font-weight:800;margin-bottom:8px}
+    .result-title.lolos{color:var(--success)}
+    .result-title.tidak{color:var(--danger)}
+    .result-text{color:var(--muted);font-size:14px}
+    .close-btn{background:var(--accent);color:white;border:none;padding:14px 32px;border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+    .close-btn:hover{opacity:0.9}
+    
+    /* LOADING */
+    .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px;color:var(--muted)}
+    .spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    @media(max-width:768px){
+      .sidebar{width:100%;position:relative;height:auto;padding:16px}
+      .main{margin-left:0;padding:16px}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo">SHC 2026</div>
+      <div class="menu-title">Menu</div>
+      <button class="menu-btn">
+        <span class="menu-btn-icon">📋</span>
+        <span>Semua Kandidat</span>
+      </button>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <h1>Hasil Seleksi SHC 2026</h1>
+        <p>Klik nama kandidat untuk melihat hasil</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Total Kandidat</div>
+          <div class="stat-value purple" id="totalKandidat">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Lolos</div>
+          <div class="stat-value green" id="totalLolos">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tidak Lolos</div>
+          <div class="stat-value red" id="totalTidak">0</div>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau kelas..." oninput="handleSearch(this.value)">
+      </div>
+
+      <div id="content" class="grid">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Memuat data...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL HASIL -->
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div id="modalPhoto"></div>
+      <div class="modal-name" id="modalName"></div>
+      <div class="modal-class" id="modalClass"></div>
+      
+      <div class="result-box">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-text" id="resultText"></div>
+      </div>
+      
+      <button class="close-btn" onclick="closeModal()">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
+    
+    let allData = [];
+    let filteredData = [];
+
+    async function loadData() {
+      try {
+        const response = await fetch(API_BASE + '?action=getFinalSelectionData&filterType=all');
+        const result = await response.json();
+        
+        if (result.success) {
+          allData = result.data || [];
+          filteredData = allData;
+          
+          // Update stats
+          document.getElementById('totalKandidat').textContent = allData.length;
+          document.getElementById('totalLolos').textContent = result.countLolos || 0;
+          document.getElementById('totalTidak').textContent = result.countTidakLolos || 0;
+          
+          renderCards();
+        }
+      } catch (error) {
+        document.getElementById('content').innerHTML = '<div class="loading"><p>Gagal memuat data</p></div>';
+      }
+    }
+
+    function renderCards() {
+      const content = document.getElementById('content');
+      
+      if (filteredData.length === 0) {
+        content.innerHTML = '<div class="loading"><p>Tidak ada data</p></div>';
+        return;
+      }
+
+      const html = filteredData.map((c, idx) => {
+        const fotoHtml = c.foto 
+          ? `<img class="photo" src="${convertDriveUrl(c.foto)}" alt="Foto" onerror="this.outerHTML='<div class=\\'photo placeholder\\'>👤</div>'">`
+          : `<div class="photo placeholder">👤</div>`;
+
+        const isLolos = c.finalStatus === 'lolos';
+        const statusBadge = isLolos 
+          ? '<span class="badge lolos">✓ LOLOS</span>'
+          : '<span class="badge tidak">✗ TIDAK LOLOS</span>';
+
+        return `
+          <div class="card" onclick="showResult(${idx})">
+            <div class="card-header">
+              ${fotoHtml}
+              <div class="info">
+                <div class="name">${escHtml(c.nama)}</div>
+                <div class="class">Kelas ${escHtml(c.kelas)}</div>
+              </div>
+            </div>
+            <div class="status">
+              ${statusBadge}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      content.innerHTML = html;
+    }
+
+    function showResult(idx) {
+      const c = filteredData[idx];
+      if (!c) return;
+
+      const modal = document.getElementById('modal');
+      const isLolos = c.finalStatus === 'lolos';
+
+      // Photo
+      document.getElementById('modalPhoto').innerHTML = c.foto
+        ? `<img class="modal-photo" src="${convertDriveUrl(c.foto)}" alt="Foto" onerror="this.outerHTML='<div class=\\'modal-photo placeholder\\'>👤</div>'">`
+        : `<div class="modal-photo placeholder">👤</div>`;
+
+      // Info
+      document.getElementById('modalName').textContent = c.nama;
+      document.getElementById('modalClass').textContent = 'Kelas ' + c.kelas;
+
+      // Result
+      if (isLolos) {
+        document.getElementById('resultIcon').textContent = '🎉';
+        document.getElementById('resultTitle').textContent = 'KAMU LOLOS!';
+        document.getElementById('resultTitle').className = 'result-title lolos';
+        document.getElementById('resultText').textContent = 'Selamat! Kamu LOLOS seleksi tahap 1!';
+      } else {
+        document.getElementById('resultIcon').textContent = '😔';
+        document.getElementById('resultTitle').textContent = 'KAMU TIDAK LOLOS';
+        document.getElementById('resultTitle').className = 'result-title tidak';
+        document.getElementById('resultText').textContent = 'Maaf, kamu belum beruntung kali ini. Tetap semangat!';
+      }
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(e) {
+      if (!e || e.target.id === 'modal' || e.target.className === 'close-btn') {
+        document.getElementById('modal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function handleSearch(query) {
+      if (!query || !query.trim()) {
+        filteredData = allData;
+      } else {
+        const q = query.toLowerCase();
+        filteredData = allData.filter(c => 
+          (c.nama && c.nama.toLowerCase().includes(q)) ||
+          (c.kelas && String(c.kelas).toLowerCase().includes(q))
+        );
+      }
+      renderCards();
+    }
+
+    function convertDriveUrl(url) {
+      if (!url) return '';
+      const match = String(url).match(/\/d\/([a-zA-Z0-9-_]{25,})/) || String(url).match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
+      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Load data on page load
+    window.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>
