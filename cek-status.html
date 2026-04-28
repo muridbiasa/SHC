@@ -4,389 +4,368 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#080b10">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Cek Status Seleksi — SHC 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:       #080b10;
-    --bg2:      #0d1117;
-    --bg3:      #111827;
-    --bg4:      #161e2e;
-    --border:   #1e2a3a;
-    --border2:  #243044;
-    --text:     #e2e8f0;
-    --muted:    #64748b;
-    --accent:   #3b82f6;
-    --accent2:  #60a5fa;
-    --green:    #22c55e;
-    --green-bg: #052e16;
-    --green-bd: #166534;
-    --red:      #ef4444;
-    --red-bg:   #1c0a09;
-    --red-bd:   #7f1d1d;
-    --gold:     #f59e0b;
-    --gold-bg:  #1c1400;
-    --gold-bd:  #713f12;
-  }
+:root {
+  --bg:       #080b10;
+  --bg2:      #0d1117;
+  --bg3:      #111827;
+  --bg4:      #161e2e;
+  --border:   #1e2a3a;
+  --border2:  #243044;
+  --text:     #e2e8f0;
+  --muted:    #64748b;
+  --accent:   #3b82f6;
+  --accent2:  #60a5fa;
+  --green:    #22c55e;
+  --green-bg: #052e16;
+  --green-bd: #166534;
+  --red:      #ef4444;
+  --red-bg:   #1c0a09;
+  --red-bd:   #7f1d1d;
+  --gold:     #f59e0b;
+  --gold-bg:  #1c1400;
+  --gold-bd:  #713f12;
+  --purple:   #a855f7;
+  --purple-bg:#1a0a2e;
+  --purple-bd:#6b21a8;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100dvh;
-    overflow-x: hidden;
-  }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100dvh;
+  overflow-x:hidden;
+}
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background:
-      radial-gradient(ellipse 90% 55% at 15% -5%,  rgba(59,130,246,.12) 0%, transparent 60%),
-      radial-gradient(ellipse 70% 45% at 85% 110%, rgba(99,102,241,.09) 0%, transparent 60%);
-    pointer-events: none; z-index: 0;
-  }
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 90% 55% at 15% -5%, rgba(59,130,246,.12) 0%,transparent 60%),
+    radial-gradient(ellipse 70% 45% at 85% 110%,rgba(99,102,241,.09) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
 
-  /* ── Layout ── */
-  .page {
-    position: relative; z-index: 1;
-    min-height: 100dvh;
-    display: flex; flex-direction: column; align-items: center;
-  }
+.page{
+  position:relative;z-index:1;
+  min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;
+}
 
-  /* ── Topbar ── */
-  .topbar {
-    width: 100%; max-width: 480px;
-    display: flex; align-items: center; justify-content: center;
-    padding: 22px 20px 0; gap: 10px;
-  }
+/* ── Topbar ── */
+.topbar{
+  width:100%;max-width:520px;
+  display:flex;align-items:center;justify-content:center;
+  padding:22px 20px 0;gap:10px;
+}
+.logo{
+  width:34px;height:34px;
+  background:linear-gradient(135deg,var(--accent),#6366f1);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;box-shadow:0 4px 12px rgba(59,130,246,.35);flex-shrink:0;
+}
+.logo-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text)}
 
-  .logo {
-    width: 34px; height: 34px;
-    background: linear-gradient(135deg, var(--accent), #6366f1);
-    border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px;
-    box-shadow: 0 4px 12px rgba(59,130,246,.35);
-    flex-shrink: 0;
-  }
+/* ── Main ── */
+.main{
+  flex:1;width:100%;max-width:520px;
+  display:flex;flex-direction:column;align-items:center;
+  padding:28px 16px 48px;
+}
 
-  .logo-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px; font-weight: 700; color: var(--text);
-  }
+/* ── Header ── */
+.hdr{text-align:center;margin-bottom:28px;animation:dn .55s ease both}
 
-  /* ── Main ── */
-  .main {
-    flex: 1; width: 100%; max-width: 480px;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 28px 16px 48px;
-  }
+.badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.2);
+  border-radius:100px;padding:5px 14px;
+  font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--green);margin-bottom:14px;
+}
+.dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 7px var(--green);
+  animation:pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-  /* ── Header ── */
-  .hdr { text-align: center; margin-bottom: 28px; animation: dn .55s ease both; }
+h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.65rem,6.5vw,2.4rem);
+  font-weight:800;line-height:1.12;letter-spacing:-.03em;
+  background:linear-gradient(145deg,#f1f5f9 0%,#94a3b8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:10px;
+}
+.sub{
+  color:var(--muted);font-size:13.5px;line-height:1.6;
+  max-width:290px;margin:0 auto;
+}
 
-  .badge {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: rgba(34,197,94,.08);
-    border: 1px solid rgba(34,197,94,.2);
-    border-radius: 100px; padding: 5px 14px;
-    font-size: 10.5px; font-weight: 600;
-    letter-spacing: .1em; text-transform: uppercase;
-    color: var(--green); margin-bottom: 14px;
-  }
+/* ── Card ── */
+.card{
+  width:100%;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;padding:24px 20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+  animation:up .55s .08s ease both;
+}
 
-  .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--green); box-shadow: 0 0 7px var(--green);
-    animation: pulse 2.2s ease-in-out infinite;
-  }
+/* ── Field ── */
+.field{margin-bottom:16px}
 
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.flbl{
+  display:block;font-size:10.5px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);margin-bottom:7px;
+}
 
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.65rem, 6.5vw, 2.4rem);
-    font-weight: 800; line-height: 1.12; letter-spacing: -.03em;
-    background: linear-gradient(145deg, #f1f5f9 0%, #94a3b8 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: 10px;
-  }
+.iwrap{position:relative}
+.iico{
+  position:absolute;left:13px;top:50%;
+  transform:translateY(-50%);
+  color:var(--muted);pointer-events:none;
+  display:flex;align-items:center;
+}
 
-  .sub {
-    color: var(--muted); font-size: 13.5px; line-height: 1.6;
-    max-width: 290px; margin: 0 auto;
-  }
+input[type="text"]{
+  width:100%;
+  background:var(--bg3);
+  border:1.5px solid var(--border2);border-radius:12px;
+  padding:13px 13px 13px 41px;
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  outline:none;
+  transition:border-color .18s,box-shadow .18s,background .18s;
+  -webkit-appearance:none;appearance:none;
+}
+input[type="text"]::placeholder{color:var(--muted)}
+input[type="text"]:focus{
+  border-color:var(--accent);
+  background:var(--bg4);
+  box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
 
-  /* ── Card ── */
-  .card {
-    width: 100%;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 20px; padding: 24px 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,.4);
-    animation: up .55s .08s ease both;
-  }
+/* ── Date Dropdowns ── */
+.date-row{
+  display:grid;
+  grid-template-columns:1fr 2fr 1.2fr;
+  gap:8px;
+}
+.sel-wrap{position:relative}
+.sel-wrap::after{
+  content:'';
+  position:absolute;right:12px;top:50%;
+  transform:translateY(-50%);
+  width:0;height:0;
+  border-left:4px solid transparent;
+  border-right:4px solid transparent;
+  border-top:5px solid var(--muted);
+  pointer-events:none;
+}
+select{
+  width:100%;
+  background:var(--bg3);
+  border:1.5px solid var(--border2);border-radius:12px;
+  padding:13px 32px 13px 13px;
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  outline:none;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  transition:border-color .18s,box-shadow .18s,background .18s;
+}
+select:focus{
+  border-color:var(--accent);
+  background:var(--bg4);
+  box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
+select option{background:var(--bg3);color:var(--text)}
+select.empty{color:var(--muted)}
 
-  /* ── Field ── */
-  .field { margin-bottom: 16px; }
+.date-sublabels{
+  display:grid;grid-template-columns:1fr 2fr 1.2fr;
+  gap:8px;margin-top:5px;
+}
+.date-sublabels span{font-size:10px;color:var(--muted);text-align:center;letter-spacing:.05em}
 
-  .flbl {
-    display: block; font-size: 10.5px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: .1em;
-    color: var(--muted); margin-bottom: 7px;
-  }
+.date-preview{
+  margin-top:8px;font-size:12px;color:var(--accent2);
+  display:flex;align-items:center;gap:5px;min-height:18px;
+  transition:opacity .2s;opacity:0;
+}
+.date-preview.show{opacity:1}
 
-  /* Text input */
-  .iwrap { position: relative; }
+/* ── Button ── */
+.btn{
+  width:100%;margin-top:18px;padding:14px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:12px;
+  font-family:'Syne',sans-serif;
+  font-size:15px;font-weight:700;letter-spacing:.04em;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .18s,transform .12s,box-shadow .18s;
+  box-shadow:0 4px 18px rgba(59,130,246,.3);
+  touch-action:manipulation;min-height:50px;
+}
+.btn:hover:not(:disabled){background:#2563eb;box-shadow:0 6px 22px rgba(59,130,246,.4)}
+.btn:active:not(:disabled){transform:scale(.975)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
 
-  .iico {
-    position: absolute; left: 13px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--muted); pointer-events: none;
-    display: flex; align-items: center;
-  }
+/* ── Spinner ── */
+.spin{
+  width:17px;height:17px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:rot .6s linear infinite;flex-shrink:0;
+}
+@keyframes rot{to{transform:rotate(360deg)}}
 
-  input[type="text"] {
-    width: 100%;
-    background: var(--bg3);
-    border: 1.5px solid var(--border2); border-radius: 12px;
-    padding: 13px 13px 13px 41px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    outline: none;
-    transition: border-color .18s, box-shadow .18s, background .18s;
-    -webkit-appearance: none; appearance: none;
-  }
+/* ── Result ── */
+#result{width:100%;margin-top:18px}
 
-  input[type="text"]::placeholder { color: var(--muted); }
+.alert{
+  border-radius:14px;padding:14px 16px;
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13.5px;line-height:1.6;border:1px solid;
+  animation:up .4s ease both;
+}
+.alert.error{background:var(--red-bg);border-color:var(--red-bd);color:#fca5a5}
+.alert.warn {background:var(--gold-bg);border-color:var(--gold-bd);color:#fcd34d}
+.alert-i{font-size:17px;flex-shrink:0;margin-top:1px}
 
-  input[type="text"]:focus {
-    border-color: var(--accent);
-    background: var(--bg4);
-    box-shadow: 0 0 0 3px rgba(59,130,246,.15);
-  }
+/* ── Result Card ── */
+.rcard{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  animation:up .4s ease both;
+}
 
-  /* ── Date Dropdowns ── */
-  .date-row {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1.2fr;
-    gap: 8px;
-  }
+/* Profile section */
+.profile-sec{
+  padding:20px;
+  display:flex;gap:16px;align-items:flex-start;
+}
 
-  .sel-wrap { position: relative; }
+.pbox{
+  flex-shrink:0;width:88px;height:88px;
+  border-radius:14px;overflow:hidden;
+  background:var(--bg3);border:2px solid var(--border2);
+  position:relative;
+}
+.pbox img{width:100%;height:100%;object-fit:cover;display:block}
+.pph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:34px;color:var(--muted)}
+.pspin{position:absolute;inset:0;background:var(--bg3);display:flex;align-items:center;justify-content:center}
 
-  .sel-wrap::after {
-    content: '';
-    position: absolute; right: 12px; top: 50%;
-    transform: translateY(-50%);
-    width: 0; height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid var(--muted);
-    pointer-events: none;
-  }
+.pinfo{flex:1;min-width:0}
 
-  select {
-    width: 100%;
-    background: var(--bg3);
-    border: 1.5px solid var(--border2); border-radius: 12px;
-    padding: 13px 32px 13px 13px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    outline: none;
-    cursor: pointer;
-    -webkit-appearance: none; appearance: none;
-    transition: border-color .18s, box-shadow .18s, background .18s;
-  }
+.irow{margin-bottom:10px}
+.irow:last-child{margin-bottom:0}
+.ilbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:2px}
+.ival{font-size:14px;font-weight:500;color:var(--text);word-break:break-word}
 
-  select:focus {
-    border-color: var(--accent);
-    background: var(--bg4);
-    box-shadow: 0 0 0 3px rgba(59,130,246,.15);
-  }
+/* ── Divider ── */
+.divider{border:none;border-top:1px solid var(--border)}
 
-  /* Placeholder option styling */
-  select option { background: var(--bg3); color: var(--text); }
-  select.empty  { color: var(--muted); }
+/* ── Divisi Section ── */
+.divisi-sec{padding:16px 20px}
 
-  /* Date preview */
-  .date-preview {
-    margin-top: 8px;
-    font-size: 12px; color: var(--accent2);
-    display: flex; align-items: center; gap: 5px;
-    min-height: 18px;
-    transition: opacity .2s;
-    opacity: 0;
-  }
+.divisi-title{
+  font-size:10.5px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:12px;
+}
 
-  .date-preview.show { opacity: 1; }
+/* Status card per divisi */
+.div-cards{display:flex;flex-direction:column;gap:10px}
 
-  /* Sub-labels for dropdowns */
-  .date-sublabels {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1.2fr;
-    gap: 8px; margin-top: 5px;
-  }
+.div-card{
+  border-radius:12px;padding:13px 15px;
+  display:flex;align-items:center;gap:12px;
+  border:1px solid;
+}
 
-  .date-sublabels span {
-    font-size: 10px; color: var(--muted);
-    text-align: center; letter-spacing: .05em;
-  }
+.div-card.terima  {background:var(--green-bg);border-color:var(--green-bd)}
+.div-card.cadangan{background:var(--gold-bg);border-color:var(--gold-bd)}
+.div-card.tolak   {background:var(--red-bg);border-color:var(--red-bd)}
+.div-card.pending {background:var(--bg3);border-color:var(--border2)}
 
-  /* ── Button ── */
-  .btn {
-    width: 100%; margin-top: 18px;
-    padding: 14px;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: 12px;
-    font-family: 'Syne', sans-serif;
-    font-size: 15px; font-weight: 700; letter-spacing: .04em;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: background .18s, transform .12s, box-shadow .18s;
-    box-shadow: 0 4px 18px rgba(59,130,246,.3);
-    touch-action: manipulation;
-    min-height: 50px;
-  }
+.div-ico{
+  width:38px;height:38px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.terima   .div-ico{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25)}
+.cadangan .div-ico{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25)}
+.tolak    .div-ico{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25)}
+.pending  .div-ico{background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.2)}
 
-  .btn:hover:not(:disabled) { background: #2563eb; box-shadow: 0 6px 22px rgba(59,130,246,.4); }
-  .btn:active:not(:disabled) { transform: scale(.975); }
-  .btn:disabled { opacity: .6; cursor: not-allowed; }
+.div-body{flex:1;min-width:0}
+.div-name{font-size:13.5px;font-weight:600;color:var(--text)}
 
-  /* ── Spinner ── */
-  .spin {
-    width: 17px; height: 17px;
-    border: 2px solid rgba(255,255,255,.3);
-    border-top-color: #fff; border-radius: 50%;
-    animation: rot .6s linear infinite; flex-shrink: 0;
-  }
+.div-status-txt{
+  font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-top:2px;
+}
+.terima   .div-status-txt{color:var(--green)}
+.cadangan .div-status-txt{color:var(--gold)}
+.tolak    .div-status-txt{color:var(--red)}
+.pending  .div-status-txt{color:var(--muted)}
 
-  @keyframes rot { to { transform: rotate(360deg); } }
+.div-badge{
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:700;letter-spacing:.06em;
+  flex-shrink:0;
+}
+.terima   .div-badge{background:rgba(34,197,94,.15);color:var(--green)}
+.cadangan .div-badge{background:rgba(245,158,11,.15);color:var(--gold)}
+.tolak    .div-badge{background:rgba(239,68,68,.15);color:var(--red)}
+.pending  .div-badge{background:rgba(100,116,139,.1);color:var(--muted)}
 
-  /* ── Result ── */
-  #result { width: 100%; margin-top: 18px; }
+/* ── Footer ── */
+.rfooter{
+  padding:12px 20px;border-top:1px solid var(--border);
+  font-size:11.5px;color:var(--muted);text-align:center;line-height:1.55;
+}
 
-  /* Alert */
-  .alert {
-    border-radius: 14px; padding: 14px 16px;
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 13.5px; line-height: 1.6; border: 1px solid;
-    animation: up .4s ease both;
-  }
+.pfooter{
+  padding:20px 16px;text-align:center;
+  color:var(--muted);font-size:11px;opacity:.45;
+}
 
-  .alert.error { background: var(--red-bg); border-color: var(--red-bd); color: #fca5a5; }
-  .alert.warn  { background: var(--gold-bg); border-color: var(--gold-bd); color: #fcd34d; }
-  .alert-i     { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+@supports (padding-bottom:env(safe-area-inset-bottom)){
+  .pfooter{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+}
 
-  /* Result card */
-  .rcard {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 20px; overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,.5);
-    animation: up .4s ease both;
-  }
+/* ── Animations ── */
+@keyframes dn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes up{from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none}}
 
-  /* Banner */
-  .banner {
-    padding: 17px 20px;
-    display: flex; align-items: center; gap: 13px;
-    position: relative; overflow: hidden;
-  }
-
-  .banner.lolos       { background: linear-gradient(135deg, var(--green-bg), #064e2a); border-bottom: 1px solid var(--green-bd); }
-  .banner.tidak_lolos { background: linear-gradient(135deg, var(--red-bg), #2d0909);   border-bottom: 1px solid var(--red-bd); }
-  .banner.menunggu    { background: linear-gradient(135deg, var(--gold-bg), #292000);   border-bottom: 1px solid var(--gold-bd); }
-
-  .banner::after {
-    content: ''; position: absolute; right: -22px; top: -22px;
-    width: 100px; height: 100px; border-radius: 50%; opacity: .07;
-  }
-
-  .banner.lolos::after       { background: var(--green); }
-  .banner.tidak_lolos::after { background: var(--red); }
-  .banner.menunggu::after    { background: var(--gold); }
-
-  .bico {
-    width: 48px; height: 48px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
-
-  .lolos       .bico { background: rgba(34,197,94,.12);  border: 1px solid rgba(34,197,94,.28); }
-  .tidak_lolos .bico { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.28); }
-  .menunggu    .bico { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.28); }
-
-  .blbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; opacity: .6; margin-bottom: 3px; }
-  .btxt { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; line-height: 1.1; }
-
-  .lolos       .btxt { color: var(--green); }
-  .tidak_lolos .btxt { color: var(--red); }
-  .menunggu    .btxt { color: var(--gold); }
-
-  /* Profile */
-  .prof { padding: 18px 20px; display: flex; gap: 15px; align-items: flex-start; }
-
-  .pbox {
-    flex-shrink: 0; width: 82px; height: 82px;
-    border-radius: 12px; overflow: hidden;
-    background: var(--bg3); border: 2px solid var(--border2);
-    position: relative;
-  }
-
-  .pbox img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  .pph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--muted); }
-
-  .pspin { position: absolute; inset: 0; background: var(--bg3); display: flex; align-items: center; justify-content: center; }
-
-  .pinfo { flex: 1; min-width: 0; }
-
-  .irow { margin-bottom: 11px; }
-  .irow:last-child { margin-bottom: 0; }
-
-  .ilbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
-  .ival { font-size: 13.5px; font-weight: 500; color: var(--text); word-break: break-word; }
-
-  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
-
-  .tag {
-    background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.22);
-    color: var(--accent2); border-radius: 7px;
-    padding: 2px 9px; font-size: 11px; font-weight: 500;
-  }
-
-  .rfooter { padding: 11px 20px; border-top: 1px solid var(--border); font-size: 11.5px; color: var(--muted); text-align: center; line-height: 1.55; }
-
-  /* Page footer */
-  .pfooter { padding: 20px 16px; text-align: center; color: var(--muted); font-size: 11px; opacity: .45; }
-
-  @supports (padding-bottom: env(safe-area-inset-bottom)) {
-    .pfooter { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
-  }
-
-  /* ── Animations ── */
-  @keyframes dn { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:none} }
-  @keyframes up { from{opacity:0;transform:translateY(14px)}  to{opacity:1;transform:none} }
-
-  /* ── Desktop ── */
-  @media (min-width: 560px) {
-    .topbar { padding: 28px 24px 0; }
-    .main   { padding: 36px 24px 60px; }
-    .card   { padding: 32px 28px; }
-    h1      { font-size: 2.4rem; }
-    .sub    { max-width: 340px; font-size: 14.5px; }
-    .prof   { gap: 20px; padding: 22px 24px; }
-    .pbox   { width: 96px; height: 96px; }
-    .banner { padding: 19px 24px; }
-    select, input[type="text"] { font-size: 15px; }
-  }
+/* ── Desktop ── */
+@media(min-width:560px){
+  .topbar{padding:28px 24px 0}
+  .main  {padding:36px 24px 60px}
+  .card  {padding:32px 28px}
+  h1     {font-size:2.4rem}
+  .sub   {max-width:340px;font-size:14.5px}
+  .profile-sec{gap:22px;padding:24px}
+  .pbox  {width:100px;height:100px}
+  .divisi-sec{padding:18px 24px}
+}
 </style>
 </head>
 <body>
@@ -405,9 +384,9 @@
       <p class="sub">Masukkan nama lengkap dan tanggal lahir sesuai formulir pendaftaran.</p>
     </div>
 
+    <!-- Form Card -->
     <div class="card">
 
-      <!-- Nama -->
       <div class="field">
         <label class="flbl" for="nama">Nama Lengkap</label>
         <div class="iwrap">
@@ -422,19 +401,14 @@
         </div>
       </div>
 
-      <!-- Tanggal lahir - 3 dropdown -->
       <div class="field">
         <label class="flbl">Tanggal Lahir</label>
-
         <div class="date-row">
-          <!-- Tanggal (hari) -->
           <div class="sel-wrap">
             <select id="sel-hari" class="empty" onchange="onDateChange()">
               <option value="">Tgl</option>
             </select>
           </div>
-
-          <!-- Bulan -->
           <div class="sel-wrap">
             <select id="sel-bulan" class="empty" onchange="onDateChange()">
               <option value="">Bulan</option>
@@ -452,22 +426,15 @@
               <option value="12">Desember</option>
             </select>
           </div>
-
-          <!-- Tahun -->
           <div class="sel-wrap">
             <select id="sel-tahun" class="empty" onchange="onDateChange()">
               <option value="">Tahun</option>
             </select>
           </div>
         </div>
-
         <div class="date-sublabels">
-          <span>Tanggal</span>
-          <span>Bulan</span>
-          <span>Tahun</span>
+          <span>Tanggal</span><span>Bulan</span><span>Tahun</span>
         </div>
-
-        <!-- Preview konfirmasi -->
         <div class="date-preview" id="datePreview">
           <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -490,214 +457,271 @@
   </div>
 
   <footer class="pfooter">SHC 2026 &nbsp;·&nbsp; Sistem Informasi Seleksi Panitia &nbsp;·&nbsp; Hasil bersifat final</footer>
-
 </div>
 
 <script>
-  // ─── GANTI URL INI ────────────────────────────────────────────────────────
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
-  // ─────────────────────────────────────────────────────────────────────────
+// ─── GANTI URL INI dengan URL Web App Google Apps Script kamu ──────────────
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxdxvu5292m_Bsb3wRIKQKKKxhRutdvBh9tgQrfQqjIpfqsS53ZxwMEfUX7qkBWXQWCpQ/exec";
+// ────────────────────────────────────────────────────────────────────────────
 
-  const resultEl = document.getElementById('result');
-  const btn      = document.getElementById('cekBtn');
+const resultEl = document.getElementById('result');
+const btn      = document.getElementById('cekBtn');
 
-  const BULAN_ID = [
-    'Januari','Februari','Maret','April','Mei','Juni',
-    'Juli','Agustus','September','Oktober','November','Desember'
-  ];
+const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni',
+                  'Juli','Agustus','September','Oktober','November','Desember'];
 
-  // Isi dropdown hari (1-31)
-  const selHari = document.getElementById('sel-hari');
-  for (let d = 1; d <= 31; d++) {
-    const o = document.createElement('option');
-    o.value = String(d).padStart(2, '0');
-    o.textContent = d;
-    selHari.appendChild(o);
-  }
+// Icon per divisi
+const DIV_ICONS = {
+  'acara':'🎭','sekretaris':'📝','bendahara':'💰',
+  'perlengkapan':'🔧','keamanan':'🛡️','konsumsi':'🍽️','dana':'💵',
+  'promosi':'📢','dokumentasi':'📷','dekorasi':'🎨','desain':'✏️',
+  'art galery':'🖼️','akomodasi':'🏨','p3k':'🩹','mc':'🎤'
+};
 
-  // Isi dropdown tahun (2005-2013)
-  const selTahun = document.getElementById('sel-tahun');
-  for (let y = 2013; y >= 2005; y--) {
-    const o = document.createElement('option');
-    o.value = String(y);
-    o.textContent = y;
-    selTahun.appendChild(o);
-  }
+// Isi dropdown hari
+const selHari = document.getElementById('sel-hari');
+for (let d = 1; d <= 31; d++) {
+  const o = document.createElement('option');
+  o.value = String(d).padStart(2,'0');
+  o.textContent = d;
+  selHari.appendChild(o);
+}
 
-  // Update warna placeholder & preview
-  function onDateChange() {
-    ['sel-hari','sel-bulan','sel-tahun'].forEach(id => {
-      const el = document.getElementById(id);
-      el.classList.toggle('empty', el.value === '');
-    });
+// Isi dropdown tahun
+const selTahun = document.getElementById('sel-tahun');
+for (let y = 2013; y >= 2005; y--) {
+  const o = document.createElement('option');
+  o.value = String(y);
+  o.textContent = y;
+  selTahun.appendChild(o);
+}
 
-    const h = document.getElementById('sel-hari').value;
-    const m = document.getElementById('sel-bulan').value;
-    const y = document.getElementById('sel-tahun').value;
-
-    const preview = document.getElementById('datePreview');
-    const previewTxt = document.getElementById('datePreviewTxt');
-
-    if (h && m && y) {
-      previewTxt.textContent = `${parseInt(h)} ${BULAN_ID[parseInt(m)-1]} ${y}`;
-      preview.classList.add('show');
-    } else {
-      preview.classList.remove('show');
-    }
-  }
-
-  // Enter key pada nama
-  document.getElementById('nama').addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); cekStatus(); }
+function onDateChange() {
+  ['sel-hari','sel-bulan','sel-tahun'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.toggle('empty', el.value === '');
   });
+  const h = document.getElementById('sel-hari').value;
+  const m = document.getElementById('sel-bulan').value;
+  const y = document.getElementById('sel-tahun').value;
+  const preview = document.getElementById('datePreview');
+  const txt     = document.getElementById('datePreviewTxt');
+  if (h && m && y) {
+    txt.textContent = `${parseInt(h)} ${BULAN_ID[parseInt(m)-1]} ${y}`;
+    preview.classList.add('show');
+  } else {
+    preview.classList.remove('show');
+  }
+}
 
-  async function cekStatus() {
-    const nama  = document.getElementById('nama').value.trim();
-    const hari  = document.getElementById('sel-hari').value;
-    const bulan = document.getElementById('sel-bulan').value;
-    const tahun = document.getElementById('sel-tahun').value;
+document.getElementById('nama').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); cekStatus(); }
+});
 
-    if (!nama)  return showAlert('error', '⚠️', 'Nama lengkap tidak boleh kosong.');
-    if (!hari || !bulan || !tahun) {
-      return showAlert('error', '⚠️', 'Pilih tanggal, bulan, dan tahun lahir terlebih dahulu.');
-    }
+async function cekStatus() {
+  const nama  = document.getElementById('nama').value.trim();
+  const hari  = document.getElementById('sel-hari').value;
+  const bulan = document.getElementById('sel-bulan').value;
+  const tahun = document.getElementById('sel-tahun').value;
 
-    // Format: DDMMYYYY — sesuai normalizeDate() di Code.gs
-    // Code.gs normalizeDate(Date) → day + month + year
-    // Jadi hari=12, bulan=09, tahun=2010 → "12092010"
-    const birthDate = hari + bulan + tahun;
+  if (!nama)                  return showAlert('error','⚠️','Nama lengkap tidak boleh kosong.');
+  if (!hari||!bulan||!tahun)  return showAlert('error','⚠️','Pilih tanggal, bulan, dan tahun lahir.');
 
-    setLoading(true);
-    resultEl.style.display = 'none';
+  // Kirim DDMMYYYY — sesuai normalizeDate() Code.gs: day + month + year
+  const birthDate = hari + bulan + tahun;
 
-    try {
-      const url  = `${GAS_URL}?action=checkStatus&name=${encodeURIComponent(nama)}&birthDate=${birthDate}`;
-      const resp = await fetch(url, { mode: 'cors' });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  setLoading(true);
+  resultEl.style.display = 'none';
 
-      const json = await resp.json();
+  try {
+    const url  = `${GAS_URL}?action=checkStatus&name=${encodeURIComponent(nama)}&birthDate=${birthDate}`;
+    const resp = await fetch(url, { mode:'cors' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
 
-      if (!json.success) {
-        const msg = String(json.message || '').toLowerCase();
-        if (msg.includes('nama ditemukan') || msg.includes('tanggal lahir tidak cocok')) {
-          showAlert('warn', '🔍',
-            '<b>Nama ditemukan, tapi tanggal lahir tidak cocok.</b><br>' +
-            'Coba cek kembali tanggal lahirmu — pastikan sesuai dengan yang diisi di formulir pendaftaran.');
-        } else {
-          showAlert('error', '❌',
-            '<b>Data tidak ditemukan.</b><br>' +
-            'Pastikan nama ditulis <b>persis sama</b> seperti di formulir pendaftaran, ' +
-            'termasuk huruf kapital dan ejaan lengkap.');
-        }
-        return;
+    if (!json.success) {
+      const msg = String(json.message||'').toLowerCase();
+      if (msg.includes('nama ditemukan')||msg.includes('tanggal lahir tidak cocok')) {
+        showAlert('warn','🔍',
+          '<b>Nama ditemukan, tapi tanggal lahir tidak cocok.</b><br>'+
+          'Cek kembali tanggal lahir yang kamu pilih — harus sesuai dengan yang diisi di formulir.');
+      } else {
+        showAlert('error','❌',
+          '<b>Data tidak ditemukan.</b><br>'+
+          'Pastikan nama ditulis <b>persis sama</b> seperti saat mengisi formulir (termasuk huruf kapital dan ejaan).');
       }
-
-      renderResult(json.data);
-
-    } catch (err) {
-      showAlert('error', '🔌',
-        '<b>Tidak dapat terhubung ke server.</b><br>' +
-        'Cek koneksi internet atau coba lagi nanti.<br>' +
-        `<small style="opacity:.5">${err.message}</small>`);
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    renderResult(json.data, hari, bulan, tahun);
+
+  } catch(err) {
+    showAlert('error','🔌',
+      '<b>Tidak dapat terhubung ke server.</b><br>'+
+      'Cek koneksi internet atau coba lagi nanti.<br>'+
+      `<small style="opacity:.5">${err.message}</small>`);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function renderResult(data, hari, bulan, tahun) {
+  // Format tanggal lahir untuk ditampilkan
+  const tglLahir = `${parseInt(hari)} ${BULAN_ID[parseInt(bulan)-1]} ${tahun}`;
+
+  // Foto
+  const fotoURL = String(data.foto||'').trim();
+  const fotoHTML = fotoURL
+    ? `<div class="pspin" id="ps">
+         <div class="spin" style="width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,.2);border-top-color:var(--accent2)"></div>
+       </div>
+       <img src="${esc(fotoURL)}" alt="Foto"
+         onload="document.getElementById('ps')?.remove()"
+         onerror="this.parentElement.innerHTML='<div class=\\'pph\\'>👤</div>'">`
+    : `<div class="pph">👤</div>`;
+
+  // Parse divisi yang dilamar dari field 'divisi' di response
+  // Response Code.gs: divisi = row[12] = "Sekretaris, Acara, Art galery"
+  // Code.gs juga kirim selectionStatus per divisi — tapi checkStudentStatus hanya
+  // kirim 1 divisi (divisi pertama). Kita perlu parse semua divisi yang dilamar
+  // dan tampilkan status dari data yang tersedia.
+  
+  const divisiRaw = String(data.divisi||'').trim();
+  const divisiList = divisiRaw && divisiRaw !== '-'
+    ? divisiRaw.split(',').map(s => s.trim()).filter(Boolean)
+    : [];
+
+  // Karena checkStudentStatus di Code.gs tidak return status per divisi,
+  // kita gunakan status global dan tampilkan per divisi yang dilamar
+  // Status final global (LOLOS/TIDAK_LOLOS) dari kolom Y
+  const globalStatus = String(data.status||'MENUNGGU').toUpperCase();
+
+  // divisiStatus dari Code.gs patch: { 'acara': {nama, status, rating}, ... }
+  const divisiStatus = data.divisiStatus || {};
+  const hasDivisiStatus = Object.keys(divisiStatus).length > 0;
+
+  // Bangun cards per divisi
+  let divisiCardsHTML = '';
+
+  if (hasDivisiStatus) {
+    // Pakai data status per divisi yang akurat dari Code.gs
+    divisiCardsHTML = Object.entries(divisiStatus).map(([key, val]) => {
+      const icon   = DIV_ICONS[key] || '📋';
+      const st     = String(val.status||'pending').toLowerCase();
+
+      // Map status divisi (terima/cadangan/tolak/pending) → tampilan
+      const CONFIG = {
+        terima:   { cls:'terima',   label:'Lolos Seleksi',  badge:'✓ DITERIMA' },
+        cadangan: { cls:'cadangan', label:'Cadangan',       badge:'◉ CADANGAN' },
+        tolak:    { cls:'tolak',    label:'Tidak Lolos',    badge:'✗ DITOLAK'  },
+        pending:  { cls:'pending',  label:'Belum Dinilai',  badge:'⏳ PENDING'  },
+      };
+      const cfg = CONFIG[st] || CONFIG.pending;
+
+      return `
+        <div class="div-card ${cfg.cls}">
+          <div class="div-ico">${icon}</div>
+          <div class="div-body">
+            <div class="div-name">${esc(capWords(val.nama || key))}</div>
+            <div class="div-status-txt">${cfg.label}</div>
+          </div>
+          <div class="div-badge">${cfg.badge}</div>
+        </div>`;
+    }).join('');
+
+  } else if (divisiList.length > 0) {
+    // Fallback: Code.gs lama — pakai status global untuk semua divisi
+    const stCls   = globalStatus==='LOLOS' ? 'terima' : globalStatus==='TIDAK_LOLOS' ? 'tolak' : 'pending';
+    const stLabel = globalStatus==='LOLOS' ? 'Lolos Seleksi' : globalStatus==='TIDAK_LOLOS' ? 'Tidak Lolos' : 'Belum Dinilai';
+    const stBadge = globalStatus==='LOLOS' ? '✓ DITERIMA'   : globalStatus==='TIDAK_LOLOS' ? '✗ DITOLAK'   : '⏳ PENDING';
+
+    divisiCardsHTML = divisiList.map(divName => {
+      const divKey = divName.toLowerCase().trim();
+      const icon   = DIV_ICONS[divKey] || '📋';
+      return `
+        <div class="div-card ${stCls}">
+          <div class="div-ico">${icon}</div>
+          <div class="div-body">
+            <div class="div-name">${esc(capWords(divName))}</div>
+            <div class="div-status-txt">${stLabel}</div>
+          </div>
+          <div class="div-badge">${stBadge}</div>
+        </div>`;
+    }).join('');
+
+  } else {
+    divisiCardsHTML = `<div class="div-card pending">
+      <div class="div-ico">📋</div>
+      <div class="div-body"><div class="div-name">Tidak ada data divisi</div></div>
+    </div>`;
   }
 
-  function renderResult(data) {
-    const raw    = String(data.status || 'MENUNGGU').toUpperCase().replace(/ /g,'_');
-    const status = ['LOLOS','TIDAK_LOLOS','MENUNGGU'].includes(raw) ? raw : 'MENUNGGU';
+  const footerNote = globalStatus === 'LOLOS'
+    ? '🎉 Selamat! Pantau informasi lanjutan dari panitia SHC 2026.'
+    : globalStatus === 'TIDAK_LOLOS'
+    ? '😔 Terima kasih sudah mendaftar. Tetap semangat!'
+    : '⏳ Proses penilaian masih berlangsung. Cek kembali nanti.';
 
-    const MAP = {
-      LOLOS:       { cls:'lolos',       icon:'✅', lbl:'Status Seleksi', txt:'LOLOS' },
-      TIDAK_LOLOS: { cls:'tidak_lolos', icon:'❌', lbl:'Status Seleksi', txt:'TIDAK LOLOS' },
-      MENUNGGU:    { cls:'menunggu',    icon:'⏳', lbl:'Status Seleksi', txt:'BELUM DINILAI' },
-    };
-    const s = MAP[status];
-
-    // Divisi tags
-    const divisiRaw = String(data.divisi || '').trim();
-    let divisiHTML = '<span class="ival">-</span>';
-    if (divisiRaw && divisiRaw !== '-') {
-      const list = divisiRaw.split(',').map(x => x.trim()).filter(Boolean);
-      if (list.length) {
-        divisiHTML = `<div class="tags">${list.map(d => `<span class="tag">${esc(cap(d))}</span>`).join('')}</div>`;
-      }
-    }
-
-    // Foto
-    const fotoURL = String(data.foto || '').trim();
-    const fotoHTML = fotoURL
-      ? `<div class="pspin" id="ps">
-           <div class="spin" style="width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,.2);border-top-color:var(--accent2)"></div>
-         </div>
-         <img src="${esc(fotoURL)}" alt="Foto"
-           onload="document.getElementById('ps')?.remove()"
-           onerror="this.parentElement.innerHTML='<div class=\\'pph\\'>👤</div>'">`
-      : `<div class="pph">👤</div>`;
-
-    const note = {
-      LOLOS:       '🎉 Selamat! Kamu dinyatakan <b>lolos seleksi berkas</b>. Pantau info lanjutan dari panitia.',
-      TIDAK_LOLOS: '😔 Kamu belum berhasil lolos seleksi berkas kali ini. Tetap semangat ya!',
-      MENUNGGU:    '⏳ Proses penilaian sedang berlangsung. Cek kembali beberapa saat lagi.',
-    }[status];
-
-    resultEl.innerHTML = `
-      <div class="rcard">
-        <div class="banner ${s.cls}">
-          <div class="bico">${s.icon}</div>
-          <div>
-            <div class="blbl">${s.lbl}</div>
-            <div class="btxt">${s.txt}</div>
+  resultEl.innerHTML = `
+    <div class="rcard">
+      <div class="profile-sec">
+        <div class="pbox">${fotoHTML}</div>
+        <div class="pinfo">
+          <div class="irow">
+            <div class="ilbl">Nama Lengkap</div>
+            <div class="ival">${esc(data.nama||'-')}</div>
+          </div>
+          <div class="irow">
+            <div class="ilbl">Kelas</div>
+            <div class="ival">${esc(data.kelas||'-')}</div>
+          </div>
+          <div class="irow">
+            <div class="ilbl">Tanggal Lahir</div>
+            <div class="ival">${esc(tglLahir)}</div>
           </div>
         </div>
-        <div class="prof">
-          <div class="pbox">${fotoHTML}</div>
-          <div class="pinfo">
-            <div class="irow">
-              <div class="ilbl">Nama Lengkap</div>
-              <div class="ival">${esc(data.nama||'-')}</div>
-            </div>
-            <div class="irow">
-              <div class="ilbl">Kelas</div>
-              <div class="ival">${esc(data.kelas||'-')}</div>
-            </div>
-            <div class="irow">
-              <div class="ilbl">Divisi Dilamar</div>
-              ${divisiHTML}
-            </div>
-          </div>
-        </div>
-        <div class="rfooter">${note}</div>
       </div>
-    `;
 
-    resultEl.style.display = 'block';
-    setTimeout(() => resultEl.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
-  }
+      <hr class="divider">
 
-  function showAlert(type, icon, msg) {
-    resultEl.innerHTML = `
-      <div class="alert ${type}">
-        <span class="alert-i">${icon}</span>
-        <div>${msg}</div>
-      </div>`;
-    resultEl.style.display = 'block';
-    setTimeout(() => resultEl.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
-  }
+      <div class="divisi-sec">
+        <div class="divisi-title">
+          Status Seleksi per Divisi
+        </div>
+        <div class="div-cards">${divisiCardsHTML}</div>
+      </div>
 
-  function setLoading(on) {
-    btn.disabled = on;
-    btn.innerHTML = on
-      ? `<div class="spin"></div> Sedang Mengecek...`
-      : `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg> Cek Status Saya`;
-  }
+      <div class="rfooter">${footerNote}</div>
+    </div>
+  `;
 
-  function esc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+  resultEl.style.display = 'block';
+  setTimeout(() => resultEl.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+}
 
-  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+function showAlert(type, icon, msg) {
+  resultEl.innerHTML = `
+    <div class="alert ${type}">
+      <span class="alert-i">${icon}</span>
+      <div>${msg}</div>
+    </div>`;
+  resultEl.style.display = 'block';
+  setTimeout(() => resultEl.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+}
+
+function setLoading(on) {
+  btn.disabled = on;
+  btn.innerHTML = on
+    ? `<div class="spin"></div> Sedang Mengecek...`
+    : `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg> Cek Status Saya`;
+}
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function capWords(s){
+  return String(s||'').replace(/\b\w/g, c => c.toUpperCase());
+}
 </script>
 </body>
 </html>
