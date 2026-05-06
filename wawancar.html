@@ -1,13 +1,307 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHC Recruit 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #eee; }
+        .dark-card { background: #141414; border: 1px solid #222; }
+        .btn-divisi { transition: all 0.2s; border: 1px solid #222; background: #111; }
+        .btn-divisi:hover { border-color: #555; background: #1a1a1a; transform: translateY(-2px); }
+        .hide { display: none; }
+    </style>
+</head>
+<body class="pb-10">
 
+    <header class="sticky top-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-900 py-4 px-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-xl font-black tracking-tighter uppercase italic text-white leading-none">SHC RECRUIT 2026</h1>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Interview Management System</p>
+        </div>
+        <button id="btnBack" class="hide text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">
+            ← Kembali
+        </button>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 mt-8">
+        <!-- SCREEN 1: DIVISI -->
+        <div id="screenDivisions" class="space-y-6">
+            <div class="space-y-1">
+                <h2 class="text-3xl font-bold">Pilih Divisi</h2>
+                <p class="text-gray-500">Divisi yang sedang Anda wawancarai saat ini.</p>
+            </div>
+            <div id="divisionGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Diisi via JS -->
+            </div>
+        </div>
+
+        <!-- SCREEN 2: KANDIDAT -->
+        <div id="screenCandidates" class="hide space-y-6">
+            <div class="space-y-1">
+                <div id="currentDivName" class="text-rose-500 font-bold uppercase tracking-widest text-[10px]">DIVISI</div>
+                <h2 class="text-3xl font-bold">Kandidat</h2>
+                <p class="text-gray-500">Klik nama untuk memulai wawancara.</p>
+            </div>
+            <div id="candidateList" class="space-y-3">
+                <!-- Diisi via JS -->
+            </div>
+        </div>
+
+        <!-- SCREEN 3: FORM -->
+        <div id="screenForm" class="hide space-y-8 max-w-2xl mx-auto">
+            <div class="flex items-center gap-6 p-6 bg-[#111] rounded-3xl border border-gray-800">
+                <!-- Ubah foto menjadi rounded-2xl (kotak dengan sudut melengkung) -->
+                <img id="formFoto" src="" class="w-24 h-24 rounded-2xl object-cover border-4 border-[#1e1e1e]" alt="">
+                <div class="space-y-1">
+                    <h2 id="formNama" class="text-2xl font-black italic">Nama</h2>
+                    <div id="formKelas" class="text-gray-500 text-sm">Kelas</div>
+                    <div id="formDivisiBadge" class="inline-block px-3 py-1 mt-2 bg-rose-500 text-white text-[10px] font-bold uppercase rounded-full">DIVISI</div>
+                </div>
+            </div>
+
+            <form id="interviewForm" class="space-y-8">
+                <div id="questionsContainer" class="space-y-2">
+                    <!-- Diisi via JS (Pertanyaan Umum & Khusus) -->
+                </div>
+
+                <div class="space-y-4 pt-6 border-t border-gray-900">
+                    <label class="block text-sm font-bold text-gray-500 uppercase tracking-widest">Catatan Umum / Sifat / Kepribadian</label>
+                    <textarea id="notes" class="w-full bg-[#161616] border border-gray-800 rounded-2xl p-5 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[100px]"></textarea>
+                </div>
+
+                <div class="bg-[#111] p-8 rounded-3xl border border-gray-800 space-y-6">
+                    <h3 class="text-center font-black italic uppercase tracking-widest text-xs text-gray-500">Rekomendasi Akhir</h3>
+                    <div class="flex gap-4">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rating" value="S" class="sr-only peer">
+                            <div class="h-16 flex items-center justify-center font-black text-[10px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-emerald-500 peer-checked:text-black border-emerald-900/30 bg-[#1a1a1a]">SETUJU</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rating" value="RR" class="sr-only peer">
+                            <div class="h-16 flex items-center justify-center font-black text-[10px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-yellow-500 peer-checked:text-black border-yellow-900/30 bg-[#1a1a1a]">RAGU-RAGU</div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="rating" value="TS" class="sr-only peer">
+                            <div class="h-16 flex items-center justify-center font-black text-[10px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-red-500 peer-checked:text-black border-red-900/30 bg-[#1a1a1a]">TDK SETUJU</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pb-12">
+                    <button type="button" id="btnSkip" class="p-6 bg-[#181818] rounded-3xl font-black text-xs uppercase tracking-widest text-gray-500 hover:bg-gray-800 transition-colors">SKIP / BATAL</button>
+                    <button type="submit" id="btnSubmit" class="p-6 bg-white text-black rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors">SIMPAN & SUBMIT</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwMqFdsMWmo03OUC6HA0mLw2ih6gHw3VQrmfQ71FbTqXcr-a3vnBICcld4_t4k5Cr-qhw/exec";
+        
+        // Pertanyaan yang wajib muncul di setiap divisi
+        const pertanyaanUmum = [
+            "Apa motivasi kamu mengikuti kepanitiaan SHC?",
+            "Sebutkan apa yang menjadi kelebihan dan kekuranganmu secara jujur!",
+            "Ceritakan pengalaman organisasimu sebelumnya!"
+        ];
+
+        // Database pertanyaan khusus divisi (dengan pembaruan divisi Keamanan)
+        const bankPertanyaan = {
+            "KONSUMSI": ["Bagaimana caramu mengatur makanan untuk ratusan orang?", "Ada peserta alergi makanan, apa solusimu?", "Apakah punya kenalan vendor?"],
+            "ACARA & MC": ["Apa inovasi acaramu?", "Rundown ngaret 20 menit, langkahmu?", "Jika listrik mati dan chaos, apa yang kamu lakukan?"],
+            "DESAIN": ["Software desain apa yang dikuasai?", "Sikapmu jika ada revisi dadakan H-1?", "Tunjukkan portofolio terbaikmu!"],
+            "DOKUMENTASI": ["Kamera lowbat di tengah acara, solusimu?", "Ada momen terlewat karena tidak ada pembagian tugas, tindakanmu?", "Hasil foto banyak yang blur padahal harus diedit saat itu juga. Langkahmu?"],
+            "PROMOSI": ["Cara tingkatkan minat siswa agar beli tiket?", "Engagement medsos rendah, strategimu?", "Menghadapi komentar negatif/hate speech di IG?"],
+            "DANA USAHA": ["Strategi mencari sponsor dalam 1 bulan?", "Jika target dana kurang 10 juta di H-7, apa yang kamu lakukan?"],
+            "DEKORASI": ["Anggaran dipotong tapi konsep ingin mewah, solusinya?", "H-1 konsep diubah ketua, padahal bahan sudah dibeli. Tindakanmu?"],
+            "KEAMANAN": [
+                "Jika ada perintah dari atasan yang menurutmu membahayakan kamu atau pada penonton SHC, apakah kamu akan tetap menjalankannya atau mengambil keputusan lain?",
+                "Jika terjadi kepanikan massal saat acara (misalnya ada suara keras yang disangka ancaman), tapi ternyata itu false alarm, bagaimana cara kamu mengendalikan situasi agar tidak terjadi desak-desakan tanpa membuat orang makin panik?",
+                "Bagaimana cara kamu menghadapi seseorang yang terlihat mencurigakan, tapi belum melakukan pelanggaran apa pun, tanpa melanggar hak privasi atau memicu konflik?",
+                "Jika dua kelompok penonton mulai berselisih dan hampir berkelahi, sementara tim kamu terbatas dan situasi cepat memanas, apa langkah prioritas yang kamu ambil dalam 1 menit pertama?",
+                "Jika ada temanmu yang kamu ajak dari luar ataupun dari Sedes untuk mengikuti SHC, lalu dia mengetahui bahwa kamu adalah panitia, dan dia meminta sesuatu yang menguntungkan bagi dia (tiket konser dimurahin, barang dicek duluan, masuk VIP duluan). Apakah kamu bakal tetap melakukannya yang nyatanya bisa merusak reputasimu? Dan jikalau menolak, bagaimana mengatasi konflik dengan temanmu?"
+            ],
+            "PERLENGKAPAN": ["Barang sewaan rusak oleh panitia lain, siapa yang tanggung jawab?", "H-1 mic dan kabel roll kurang, tindakanmu?"],
+            "P3K": ["Peserta tiba-tiba kejang, apa yang kamu lakukan di 1 menit pertama?", "Ada yang berdarah kena cutter dan ada yang sesak napas, mana yang ditangani duluan?"],
+            "SEKRETARIS/BENDAHARA": ["Ada pengeluaran dadakan tanpa nota, bagaimana kamu mencatatnya?", "Sponsor minta proposal besok tapi format belum fix, strategimu?"],
+            "AKOMODASI": ["Artis datang 3 jam lebih cepat, ruangan belum siap. Tindakanmu?", "Artis minta barang aneh yang tidak ada di rider, dipenuhi atau tidak?"],
+            "ART GALLERY": ["Karya rusak disenggol teman sendiri, dilaporkan atau tidak?", "Sponsor maksa pasang logo besar di galeri yang merusak estetika, responmu?"]
+        };
+
+        let candidates = [];
+        let selectedDiv = "";
+        let selectedCand = null;
+
+        // Init Lucide
+        lucide.createIcons();
+
+        // Load Data
+        async function loadData() {
+            try {
+                const res = await fetch(`${API_URL}?action=getCandidates`);
+                candidates = await res.json();
+                renderDivisions();
+            } catch (e) {
+                alert("Gagal konek ke Google Sheets!");
+            }
+        }
+
+        function renderDivisions() {
+            const grid = document.getElementById('divisionGrid');
+            grid.innerHTML = "";
+            Object.keys(bankPertanyaan).forEach(div => {
+                const btn = document.createElement('button');
+                btn.className = "flex items-center gap-3 p-5 btn-divisi rounded-2xl group text-left";
+                btn.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-[#1e1e1e] flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i data-lucide="clipboard-list" class="w-4 h-4 text-gray-500"></i>
+                    </div>
+                    <span class="font-bold text-xs uppercase tracking-wide leading-tight">${div}</span>
+                `;
+                btn.onclick = () => showCandidates(div);
+                grid.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function showCandidates(div) {
+            selectedDiv = div;
+            document.getElementById('screenDivisions').classList.add('hide');
+            document.getElementById('screenCandidates').classList.remove('hide');
+            document.getElementById('btnBack').classList.remove('hide');
+            document.getElementById('currentDivName').innerText = div;
+
+            const list = document.getElementById('candidateList');
+            list.innerHTML = "";
+            const filtered = candidates.filter(c => c.divisi === div);
+            
+            if (filtered.length === 0) {
+                list.innerHTML = "<div class='py-10 text-center text-gray-600'>Tidak ada kandidat.</div>";
+            } else {
+                filtered.forEach(c => {
+                    const row = document.createElement('button');
+                    row.className = "w-full flex items-center gap-4 p-4 dark-card rounded-2xl hover:border-gray-500 transition-all text-left";
+                    row.innerHTML = `
+                        <!-- Ubah foto list menjadi rounded-xl (kotak sudut melengkung) -->
+                        <img src="${c.foto}" class="w-12 h-12 rounded-xl object-cover border border-gray-800" alt="">
+                        <div>
+                            <div class="font-bold leading-tight">${c.nama}</div>
+                            <div class="text-xs text-gray-500">${c.kelas} • ${c.ruangan || '-'}</div>
+                        </div>
+                    `;
+                    row.onclick = () => showForm(c);
+                    list.appendChild(row);
+                });
+            }
+        }
+
+        function showForm(c) {
+            selectedCand = c;
+            document.getElementById('screenCandidates').classList.add('hide');
+            document.getElementById('screenForm').classList.remove('hide');
+            
+            document.getElementById('formFoto').src = c.foto;
+            document.getElementById('formNama').innerText = c.nama;
+            document.getElementById('formKelas').innerText = c.kelas;
+            document.getElementById('formDivisiBadge').innerText = "DIVISI: " + c.divisi;
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = "";
+
+            // 1. RENDER PERTANYAAN UMUM
+            const sectionUmum = document.createElement('div');
+            sectionUmum.innerHTML = `<h3 class="text-rose-500 font-black tracking-widest uppercase text-xs mb-4">Pertanyaan Umum (Wajib)</h3>`;
+            pertanyaanUmum.forEach((q, i) => {
+                sectionUmum.innerHTML += `
+                    <div class="space-y-2 mb-6">
+                        <label class="block text-sm font-medium text-gray-400">U${i + 1}. ${q}</label>
+                        <textarea required data-q="[UMUM] ${q}" class="q-ans w-full bg-[#161616] border border-gray-800 rounded-2xl p-5 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[100px]"></textarea>
+                    </div>
+                `;
+            });
+            container.appendChild(sectionUmum);
+
+            // 2. RENDER PERTANYAAN KHUSUS DIVISI
+            const qs = bankPertanyaan[c.divisi] || [];
+            if (qs.length > 0) {
+                const sectionKhusus = document.createElement('div');
+                sectionKhusus.className = "pt-6 border-t border-gray-900";
+                sectionKhusus.innerHTML = `<h3 class="text-blue-500 font-black tracking-widest uppercase text-xs mb-4">Pertanyaan Khusus: ${c.divisi}</h3>`;
+                qs.forEach((q, i) => {
+                    sectionKhusus.innerHTML += `
+                        <div class="space-y-2 mb-6">
+                            <label class="block text-sm font-medium text-gray-200">K${i + 1}. ${q}</label>
+                            <textarea required data-q="[KHUSUS] ${q}" class="q-ans w-full bg-[#161616] border border-gray-800 rounded-2xl p-5 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[100px]"></textarea>
+                        </div>
+                    `;
+                });
+                container.appendChild(sectionKhusus);
+            }
+        }
+
+        document.getElementById('btnBack').onclick = () => {
+            const screenC = document.getElementById('screenCandidates');
+            const screenF = document.getElementById('screenForm');
+            if (!screenF.classList.contains('hide')) {
+                screenF.classList.add('hide');
+                screenC.classList.remove('hide');
+            } else {
+                screenC.classList.add('hide');
+                document.getElementById('screenDivisions').classList.remove('hide');
+                document.getElementById('btnBack').classList.add('hide');
+            }
+        };
+
+        document.getElementById('btnSkip').onclick = () => {
+            if(confirm("Batal wawancara?")) location.reload();
+        };
+
+        document.getElementById('interviewForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const rating = document.querySelector('input[name="rating"]:checked');
+            if (!rating) return alert("Pilih Rating!");
+
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.innerText = "MENGIRIM...";
+
+            const jawaban = {};
+            document.querySelectorAll('.q-ans').forEach(ta => {
+                jawaban[ta.getAttribute('data-q')] = ta.value;
+            });
+
+            const payload = {
+                action: 'saveInterview',
+                data: {
+                    candidate_id: selectedCand.candidate_id,
+                    nama: selectedCand.nama,
+                    divisi: selectedCand.divisi,
+                    jawaban: jawaban,
+                    catatan: document.getElementById('notes').value,
+                    rating: rating.value
+                }
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(payload)
+                });
+                alert("Data Tersimpan!");
+                location.reload();
+            } catch (err) {
+                alert("Gagal Save!");
+                btn.disabled = false;
+                btn.innerText = "SIMPAN & SUBMIT";
+            }
+        };
+
+        loadData();
+    </script>
+</body>
+</html>
