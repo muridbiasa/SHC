@@ -55,7 +55,7 @@
         <div id="screenForm" class="hide space-y-8 max-w-2xl mx-auto">
             <div class="flex items-center gap-6 p-6 bg-[#111] rounded-3xl border border-gray-800 shadow-2xl">
                 <div class="w-32 h-40 flex-shrink-0 bg-[#1e1e1e] rounded-2xl overflow-hidden border-2 border-gray-800 shadow-xl">
-                    <img id="formFoto" src="" class="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" onerror="this.src='https://placehold.co/300x400/1a1a1a/cccccc?text=No+Photo'">
+                    <img id="formFoto" src="" class="w-full h-full object-cover" alt="">
                 </div>
                 <div class="space-y-2">
                     <h2 id="formNama" class="text-3xl font-black italic uppercase tracking-tighter leading-none text-white">Nama</h2>
@@ -100,20 +100,72 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwMqFdsMWmo03OUC6HA0mLw2ih6gHw3VQrmfQ71FbTqXcr-a3vnBICcld4_t4k5Cr-qhw/exec";
-        
+
         let candidates = [];
         let selectedDiv = "";
         let selectedCand = null;
 
-        // FUNGSI BARU: Konversi Link GDrive biasa jadi Direct Image Link
-        function getDirectImageUrl(url) {
-            if (!url) return "";
-            // Mencari ID dari link format /d/ID/view atau ?id=ID
-            const idMatch = url.match(/id=([a-zA-Z0-9_-]+)/) || url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            if (idMatch && idMatch[1]) {
-                return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+        // =====================================================================
+        // FIX UTAMA: Ekstrak Google Drive File ID dengan regex yang lebih presisi
+        // Lalu buat URL proxy via GAS sendiri supaya bypass CORS
+        // =====================================================================
+        function extractDriveId(url) {
+            if (!url || typeof url !== 'string' || url.trim() === '') return null;
+
+            // Format: /file/d/ID/view  atau  /d/ID/
+            let m = url.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
+            if (m) return m[1];
+
+            // Format: ?id=ID  atau  open?id=ID
+            m = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
+            if (m) return m[1];
+
+            // Sudah berupa ID murni (25+ karakter alphanumeric/dash/underscore)
+            if (/^[a-zA-Z0-9_-]{25,}$/.test(url.trim())) return url.trim();
+
+            return null;
+        }
+
+        // Kembalikan array URL untuk dicoba satu per satu (fallback chain)
+        function getDriveFallbackChain(rawUrl) {
+            if (!rawUrl) return [PLACEHOLDER];
+
+            // Jika sudah bukan Drive URL (mis. lh3 atau placehold.co), langsung pakai
+            if (rawUrl.includes('lh3.googleusercontent.com') || rawUrl.includes('placehold.co')) {
+                return [rawUrl, PLACEHOLDER];
             }
-            return url;
+
+            const id = extractDriveId(rawUrl);
+            if (!id) return [rawUrl, PLACEHOLDER]; // URL lain, coba langsung
+
+            return [
+                // Format 1: thumbnail Google Drive (paling reliable, tidak butuh login)
+                `https://drive.google.com/thumbnail?id=${id}&sz=w400`,
+                // Format 2: uc?export=view (kadang minta login kalau file private)
+                `https://drive.google.com/uc?export=view&id=${id}`,
+                // Format 3: lh3 CDN
+                `https://lh3.googleusercontent.com/d/${id}`,
+                PLACEHOLDER
+            ];
+        }
+
+        const PLACEHOLDER = 'https://placehold.co/300x400/1a1a1a/cccccc?text=No+Photo';
+
+        // Set gambar dengan fallback otomatis jika gagal load
+        function setImageWithFallback(imgEl, rawUrl) {
+            const chain = getDriveFallbackChain(rawUrl);
+            let idx = 0;
+
+            function tryNext() {
+                if (idx >= chain.length) return;
+                imgEl.onerror = () => {
+                    idx++;
+                    tryNext();
+                };
+                imgEl.src = chain[idx++];
+            }
+
+            tryNext();
         }
 
         // Load Data
@@ -157,39 +209,51 @@
             const list = document.getElementById('candidateList');
             list.innerHTML = "";
             const filtered = candidates.filter(c => c.divisi === div);
-            
+
             if (filtered.length === 0) {
                 list.innerHTML = "<div class='py-10 text-center text-gray-600 border border-dashed border-gray-800 rounded-3xl font-medium'>Belum ada kandidat terdaftar di divisi ini.</div>";
             } else {
                 filtered.forEach(c => {
-                    const directFoto = getDirectImageUrl(c.foto); // Konversi foto di sini
                     const row = document.createElement('button');
                     row.className = "w-full flex items-center gap-4 p-4 dark-card rounded-2xl hover:border-gray-500 transition-all text-left group";
+
+                    // Buat elemen img dulu agar bisa pakai setImageWithFallback
+                    const imgEl = document.createElement('img');
+                    imgEl.className = "w-full h-full object-cover";
+                    imgEl.alt = c.nama;
+
                     row.innerHTML = `
-                        <div class="w-12 h-16 flex-shrink-0 bg-[#1e1e1e] rounded-lg overflow-hidden border border-gray-800 group-hover:border-gray-500 transition-colors">
-                            <img src="${directFoto}" class="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" onerror="this.src='https://placehold.co/300x400/1a1a1a/cccccc?text=Auto+Photo'">
-                        </div>
+                        <div class="w-12 h-16 flex-shrink-0 bg-[#1e1e1e] rounded-lg overflow-hidden border border-gray-800 group-hover:border-gray-500 transition-colors thumb-wrap"></div>
                         <div>
                             <div class="font-bold leading-tight group-hover:text-white transition-colors uppercase tracking-tighter">${c.nama}</div>
                             <div class="text-[10px] text-gray-500 font-medium uppercase mt-1">${c.kelas} • ${c.ruangan || '-'}</div>
                         </div>
                     `;
-                    row.onclick = () => showForm(c, directFoto);
+
+                    row.querySelector('.thumb-wrap').appendChild(imgEl);
+                    setImageWithFallback(imgEl, c.foto);
+
+                    row.onclick = () => showForm(c);
                     list.appendChild(row);
                 });
             }
         }
 
-        function showForm(c, directFotoUrl) {
+        function showForm(c) {
             selectedCand = c;
             document.getElementById('screenCandidates').classList.add('hide');
             document.getElementById('screenForm').classList.remove('hide');
-            
-            document.getElementById('formFoto').src = directFotoUrl || getDirectImageUrl(c.foto);
+
+            const formFoto = document.getElementById('formFoto');
+            setImageWithFallback(formFoto, c.foto);
+
             document.getElementById('formNama').innerText = c.nama;
             document.getElementById('formKelas').innerText = c.kelas;
             document.getElementById('formDivisiBadge').innerText = "DIVISI: " + c.divisi;
             document.getElementById('overallReview').value = "";
+
+            // Reset radio buttons
+            document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
         }
 
         document.getElementById('btnBack').onclick = () => {
@@ -206,7 +270,7 @@
         };
 
         document.getElementById('btnSkip').onclick = () => {
-            if(confirm("Batalkan pengisian data?")) location.reload();
+            if (confirm("Batalkan pengisian data?")) location.reload();
         };
 
         document.getElementById('interviewForm').onsubmit = async (e) => {
