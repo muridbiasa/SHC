@@ -3,44 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHC Recruit 2026</title>
+    <title>SHC Recruit 2026 - Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #eee; }
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #eee; scroll-behavior: smooth; }
         .dark-card { background: #141414; border: 1px solid #222; }
         .btn-divisi { transition: all 0.2s; border: 1px solid #222; background: #111; }
         .btn-divisi:hover { border-color: #555; background: #1a1a1a; transform: translateY(-2px); }
         .hide { display: none; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="pb-10">
 
     <header class="sticky top-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-900 py-4 px-6 flex items-center justify-between">
-        <div>
+        <div class="cursor-pointer" onclick="goToScreen('screenDivisions')">
             <h1 class="text-xl font-black tracking-tighter uppercase italic text-white leading-none">SHC RECRUIT 2026</h1>
             <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Interview Management System</p>
         </div>
-        <button id="btnBack" class="hide text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">
-            ← Kembali
+        <button id="btnBack" class="hide text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors flex items-center gap-1">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i> Kembali
         </button>
     </header>
 
     <main class="max-w-4xl mx-auto px-6 mt-8">
-        <!-- SCREEN 1: DIVISI -->
-        <div id="screenDivisions" class="space-y-6">
+        <!-- SCREEN 1: PILIH DIVISI -->
+        <div id="screenDivisions" class="space-y-6 animate-fade">
             <div class="space-y-1">
                 <h2 class="text-3xl font-bold">Pilih Divisi</h2>
-                <p class="text-gray-500">Divisi yang sedang Anda wawancarai saat ini.</p>
+                <p class="text-gray-500">Pilih divisi yang sedang Anda wawancarai.</p>
             </div>
             <div id="divisionGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <!-- Diisi via JS -->
             </div>
         </div>
 
-        <!-- SCREEN 2: KANDIDAT -->
-        <div id="screenCandidates" class="hide space-y-6">
+        <!-- SCREEN 2: DAFTAR KANDIDAT -->
+        <div id="screenCandidates" class="hide space-y-6 animate-fade">
             <div class="space-y-1">
                 <div id="currentDivName" class="text-rose-500 font-bold uppercase tracking-widest text-[10px]">DIVISI</div>
                 <h2 class="text-3xl font-bold">Kandidat</h2>
@@ -51,11 +53,11 @@
             </div>
         </div>
 
-        <!-- SCREEN 3: FORM -->
-        <div id="screenForm" class="hide space-y-8 max-w-2xl mx-auto">
+        <!-- SCREEN 3: FORM INTERVIEW -->
+        <div id="screenForm" class="hide space-y-8 max-w-2xl mx-auto animate-fade">
             <div class="flex items-center gap-6 p-6 bg-[#111] rounded-3xl border border-gray-800 shadow-2xl">
                 <div class="w-32 h-40 flex-shrink-0 bg-[#1e1e1e] rounded-2xl overflow-hidden border-2 border-gray-800 shadow-xl">
-                    <img id="formFoto" src="" class="w-full h-full object-cover" alt="">
+                    <img id="formFoto" src="" class="w-full h-full object-cover" alt="Foto Kandidat">
                 </div>
                 <div class="space-y-2">
                     <h2 id="formNama" class="text-3xl font-black italic uppercase tracking-tighter leading-none text-white">Nama</h2>
@@ -65,11 +67,9 @@
             </div>
 
             <form id="interviewForm" class="space-y-8">
-                <div class="space-y-6">
-                    <div class="space-y-3">
-                        <label class="block text-xs font-black text-gray-500 uppercase tracking-[0.2em]">Hasil Review Keseluruhan</label>
-                        <textarea id="overallReview" required class="w-full bg-[#161616] border border-gray-800 rounded-3xl p-6 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[300px] text-lg leading-relaxed shadow-inner placeholder:text-gray-700" placeholder="Tuliskan hasil wawancara, kelebihan, kekurangan, dan performa kandidat di sini secara detail..."></textarea>
-                    </div>
+                <div class="space-y-3">
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-[0.2em]">Hasil Review Keseluruhan</label>
+                    <textarea id="overallReview" required class="w-full bg-[#161616] border border-gray-800 rounded-3xl p-6 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[250px] text-lg leading-relaxed shadow-inner placeholder:text-gray-700" placeholder="Tuliskan hasil wawancara, kelebihan, kekurangan..."></textarea>
                 </div>
 
                 <div class="bg-[#111] p-8 rounded-[2rem] border border-gray-800 space-y-6 shadow-2xl">
@@ -91,7 +91,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 pb-12">
-                    <button type="button" id="btnSkip" class="p-6 bg-[#181818] border border-gray-800 rounded-3xl font-black text-[11px] uppercase tracking-widest text-gray-500 hover:bg-gray-800 transition-colors">SKIP / BATAL</button>
+                    <button type="button" id="btnCancel" class="p-6 bg-[#181818] border border-gray-800 rounded-3xl font-black text-[11px] uppercase tracking-widest text-gray-500 hover:bg-gray-800 transition-colors">BATAL</button>
                     <button type="submit" id="btnSubmit" class="p-6 bg-white text-black rounded-3xl font-black text-[11px] uppercase tracking-widest hover:bg-gray-100 shadow-xl transition-all active:scale-[0.97]">SIMPAN DATA</button>
                 </div>
             </form>
@@ -99,193 +99,132 @@
     </main>
 
     <script>
+        // GANTI API_URL INI DENGAN URL DEPLOY SCRIPT ANDA
         const API_URL = "https://script.google.com/macros/s/AKfycbwMqFdsMWmo03OUC6HA0mLw2ih6gHw3VQrmfQ71FbTqXcr-a3vnBICcld4_t4k5Cr-qhw/exec";
+        const PLACEHOLDER = 'https://placehold.co/300x400/1a1a1a/cccccc?text=No+Photo';
 
         let candidates = [];
         let selectedDiv = "";
         let selectedCand = null;
 
+        const DIVISIONS = ["ACARA & MC", "KONSUMSI", "DESAIN", "DOKUMENTASI", "PROMOSI", "DANA USAHA", "DEKORASI", "KEAMANAN", "PERLENGKAPAN", "P3K", "SEKRETARIS/BENDAHARA", "AKOMODASI", "ART GALLERY"];
+
         // =====================================================================
-        // FIX UTAMA: Ekstrak Google Drive File ID dengan regex yang lebih presisi
-        // Lalu buat URL proxy via GAS sendiri supaya bypass CORS
+        // CORE LOGIC
         // =====================================================================
-        function extractDriveId(url) {
-            if (!url || typeof url !== 'string' || url.trim() === '') return null;
 
-            // Format: /file/d/ID/view  atau  /d/ID/
-            let m = url.match(/\/d\/([a-zA-Z0-9_-]{25,})/);
-            if (m) return m[1];
-
-            // Format: ?id=ID  atau  open?id=ID
-            m = url.match(/[?&]id=([a-zA-Z0-9_-]{25,})/);
-            if (m) return m[1];
-
-            // Sudah berupa ID murni (25+ karakter alphanumeric/dash/underscore)
-            if (/^[a-zA-Z0-9_-]{25,}$/.test(url.trim())) return url.trim();
-
-            return null;
+        async function init() {
+            renderDivisionButtons();
+            await fetchCandidates();
+            if (window.lucide) lucide.createIcons();
         }
 
-        // Kembalikan array URL untuk dicoba satu per satu (fallback chain)
-        function getDriveFallbackChain(rawUrl) {
-            if (!rawUrl) return [PLACEHOLDER];
-
-            // Jika sudah bukan Drive URL (mis. lh3 atau placehold.co), langsung pakai
-            if (rawUrl.includes('lh3.googleusercontent.com') || rawUrl.includes('placehold.co')) {
-                return [rawUrl, PLACEHOLDER];
-            }
-
-            const id = extractDriveId(rawUrl);
-            if (!id) return [rawUrl, PLACEHOLDER]; // URL lain, coba langsung
-
-            return [
-                // Format 1: thumbnail Google Drive (paling reliable, tidak butuh login)
-                `https://drive.google.com/thumbnail?id=${id}&sz=w400`,
-                // Format 2: uc?export=view (kadang minta login kalau file private)
-                `https://drive.google.com/uc?export=view&id=${id}`,
-                // Format 3: lh3 CDN
-                `https://lh3.googleusercontent.com/d/${id}`,
-                PLACEHOLDER
-            ];
-        }
-
-        const PLACEHOLDER = 'https://placehold.co/300x400/1a1a1a/cccccc?text=No+Photo';
-
-        // Set gambar dengan fallback otomatis jika gagal load
-        function setImageWithFallback(imgEl, rawUrl) {
-            const chain = getDriveFallbackChain(rawUrl);
-            let idx = 0;
-
-            function tryNext() {
-                if (idx >= chain.length) return;
-                imgEl.onerror = () => {
-                    idx++;
-                    tryNext();
-                };
-                imgEl.src = chain[idx++];
-            }
-
-            tryNext();
-        }
-
-        // Load Data
-        async function loadData() {
+        async function fetchCandidates() {
             try {
                 const res = await fetch(`${API_URL}?action=getCandidates`);
                 candidates = await res.json();
-                renderDivisions();
             } catch (e) {
-                alert("Gagal konek ke Google Sheets!");
+                console.error("Gagal memuat data kandidat.");
             }
         }
 
-        const divisions = ["ACARA & MC", "KONSUMSI", "DESAIN", "DOKUMENTASI", "PROMOSI", "DANA USAHA", "DEKORASI", "KEAMANAN", "PERLENGKAPAN", "P3K", "SEKRETARIS/BENDAHARA", "AKOMODASI", "ART GALLERY"];
-
-        function renderDivisions() {
+        function renderDivisionButtons() {
             const grid = document.getElementById('divisionGrid');
             grid.innerHTML = "";
-            divisions.forEach(div => {
+            DIVISIONS.forEach(div => {
                 const btn = document.createElement('button');
                 btn.className = "flex items-center gap-3 p-5 btn-divisi rounded-2xl group text-left";
                 btn.innerHTML = `
                     <div class="w-10 h-10 rounded-full bg-[#1e1e1e] flex items-center justify-center group-hover:scale-110 transition-transform">
                         <i data-lucide="clipboard-list" class="w-4 h-4 text-gray-500"></i>
                     </div>
-                    <span class="font-bold text-xs uppercase tracking-wide leading-tight">${div}</span>
+                    <span class="font-bold text-[10px] uppercase tracking-wide leading-tight">${div}</span>
                 `;
                 btn.onclick = () => showCandidates(div);
                 grid.appendChild(btn);
             });
-            if (window.lucide) lucide.createIcons();
         }
 
         function showCandidates(div) {
             selectedDiv = div;
-            document.getElementById('screenDivisions').classList.add('hide');
-            document.getElementById('screenCandidates').classList.remove('hide');
-            document.getElementById('btnBack').classList.remove('hide');
+            const filtered = candidates.filter(c => c.divisi === div);
+            
             document.getElementById('currentDivName').innerText = div;
-
             const list = document.getElementById('candidateList');
             list.innerHTML = "";
-            const filtered = candidates.filter(c => c.divisi === div);
 
             if (filtered.length === 0) {
-                list.innerHTML = "<div class='py-10 text-center text-gray-600 border border-dashed border-gray-800 rounded-3xl font-medium'>Belum ada kandidat terdaftar di divisi ini.</div>";
+                list.innerHTML = `<div class='py-10 text-center text-gray-600 border border-dashed border-gray-800 rounded-3xl font-medium'>
+                    Semua kandidat sudah diwawancarai atau tidak ada pendaftar.
+                </div>`;
             } else {
                 filtered.forEach(c => {
-                    const row = document.createElement('button');
-                    row.className = "w-full flex items-center gap-4 p-4 dark-card rounded-2xl hover:border-gray-500 transition-all text-left group";
-
-                    // Buat elemen img dulu agar bisa pakai setImageWithFallback
-                    const imgEl = document.createElement('img');
-                    imgEl.className = "w-full h-full object-cover";
-                    imgEl.alt = c.nama;
-
-                    row.innerHTML = `
-                        <div class="w-12 h-16 flex-shrink-0 bg-[#1e1e1e] rounded-lg overflow-hidden border border-gray-800 group-hover:border-gray-500 transition-colors thumb-wrap"></div>
+                    const btn = document.createElement('button');
+                    btn.className = "w-full flex items-center gap-4 p-4 dark-card rounded-2xl hover:border-gray-500 transition-all text-left group animate-fade";
+                    btn.innerHTML = `
+                        <div class="w-12 h-16 flex-shrink-0 bg-[#1e1e1e] rounded-lg overflow-hidden border border-gray-800">
+                            <img src="${c.foto || PLACEHOLDER}" class="w-full h-full object-cover" onerror="this.src='${PLACEHOLDER}'">
+                        </div>
                         <div>
                             <div class="font-bold leading-tight group-hover:text-white transition-colors uppercase tracking-tighter">${c.nama}</div>
                             <div class="text-[10px] text-gray-500 font-medium uppercase mt-1">${c.kelas} • ${c.ruangan || '-'}</div>
                         </div>
                     `;
-
-                    row.querySelector('.thumb-wrap').appendChild(imgEl);
-                    setImageWithFallback(imgEl, c.foto);
-
-                    row.onclick = () => showForm(c);
-                    list.appendChild(row);
+                    btn.onclick = () => showForm(c);
+                    list.appendChild(btn);
                 });
             }
+            goToScreen('screenCandidates');
         }
 
         function showForm(c) {
             selectedCand = c;
-            document.getElementById('screenCandidates').classList.add('hide');
-            document.getElementById('screenForm').classList.remove('hide');
-
-            const formFoto = document.getElementById('formFoto');
-            setImageWithFallback(formFoto, c.foto);
-
+            document.getElementById('formFoto').src = c.foto || PLACEHOLDER;
             document.getElementById('formNama').innerText = c.nama;
             document.getElementById('formKelas').innerText = c.kelas;
             document.getElementById('formDivisiBadge').innerText = "DIVISI: " + c.divisi;
             document.getElementById('overallReview').value = "";
-
-            // Reset radio buttons
             document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+            goToScreen('screenForm');
         }
 
-        document.getElementById('btnBack').onclick = () => {
-            const screenC = document.getElementById('screenCandidates');
-            const screenF = document.getElementById('screenForm');
-            if (!screenF.classList.contains('hide')) {
-                screenF.classList.add('hide');
-                screenC.classList.remove('hide');
+        function goToScreen(screenId) {
+            ["screenDivisions", "screenCandidates", "screenForm"].forEach(id => {
+                document.getElementById(id).classList.add('hide');
+            });
+            document.getElementById(screenId).classList.remove('hide');
+            
+            // Header back button logic
+            const btnBack = document.getElementById('btnBack');
+            if (screenId === 'screenDivisions') {
+                btnBack.classList.add('hide');
             } else {
-                screenC.classList.add('hide');
-                document.getElementById('screenDivisions').classList.remove('hide');
-                document.getElementById('btnBack').classList.add('hide');
+                btnBack.classList.remove('hide');
+                btnBack.onclick = () => {
+                    if (screenId === 'screenForm') showCandidates(selectedDiv);
+                    else goToScreen('screenDivisions');
+                };
             }
-        };
+            window.scrollTo(0,0);
+        }
 
-        document.getElementById('btnSkip').onclick = () => {
-            if (confirm("Batalkan pengisian data?")) location.reload();
-        };
+        // =====================================================================
+        // SAVE ACTION (MODIFIED - NO REFRESH)
+        // =====================================================================
 
         document.getElementById('interviewForm').onsubmit = async (e) => {
             e.preventDefault();
             const rating = document.querySelector('input[name="rating"]:checked');
-            if (!rating) return alert("Harap pilih rating rekomendasi akhir!");
+            if (!rating) return alert("Harap pilih rating rekomendasi!");
 
             const btn = document.getElementById('btnSubmit');
+            const originalText = btn.innerText;
             btn.disabled = true;
-            btn.innerText = "SEDANG MENGIRIM...";
+            btn.innerText = "MENYIMPAN...";
 
             const payload = {
                 action: 'saveInterview',
                 data: {
-                    candidate_id: selectedCand.candidate_id,
                     nama: selectedCand.nama,
                     divisi: selectedCand.divisi,
                     catatan: document.getElementById('overallReview').value,
@@ -295,22 +234,35 @@
             };
 
             try {
+                // Post ke GAS
                 await fetch(API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify(payload)
                 });
-                alert("Data berhasil tersimpan ke Spreadsheet!");
-                location.reload();
+
+                // BERHASIL: Update data lokal secara instan
+                // Hapus kandidat saat ini dari daftar utama
+                candidates = candidates.filter(c => c.nama !== selectedCand.nama);
+                
+                alert("Data berhasil tersimpan!");
+                
+                // Kembali ke daftar kandidat tanpa reload
+                showCandidates(selectedDiv);
+
             } catch (err) {
-                alert("Terjadi kesalahan saat mengirim data!");
+                alert("Gagal koneksi ke database.");
+            } finally {
                 btn.disabled = false;
-                btn.innerText = "SIMPAN DATA";
+                btn.innerText = originalText;
             }
         };
 
-        loadData();
-        if (window.lucide) lucide.createIcons();
+        document.getElementById('btnCancel').onclick = () => {
+            if(confirm("Batalkan pengisian?")) showCandidates(selectedDiv);
+        };
+
+        init();
     </script>
 </body>
 </html>
