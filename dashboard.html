@@ -89,9 +89,10 @@
 
     /* ---- CANDIDATE CARDS ---- */
     .candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;gap:14px;cursor:pointer;transition:all 0.25s ease;position:relative;overflow:hidden}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column;gap:0;cursor:pointer;transition:all 0.25s ease;position:relative;}
     .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
     .card:active{transform:scale(0.985)}
+    .card-main-row{display:flex;gap:14px;width:100%}
     .card-photo{width:70px;height:90px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
     .card-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:32px}
     .card-info{flex:1;min-width:0}
@@ -109,16 +110,30 @@
     .rating-div{font-size:11px;font-weight:600;color:var(--text-secondary)}
     .rating-reason{font-size:11px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-    /* Badge Final Status pada kartu */
-    .final-status-badge{
-      position:absolute;top:10px;right:10px;
-      padding:4px 10px;border-radius:20px;
-      font-size:10px;font-weight:800;
-      letter-spacing:0.5px;
+    /* Badge Final Status — di bawah kartu, BUKAN absolute */
+    .card-status-row{
+      display:flex;align-items:center;gap:8px;
+      margin-top:12px;padding-top:10px;
+      border-top:1px solid var(--border);
     }
-    .final-status-badge.lolos{background:rgba(46,213,115,0.2);color:var(--star-3);border:1px solid rgba(46,213,115,0.4)}
-    .final-status-badge.tidak_lolos{background:rgba(255,71,87,0.2);color:var(--star-1);border:1px solid rgba(255,71,87,0.4)}
-    .final-status-badge.manual{outline:2px solid currentColor;outline-offset:2px;}
+    .final-status-badge{
+      display:inline-flex;align-items:center;gap:5px;
+      padding:5px 12px;border-radius:20px;
+      font-size:11px;font-weight:800;letter-spacing:0.4px;
+    }
+    .final-status-badge.lolos{
+      background:rgba(46,213,115,0.15);color:var(--star-3);
+      border:1px solid rgba(46,213,115,0.35);
+    }
+    .final-status-badge.tidak_lolos{
+      background:rgba(255,71,87,0.15);color:var(--star-1);
+      border:1px solid rgba(255,71,87,0.35);
+    }
+    .manual-badge{
+      font-size:10px;font-weight:600;color:var(--muted);
+      background:var(--surface-2);border:1px solid var(--border);
+      padding:3px 7px;border-radius:4px;
+    }
 
     /* Rata-rata score di kartu */
     .avg-score-chip{
@@ -247,12 +262,54 @@
     .toast.error{border-left:4px solid var(--star-1);color:var(--star-1)}
     .toast.info{border-left:4px solid var(--accent);color:var(--accent-light)}
 
+    /* ---- REKAP WAWANCARA ---- */
+    .rekap-header-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .rekap-count-badge{background:rgba(124,107,255,0.15);color:var(--accent-light);font-size:13px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid rgba(124,107,255,0.3)}
+    .rekap-filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .rekap-filter-btn{padding:7px 14px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s}
+    .rekap-filter-btn:hover{border-color:var(--accent);color:var(--text)}
+    .rekap-filter-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+    .rekap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+    .rekap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all 0.25s ease}
+    .rekap-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
+    .rekap-card:active{transform:scale(0.985)}
+    .rekap-card-top{display:flex;gap:14px;align-items:flex-start}
+    .rekap-photo{width:64px;height:82px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
+    .rekap-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:28px}
+    .rekap-info{flex:1;min-width:0}
+    .rekap-name{font-size:15px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rekap-kelas{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
+    .rekap-divisi-wwc{font-size:11px;color:var(--muted);margin-bottom:4px}
+    .rekap-divisi-wwc strong{color:var(--text-secondary)}
+    .rekap-review-short{font-size:12px;color:var(--text-secondary);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+    .rekap-selengkapnya{color:var(--accent-light);font-size:11px;font-weight:600;cursor:pointer;margin-top:4px;display:inline-block}
+    .rekap-divisi-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+    .rekap-divisi-tag-item{font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;border:1px solid}
+    .rekap-divisi-tag-item.terima{background:rgba(46,213,115,0.12);color:var(--star-3);border-color:rgba(46,213,115,0.3)}
+    .rekap-divisi-tag-item.tolak{background:rgba(255,71,87,0.12);color:var(--star-1);border-color:rgba(255,71,87,0.3)}
+    .rekap-divisi-tag-item.cadangan{background:rgba(255,159,67,0.12);color:var(--star-2);border-color:rgba(255,159,67,0.3)}
+    .rekap-divisi-tag-item.pending{background:rgba(124,107,255,0.08);color:var(--muted);border-color:var(--border)}
+    .rekap-status-kelulusan{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px;display:inline-flex;align-items:center;gap:4px}
+    .rekap-status-kelulusan.lolos{background:rgba(46,213,115,0.12);color:var(--star-3);border:1px solid rgba(46,213,115,0.3)}
+    .rekap-status-kelulusan.tidak_lolos{background:rgba(255,71,87,0.12);color:var(--star-1);border:1px solid rgba(255,71,87,0.3)}
+    .rekap-status-kelulusan.pending{background:rgba(255,159,67,0.08);color:var(--star-2);border:1px solid rgba(255,159,67,0.2)}
+    .rekap-bottom-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
+
+    /* Modal rekap */
+    .rekap-modal-review{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;font-size:13px;color:var(--text-secondary);line-height:1.65;white-space:pre-wrap;margin-bottom:14px;max-height:280px;overflow-y:auto}
+    .rekap-modal-divisi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .rekap-modal-divisi-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+    .rekap-modal-divisi-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
+    .rekap-modal-divisi-status{font-size:11px;font-weight:600}
+
     /* ---- RESPONSIVE ---- */
     @media(max-width:768px){
       .menu-toggle{display:flex!important}
       .sidebar{width:85vw;max-width:320px;transform:translateX(-100%);padding-top:calc(60px + var(--safe-top))}
       .sidebar.open{transform:translateX(0);box-shadow:4px 0 32px rgba(0,0,0,0.5)}
       .main{margin-left:0;width:100%;padding:calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom))}
+      .rekap-grid{grid-template-columns:1fr}
+      .rekap-modal-divisi-grid{grid-template-columns:1fr}
       .candidate-grid{grid-template-columns:1fr;gap:12px}
       .card{padding:14px;gap:12px}
       .card-photo{width:64px;height:82px}
@@ -279,6 +336,13 @@
 
       <div class="sidebar-title">Filter Divisi</div>
       <div id="divisionList"></div>
+
+      <div class="sidebar-title" style="margin-top:24px;">Rekap Wawancara</div>
+      <button class="div-btn" id="btnMenuRekap" onclick="loadRekapWawancara(this)">
+        <span class="div-btn-icon">🎤</span>
+        <span>Hasil Rekap Wawancara</span>
+        <span class="sidebar-count-badge" id="countRekap">—</span>
+      </button>
 
       <div class="sidebar-title" style="margin-top:24px;">Hasil Akhir Seleksi</div>
       <button class="div-btn" id="btnMenuSemua" onclick="loadFinalSelectionData('all', this)">
@@ -406,6 +470,35 @@
     </div>
   </div>
 
+  <!-- ===== MODAL REKAP WAWANCARA ===== -->
+  <div class="modal-overlay" id="rekapModal" onclick="closeRekapModalOnBackdrop(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div id="rekapModalPhoto"></div>
+        <div style="flex:1;min-width:0">
+          <div class="modal-title" id="rekapModalName">—</div>
+          <div class="modal-subtitle" id="rekapModalClass">—</div>
+          <div id="rekapModalStatusPill" style="margin-top:6px"></div>
+        </div>
+        <button class="modal-close" onclick="closeRekapModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-label">🎯 Divisi yang Dipilih & Status Berkas</div>
+          <div id="rekapModalDivisiGrid" class="rekap-modal-divisi-grid"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-label">🎤 Diwawancarai oleh Divisi</div>
+          <div id="rekapModalWwcDivisi" style="font-size:14px;font-weight:600;color:var(--accent-light)"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-label">📝 Hasil Review Wawancara</div>
+          <div class="rekap-modal-review" id="rekapModalReview">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== MODAL QUOTA CONFIG ===== -->
   <div class="modal-config" id="quotaConfigModal" onclick="closeQuotaConfig(event)">
     <div class="modal-config-content" onclick="event.stopPropagation()">
@@ -438,8 +531,8 @@
     // STATE
     // ============================================================
     let currentDivisi = 'all';
-    let allCandidatesData = [];
-    let filteredCandidates = []; // Store filtered results for correct modal access
+    let allCandidatesData = [];       // Data master (JANGAN pakai ini untuk index modal)
+    let filteredCandidatesData = [];  // Data yang sedang DITAMPILKAN (pakai ini untuk index modal)
     let quotaConfig = {};
     let currentQuotaDivisi = null;
     let searchTimeout = null;
@@ -508,15 +601,14 @@
       document.getElementById('searchClear').classList.toggle('visible', currentSearchQuery.length > 0);
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
-        filteredCandidates = filterCandidates(currentSearchQuery, allCandidatesData);
-        renderCandidates(filteredCandidates);
+        const filtered = filterCandidates(currentSearchQuery, allCandidatesData);
+        renderCandidates(filtered); // renderCandidates akan set filteredCandidatesData
       }, 250);
     }
 
     function clearSearch() {
       document.getElementById('searchInput').value = '';
       currentSearchQuery = '';
-      filteredCandidates = [];
       document.getElementById('searchClear').classList.remove('visible');
       renderCandidates(allCandidatesData);
       document.getElementById('searchInput').focus();
@@ -790,26 +882,20 @@
     function renderCandidates(candidates) {
       const content = document.getElementById('content');
       if (!candidates || candidates.length === 0) {
+        filteredCandidatesData = [];
         content.innerHTML = `<div class="empty"><p>🔍 Tidak ada kandidat ditemukan</p></div>`;
         return;
       }
 
-      // Store the filtered candidates globally so modal can access correct index
-      filteredCandidates = candidates;
+      // Simpan array yang sedang ditampilkan — ini yang digunakan openModalDetail(idx)
+      filteredCandidatesData = candidates;
+
       const html = candidates.map((c, idx) => buildCandidateCard(c, idx)).join('');
       content.innerHTML = `<div class="candidate-grid">${html}</div>`;
     }
 
     function buildCandidateCard(c, idx) {
       const fotoHtml = buildPhotoHtml(c.foto, 'card-photo');
-
-      // Badge final status
-      let badgeHtml = '';
-      if (c.finalStatus) {
-        const isLolos = c.finalStatus === 'lolos';
-        const manualClass = c.isManualOverride ? ' manual' : '';
-        badgeHtml = `<div class="final-status-badge ${c.finalStatus}${manualClass}">${isLolos ? '✅ LOLOS' : '❌ TIDAK LOLOS'}${c.isManualOverride ? ' ✍️' : ''}</div>`;
-      }
 
       // Avg score chip (di mode final)
       let avgChip = '';
@@ -844,17 +930,33 @@
         }
       }
 
+      // Status row di bawah kartu (bukan absolute, tidak nimpa nama)
+      let statusRowHtml = '';
+      if (c.finalStatus) {
+        const isLolos = c.finalStatus === 'lolos';
+        const manualTag = c.isManualOverride
+          ? `<span class="manual-badge">✍️ Override Manual</span>` : '';
+        statusRowHtml = `<div class="card-status-row">
+          <span class="final-status-badge ${c.finalStatus}">
+            ${isLolos ? '✅ LOLOS' : '❌ TIDAK LOLOS'}
+          </span>
+          ${manualTag}
+        </div>`;
+      }
+
       return `<div class="card" onclick="openModalDetail(${idx})">
-        ${badgeHtml}
-        ${fotoHtml}
-        <div class="card-info">
-          <div class="card-name">${escHtml(c.nama)}</div>
-          <span class="card-class">Kelas ${escHtml(c.kelas)}</span>
-          <div class="card-divisi">🎯 ${escHtml(divText)}</div>
-          ${avgChip}
-          <div class="rating-list">${ratingsHtml}</div>
-          ${actionHtml}
+        <div class="card-main-row">
+          ${fotoHtml}
+          <div class="card-info">
+            <div class="card-name">${escHtml(c.nama)}</div>
+            <span class="card-class">Kelas ${escHtml(c.kelas)}</span>
+            <div class="card-divisi">🎯 ${escHtml(divText)}</div>
+            ${avgChip}
+            <div class="rating-list">${ratingsHtml}</div>
+            ${actionHtml}
+          </div>
         </div>
+        ${statusRowHtml}
       </div>`;
     }
 
@@ -864,9 +966,7 @@
     async function quickSetStatus(rowIndex, divisi, status, cardIdx) {
       const result = await apiPost({action: 'updateSelectionStatus', rowIndex, divisi, status});
       if (result.success) {
-        // Use filteredCandidates if available (when searching), otherwise use allCandidatesData
-        const candidatesList = filteredCandidates.length > 0 ? filteredCandidates : allCandidatesData;
-        const c = candidatesList[cardIdx];
+        const c = allCandidatesData[cardIdx];
         if (c) {
           if (!c.selectionStatus) c.selectionStatus = {};
           c.selectionStatus[divisi] = status;
@@ -1008,9 +1108,8 @@
     // MODAL DETAIL
     // ============================================================
     function openModalDetail(idx) {
-      // Use filteredCandidates if available (when searching), otherwise use allCandidatesData
-      const candidatesList = filteredCandidates.length > 0 ? filteredCandidates : allCandidatesData;
-      const c = candidatesList[idx];
+      // PENTING: pakai filteredCandidatesData (yang sedang ditampilkan), bukan allCandidatesData
+      const c = filteredCandidatesData[idx];
       if (!c) return;
       currentModalCandidate = c;
 
@@ -1136,6 +1235,258 @@
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+    }
+
+    // ============================================================
+    // REKAP WAWANCARA
+    // ============================================================
+    let allRekapData = [];
+    let filteredRekapData = [];
+    let rekapDivisiFilter = 'all';
+    let rekapSearchTimeout = null;
+
+    async function loadRekapWawancara(clickedBtn) {
+      isFinalSelectionMode = false;
+      currentDivisi = 'rekap';
+
+      if (clickedBtn) setActiveSidebarBtn(clickedBtn);
+
+      document.getElementById('pageTitle').textContent = '🎤 Rekap Hasil Wawancara';
+      document.getElementById('pageDesc').textContent = 'Data hasil wawancara seluruh kandidat yang telah direview';
+      document.getElementById('quotaTracker').style.display = 'none';
+      document.getElementById('statsBar').style.display = 'none';
+
+      const content = document.getElementById('content');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat rekap wawancara...</p></div>';
+
+      if (window.innerWidth <= 768) toggleMenu();
+
+      let result = getCached('rekap_wawancara');
+      if (!result) {
+        result = await apiGet({action: 'getRekapWawancara'});
+        if (result && result.success) setCache('rekap_wawancara', result);
+      }
+
+      if (!result || !result.success) {
+        content.innerHTML = `<div class="empty"><p>⚠️ ${result?.error || result?.message || 'Gagal memuat data rekap wawancara'}</p></div>`;
+        return;
+      }
+
+      allRekapData = result.data || [];
+      document.getElementById('countRekap').textContent = allRekapData.length;
+
+      renderRekapSection(allRekapData);
+    }
+
+    function renderRekapSection(data) {
+      const content = document.getElementById('content');
+      if (!data || data.length === 0) {
+        content.innerHTML = '<div class="empty"><p>📭 Belum ada data rekap wawancara</p></div>';
+        return;
+      }
+
+      // Kumpulkan divisi unik dari data wawancara
+      const divisiSet = new Set(data.map(d => (d.divisi_pewawancara || '').trim()).filter(Boolean));
+      const divisiList = Array.from(divisiSet).sort();
+
+      const filterBtns = divisiList.map(div =>
+        `<button class="rekap-filter-btn${rekapDivisiFilter===div?' active':''}" onclick="setRekapFilter('${div}')">${capitalize(div)}</button>`
+      ).join('');
+
+      const cards = data.map((r, idx) => buildRekapCard(r, idx)).join('');
+
+      content.innerHTML = `
+        <div class="rekap-header-bar">
+          <span class="rekap-count-badge">📋 ${data.length} Kandidat Terwawancara</span>
+        </div>
+        <div class="search-wrapper" style="margin-top:0">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="rekapSearchInput" placeholder="Cari nama atau kelas..." autocomplete="off">
+            <button class="search-clear" id="rekapSearchClear" onclick="clearRekapSearch()">✕</button>
+          </div>
+        </div>
+        <div class="rekap-filter-bar">
+          <button class="rekap-filter-btn${rekapDivisiFilter==='all'?' active':''}" onclick="setRekapFilter('all')">🎯 Semua Divisi</button>
+          ${filterBtns}
+        </div>
+        <div class="rekap-grid" id="rekapGrid">${cards}</div>
+      `;
+
+      filteredRekapData = data;
+
+      // Attach search listener
+      const inp = document.getElementById('rekapSearchInput');
+      if (inp) {
+        inp.addEventListener('input', (e) => {
+          const q = e.target.value;
+          document.getElementById('rekapSearchClear').classList.toggle('visible', q.length > 0);
+          clearTimeout(rekapSearchTimeout);
+          rekapSearchTimeout = setTimeout(() => applyRekapFilters(), 250);
+        });
+      }
+    }
+
+    function setRekapFilter(divisi) {
+      rekapDivisiFilter = divisi;
+      applyRekapFilters();
+    }
+
+    function applyRekapFilters() {
+      const q = (document.getElementById('rekapSearchInput')?.value || '').toLowerCase().trim();
+      let filtered = allRekapData;
+
+      if (rekapDivisiFilter !== 'all') {
+        filtered = filtered.filter(r => (r.divisi_pewawancara||'').toLowerCase() === rekapDivisiFilter.toLowerCase());
+      }
+      if (q) {
+        filtered = filtered.filter(r =>
+          (r.nama||'').toLowerCase().includes(q) ||
+          (r.kelas||'').toLowerCase().includes(q)
+        );
+      }
+
+      filteredRekapData = filtered;
+
+      // Update filter buttons
+      document.querySelectorAll('.rekap-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.trim().replace(/^[^ ]+ /,'').toLowerCase() === rekapDivisiFilter.toLowerCase() ||
+          (rekapDivisiFilter === 'all' && btn.textContent.includes('Semua')));
+      });
+
+      const grid = document.getElementById('rekapGrid');
+      if (!grid) return;
+
+      const countBadge = document.querySelector('.rekap-count-badge');
+      if (countBadge) countBadge.textContent = `📋 ${filtered.length} Kandidat Terwawancara`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><p>🔍 Tidak ada kandidat ditemukan</p></div>';
+        return;
+      }
+      grid.innerHTML = filtered.map((r, idx) => buildRekapCard(r, idx)).join('');
+    }
+
+    function clearRekapSearch() {
+      const inp = document.getElementById('rekapSearchInput');
+      if (inp) inp.value = '';
+      const clr = document.getElementById('rekapSearchClear');
+      if (clr) clr.classList.remove('visible');
+      applyRekapFilters();
+    }
+
+    function buildRekapCard(r, idx) {
+      const fotoHtml = buildPhotoHtml(r.foto, 'rekap-photo');
+
+      // Divisi yang dipilih + status berkas
+      const divisiPilihan = parseDivisiPilihan(r.divisi_pilihan || '');
+      const divisiStatusBerkas = r.divisi_status_berkas || {};
+
+      let divisiTagsHtml = '';
+      if (divisiPilihan.length > 0) {
+        divisiTagsHtml = divisiPilihan.map(div => {
+          const key = div.toLowerCase();
+          const status = divisiStatusBerkas[key] || 'pending';
+          const label = statusBerkasLabel(status);
+          return `<span class="rekap-divisi-tag-item ${status}">${capitalize(div)}: ${label}</span>`;
+        }).join('');
+      }
+
+      // Review (potong jika panjang) - support both 'catatan' and 'review' fields
+      const reviewText = r.catatan || r.review || '';
+      const isLong = reviewText.length > 180;
+      const reviewShort = isLong ? reviewText.substring(0, 180) + '...' : reviewText;
+
+      // Status kelulusan
+      const rawKel = (r.status_kelulusan || r.status || '').toLowerCase().replace(/\s+/g,'_');
+      const kelulusanClass = rawKel.includes('lolos') && !rawKel.includes('tidak') ? 'lolos' : rawKel.includes('tidak') ? 'tidak_lolos' : 'pending';
+      const kelulusanLabel = r.status_kelulusan || r.status || 'Sudah Direview';
+
+      return `<div class="rekap-card" onclick="openRekapModal(${idx})">
+        <div class="rekap-card-top">
+          ${fotoHtml}
+          <div class="rekap-info">
+            <div class="rekap-name">${escHtml(r.nama)}</div>
+            <span class="rekap-kelas">${escHtml(r.kelas||'-')}</span>
+            <div class="rekap-divisi-wwc">🎤 <strong>Diwawancarai:</strong> ${escHtml(r.divisi_pewawancara||'-')}</div>
+          </div>
+        </div>
+        ${divisiTagsHtml ? `<div class="rekap-divisi-tags">${divisiTagsHtml}</div>` : ''}
+        ${reviewText ? `<div class="rekap-review-short">${escHtml(reviewShort)}${isLong?'<span class="rekap-selengkapnya"> Selengkapnya →</span>':''}</div>` : ''}
+        <div class="rekap-bottom-row">
+          <span class="rekap-status-kelulusan ${kelulusanClass}">${statusKelulusanIcon(kelulusanClass)} ${escHtml(kelulusanLabel)}</span>
+        </div>
+      </div>`;
+    }
+
+    function parseDivisiPilihan(raw) {
+      if (!raw) return [];
+      // Could be comma-separated or single
+      return raw.split(/[,;]/).map(s => s.trim()).filter(Boolean);
+    }
+
+    function statusBerkasLabel(s) {
+      if (!s || s === 'pending') return '—';
+      if (s === 'terima') return '✅ Terima';
+      if (s === 'tolak') return '❌ Tolak';
+      if (s === 'cadangan') return '🟡 Cadangan';
+      return s;
+    }
+
+    function statusKelulusanIcon(s) {
+      if (s === 'lolos') return '✅';
+      if (s === 'tidak_lolos') return '❌';
+      return '⏳';
+    }
+
+    function openRekapModal(idx) {
+      const r = filteredRekapData[idx];
+      if (!r) return;
+
+      document.getElementById('rekapModalPhoto').innerHTML = buildPhotoHtml(r.foto, 'modal-photo');
+      document.getElementById('rekapModalName').textContent = r.nama;
+      document.getElementById('rekapModalClass').textContent = 'Kelas ' + (r.kelas || '-');
+
+      // Status pill
+      const rawKelM = (r.status_kelulusan || r.status || '').toLowerCase().replace(/\s+/g,'_');
+      const kelulusanClassM = rawKelM.includes('lolos') && !rawKelM.includes('tidak') ? 'lolos' : rawKelM.includes('tidak') ? 'tidak_lolos' : 'pending';
+      const kelulusanLabelM = r.status_kelulusan || r.status || 'Sudah Direview';
+      document.getElementById('rekapModalStatusPill').innerHTML =
+        `<span class="rekap-status-kelulusan ${kelulusanClassM}">${statusKelulusanIcon(kelulusanClassM)} ${escHtml(kelulusanLabelM)}</span>`;
+
+      // Divisi pilihan + status berkas
+      const divisiPilihan = parseDivisiPilihan(r.divisi_pilihan || '');
+      const divisiStatusBerkas = r.divisi_status_berkas || {};
+      const gridHtml = divisiPilihan.length > 0
+        ? divisiPilihan.map(div => {
+            const key = div.toLowerCase();
+            const status = divisiStatusBerkas[key] || 'pending';
+            const label = statusBerkasLabel(status);
+            return `<div class="rekap-modal-divisi-item">
+              <div class="rekap-modal-divisi-name">${escHtml(capitalize(div))}</div>
+              <div class="rekap-modal-divisi-status rekap-divisi-tag-item ${status}">${label}</div>
+            </div>`;
+          }).join('')
+        : '<p style="color:var(--muted);font-size:13px">—</p>';
+      document.getElementById('rekapModalDivisiGrid').innerHTML = gridHtml;
+
+      // Divisi pewawancara
+      document.getElementById('rekapModalWwcDivisi').textContent = r.divisi_pewawancara || '-';
+
+      // Review
+      document.getElementById('rekapModalReview').textContent = r.catatan || r.review || 'Tidak ada catatan';
+
+      document.getElementById('rekapModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRekapModal() {
+      document.getElementById('rekapModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function closeRekapModalOnBackdrop(e) {
+      if (e.target === e.currentTarget) closeRekapModal();
     }
 
     let toastTimer = null;
