@@ -15,6 +15,11 @@
         .hide { display: none; }
         .animate-fade { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Validasi */
+        .field-error { border-color: #ef4444 !important; ring-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,0.25) !important; }
+        .error-msg { color: #ef4444; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; display: flex; align-items: center; gap: 5px; }
+        .rating-error-box { border: 2px solid #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,0.25); border-radius: 1rem; }
     </style>
 </head>
 <body class="pb-10">
@@ -68,12 +73,13 @@
 
             <form id="interviewForm" class="space-y-8">
                 <div class="space-y-3">
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-[0.2em]">Hasil Review Keseluruhan</label>
-                    <textarea id="overallReview" required class="w-full bg-[#161616] border border-gray-800 rounded-3xl p-6 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[250px] text-lg leading-relaxed shadow-inner placeholder:text-gray-700" placeholder="Tuliskan hasil wawancara, kelebihan, kekurangan..."></textarea>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-[0.2em]">Hasil Review Keseluruhan <span class="text-red-500">*</span></label>
+                    <textarea id="overallReview" class="w-full bg-[#161616] border border-gray-800 rounded-3xl p-6 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[250px] text-lg leading-relaxed shadow-inner placeholder:text-gray-700" placeholder="Tuliskan hasil wawancara, kelebihan, kekurangan..."></textarea>
+                    <div id="reviewError" class="error-msg hide">⚠ Review wajib diisi sebelum menyimpan</div>
                 </div>
 
-                <div class="bg-[#111] p-8 rounded-[2rem] border border-gray-800 space-y-6 shadow-2xl">
-                    <h3 class="text-center font-black italic uppercase tracking-widest text-[10px] text-gray-500">Rekomendasi Akhir</h3>
+                <div id="ratingBox" class="bg-[#111] p-8 rounded-[2rem] border border-gray-800 space-y-6 shadow-2xl">
+                    <h3 class="text-center font-black italic uppercase tracking-widest text-[10px] text-gray-500">Rekomendasi Akhir <span class="text-red-500">*</span></h3>
                     <div class="flex gap-4">
                         <label class="flex-1 cursor-pointer group">
                             <input type="radio" name="rating" value="S" class="sr-only peer">
@@ -88,6 +94,7 @@
                             <div class="h-20 flex items-center justify-center font-black text-[11px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-red-500 peer-checked:text-black border-red-900/20 bg-[#1a1a1a] group-hover:bg-[#222]">TDK SETUJU</div>
                         </label>
                     </div>
+                    <div id="ratingError" class="error-msg hide">⚠ Pilih salah satu rekomendasi akhir</div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 pb-12">
@@ -214,9 +221,40 @@
 
         document.getElementById('interviewForm').onsubmit = async (e) => {
             e.preventDefault();
-            const rating = document.querySelector('input[name="rating"]:checked');
-            if (!rating) return alert("Harap pilih rating rekomendasi!");
 
+            const reviewEl = document.getElementById('overallReview');
+            const reviewVal = reviewEl.value.trim();
+            const ratingEl  = document.querySelector('input[name="rating"]:checked');
+            const reviewErr = document.getElementById('reviewError');
+            const ratingErr = document.getElementById('ratingError');
+            const ratingBox = document.getElementById('ratingBox');
+
+            // --- Reset error state ---
+            reviewEl.classList.remove('field-error');
+            reviewErr.classList.add('hide');
+            ratingBox.classList.remove('rating-error-box');
+            ratingErr.classList.add('hide');
+
+            // --- Validasi ---
+            let valid = true;
+
+            if (!reviewVal) {
+                reviewEl.classList.add('field-error');
+                reviewErr.classList.remove('hide');
+                reviewEl.focus();
+                valid = false;
+            }
+
+            if (!ratingEl) {
+                ratingBox.classList.add('rating-error-box');
+                ratingErr.classList.remove('hide');
+                if (valid) ratingBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            // --- Simpan ---
             const btn = document.getElementById('btnSubmit');
             const originalText = btn.innerText;
             btn.disabled = true;
@@ -225,29 +263,23 @@
             const payload = {
                 action: 'saveInterview',
                 data: {
-                    nama: selectedCand.nama,
-                    divisi: selectedCand.divisi,
-                    catatan: document.getElementById('overallReview').value,
-                    rating: rating.value,
+                    nama:    selectedCand.nama,
+                    divisi:  selectedCand.divisi,
+                    catatan: reviewVal,
+                    rating:  ratingEl.value,
                     jawaban: {}
                 }
             };
 
             try {
-                // Post ke GAS
                 await fetch(API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify(payload)
                 });
 
-                // BERHASIL: Update data lokal secara instan
-                // Hapus kandidat saat ini dari daftar utama
                 candidates = candidates.filter(c => c.nama !== selectedCand.nama);
-                
                 alert("Data berhasil tersimpan!");
-                
-                // Kembali ke daftar kandidat tanpa reload
                 showCandidates(selectedDiv);
 
             } catch (err) {
@@ -257,6 +289,16 @@
                 btn.innerText = originalText;
             }
         };
+
+        // Hapus error saat user mulai mengetik / memilih
+        document.getElementById('overallReview').addEventListener('input', () => {
+            document.getElementById('overallReview').classList.remove('field-error');
+            document.getElementById('reviewError').classList.add('hide');
+        });
+        document.querySelectorAll('input[name="rating"]').forEach(r => r.addEventListener('change', () => {
+            document.getElementById('ratingBox').classList.remove('rating-error-box');
+            document.getElementById('ratingError').classList.add('hide');
+        }));
 
         document.getElementById('btnCancel').onclick = () => {
             if(confirm("Batalkan pengisian?")) showCandidates(selectedDiv);
