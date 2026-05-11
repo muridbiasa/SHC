@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +16,7 @@
         .animate-fade { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Validasi */
-        .field-error { border-color: #ef4444 !important; ring-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,0.25) !important; }
+        .field-error { border-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,0.25) !important; }
         .error-msg { color: #ef4444; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; display: flex; align-items: center; gap: 5px; }
         .rating-error-box { border: 2px solid #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,0.25); border-radius: 1rem; }
     </style>
@@ -41,9 +40,7 @@
                 <h2 class="text-3xl font-bold">Pilih Divisi</h2>
                 <p class="text-gray-500">Pilih divisi yang sedang Anda wawancarai.</p>
             </div>
-            <div id="divisionGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- Diisi via JS -->
-            </div>
+            <div id="divisionGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
         </div>
 
         <!-- SCREEN 2: DAFTAR KANDIDAT -->
@@ -53,9 +50,7 @@
                 <h2 class="text-3xl font-bold">Kandidat</h2>
                 <p class="text-gray-500">Klik nama untuk memulai wawancara.</p>
             </div>
-            <div id="candidateList" class="space-y-3">
-                <!-- Diisi via JS -->
-            </div>
+            <div id="candidateList" class="space-y-3"></div>
         </div>
 
         <!-- SCREEN 3: FORM INTERVIEW -->
@@ -66,7 +61,9 @@
                 </div>
                 <div class="space-y-2">
                     <h2 id="formNama" class="text-3xl font-black italic uppercase tracking-tighter leading-none text-white">Nama</h2>
-                    <div id="formKelas" class="text-gray-400 font-medium">Kelas</div>
+                    <!-- FIX: Tampilkan DIVISI dari Master Kandidat kolom C -->
+                    <div id="formDivisiText" class="text-rose-400 font-bold uppercase tracking-wider text-sm">DIVISI</div>
+                    <div id="formKelasText" class="text-gray-500 text-xs">Kelas</div>
                     <div id="formDivisiBadge" class="inline-block px-4 py-1.5 mt-2 bg-rose-600 text-white text-[11px] font-black uppercase rounded-full shadow-lg shadow-rose-900/40">DIVISI</div>
                 </div>
             </div>
@@ -106,7 +103,6 @@
     </main>
 
     <script>
-        // GANTI API_URL INI DENGAN URL DEPLOY SCRIPT ANDA
         const API_URL = "https://script.google.com/macros/s/AKfycbwMqFdsMWmo03OUC6HA0mLw2ih6gHw3VQrmfQ71FbTqXcr-a3vnBICcld4_t4k5Cr-qhw/exec";
         const PLACEHOLDER = 'https://placehold.co/300x400/1a1a1a/cccccc?text=No+Photo';
 
@@ -114,11 +110,8 @@
         let selectedDiv = "";
         let selectedCand = null;
 
+        // Daftar divisi sesuai Master Kandidat kolom C
         const DIVISIONS = ["ACARA & MC", "KONSUMSI", "DESAIN", "DOKUMENTASI", "PROMOSI", "DANA USAHA", "DEKORASI", "KEAMANAN", "PERLENGKAPAN", "P3K", "SEKRETARIS/BENDAHARA", "AKOMODASI", "ART GALLERY"];
-
-        // =====================================================================
-        // CORE LOGIC
-        // =====================================================================
 
         async function init() {
             renderDivisionButtons();
@@ -130,8 +123,14 @@
             try {
                 const res = await fetch(`${API_URL}?action=getCandidates`);
                 candidates = await res.json();
+                // DEBUG: Cek struktur data dari API
+                console.log("Total candidates:", candidates.length);
+                if (candidates.length > 0) {
+                    console.log("Sample candidate data:", candidates[0]);
+                    console.log("Divisi sample:", candidates[0].divisi);
+                }
             } catch (e) {
-                console.error("Gagal memuat data kandidat.");
+                console.error("Gagal memuat data kandidat:", e);
             }
         }
 
@@ -154,7 +153,13 @@
 
         function showCandidates(div) {
             selectedDiv = div;
-            const filtered = candidates.filter(c => c.divisi === div);
+            // FIX: Filter berdasarkan kolom 'divisi' dari Master Kandidat (kolom C / index 2 di GS)
+            const filtered = candidates.filter(c => {
+                const candDiv = String(c.divisi || "").toUpperCase().trim();
+                return candDiv === div.toUpperCase().trim();
+            });
+            
+            console.log("Mencari divisi:", div, "Ditemukan:", filtered.length);
             
             document.getElementById('currentDivName').innerText = div;
             const list = document.getElementById('candidateList');
@@ -168,13 +173,21 @@
                 filtered.forEach(c => {
                     const btn = document.createElement('button');
                     btn.className = "w-full flex items-center gap-4 p-4 dark-card rounded-2xl hover:border-gray-500 transition-all text-left group animate-fade";
+                    
+                    // FIX: Tampilkan DIVISI (bukan kelas) sesuai permintaan
+                    const divisiDisplay = c.divisi || '-';
+                    const kelasDisplay = c.kelas || '-';
+                    const ruanganDisplay = c.ruangan || '-';
+                    
                     btn.innerHTML = `
                         <div class="w-12 h-16 flex-shrink-0 bg-[#1e1e1e] rounded-lg overflow-hidden border border-gray-800">
                             <img src="${c.foto || PLACEHOLDER}" class="w-full h-full object-cover" onerror="this.src='${PLACEHOLDER}'">
                         </div>
                         <div>
                             <div class="font-bold leading-tight group-hover:text-white transition-colors uppercase tracking-tighter">${c.nama}</div>
-                            <div class="text-[10px] text-gray-500 font-medium uppercase mt-1">${c.kelas} • ${c.ruangan || '-'}</div>
+                            <div class="text-[10px] font-medium uppercase mt-1">
+                                <span class="text-rose-400 font-bold">${divisiDisplay}</span> • ${kelasDisplay} • ${ruanganDisplay}
+                            </div>
                         </div>
                     `;
                     btn.onclick = () => showForm(c);
@@ -188,8 +201,19 @@
             selectedCand = c;
             document.getElementById('formFoto').src = c.foto || PLACEHOLDER;
             document.getElementById('formNama').innerText = c.nama;
-            document.getElementById('formKelas').innerText = c.kelas;
-            document.getElementById('formDivisiBadge').innerText = "DIVISI: " + c.divisi;
+            
+            // FIX: Pisahkan tampilan DIVISI dan KELAS dengan jelas
+            const divisi = String(c.divisi || c.kelas || '-').trim();
+            const kelas = String(c.kelas || '-').trim();
+            
+            // Tampilkan DIVISI di teks utama (warna rose sesuai badge)
+            document.getElementById('formDivisiText').innerText = divisi.toUpperCase();
+            // Tampilkan KELAS di teks secondary
+            document.getElementById('formKelasText').innerText = kelas ? 'Kelas ' + kelas : '';
+            // Badge divisi
+            document.getElementById('formDivisiBadge').innerText = divisi.toUpperCase();
+            
+            // Reset form
             document.getElementById('overallReview').value = "";
             document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
             goToScreen('screenForm');
@@ -201,7 +225,6 @@
             });
             document.getElementById(screenId).classList.remove('hide');
             
-            // Header back button logic
             const btnBack = document.getElementById('btnBack');
             if (screenId === 'screenDivisions') {
                 btnBack.classList.add('hide');
@@ -215,10 +238,6 @@
             window.scrollTo(0,0);
         }
 
-        // =====================================================================
-        // SAVE ACTION (MODIFIED - NO REFRESH)
-        // =====================================================================
-
         document.getElementById('interviewForm').onsubmit = async (e) => {
             e.preventDefault();
 
@@ -229,13 +248,11 @@
             const ratingErr = document.getElementById('ratingError');
             const ratingBox = document.getElementById('ratingBox');
 
-            // --- Reset error state ---
             reviewEl.classList.remove('field-error');
             reviewErr.classList.add('hide');
             ratingBox.classList.remove('rating-error-box');
             ratingErr.classList.add('hide');
 
-            // --- Validasi ---
             let valid = true;
 
             if (!reviewVal) {
@@ -254,22 +271,53 @@
 
             if (!valid) return;
 
-            // --- Simpan ---
             const btn = document.getElementById('btnSubmit');
             const originalText = btn.innerText;
             btn.disabled = true;
             btn.innerText = "MENYIMPAN...";
 
+            // ✅ PAYLOAD YANG BENAR - Kirim DIVISI ke field 'kelas' agar masuk kolom C di sheet
             const payload = {
                 action: 'saveInterview',
                 data: {
+                    // Data kandidat dari selectedCand
                     nama:    selectedCand.nama,
-                    divisi:  selectedCand.divisi,
-                    catatan: reviewVal,
-                    rating:  ratingEl.value,
+                    
+                    // ⚠️ PENTING: Kirim DIVISI (bukan kelas akademik) ke field 'kelas'
+                    // Karena di sheet "Rekap Wawancara", kolom [2] = "Kelas" akan kita pakai untuk filter divisi
+                    kelas:   selectedCand.divisi || selectedCand.kelas || '-',
+                    
+                    // Backup: kirim juga field 'divisi' terpisah (untuk keamanan)
+                    divisi:  selectedCand.divisi || selectedCand.kelas || '-',
+                    
+                    // Status interview: S / RR / TS (dari radio button name="rating")
+                    status:  ratingEl.value,
+                    
+                    // Review wajib diisi
+                    review:  reviewVal,
+                    catatan: reviewVal,  // fallback field
+                    
+                    // Optional fields (jika ada)
+                    umum1: '',
+                    umum2: '',
+                    umum3: '',
+                    divisi1: '',
+                    divisi2: '',
+                    divisi3: '',
+                    skor_sikap: '',
+                    skor_kompetensi: '',
+                    status_kelulusan: '',
                     jawaban: {}
                 }
             };
+
+            // 🔍 DEBUG: Log payload sebelum dikirim
+            console.log('📤 Sending payload:', JSON.stringify(payload, null, 2));
+            console.log('📋 Debug info:');
+            console.log('  - selectedCand.divisi:', selectedCand.divisi);
+            console.log('  - selectedCand.kelas:', selectedCand.kelas);
+            console.log('  - payload.data.kelas:', payload.data.kelas);
+            console.log('  - payload.data.status:', payload.data.status);
 
             try {
                 await fetch(API_URL, {
@@ -278,6 +326,7 @@
                     body: JSON.stringify(payload)
                 });
 
+                // Hapus kandidat yang sudah diwawancara agar tidak muncul lagi
                 candidates = candidates.filter(c => c.nama !== selectedCand.nama);
                 alert("Data berhasil tersimpan!");
                 showCandidates(selectedDiv);
@@ -290,7 +339,6 @@
             }
         };
 
-        // Hapus error saat user mulai mengetik / memilih
         document.getElementById('overallReview').addEventListener('input', () => {
             document.getElementById('overallReview').classList.remove('field-error');
             document.getElementById('reviewError').classList.add('hide');
