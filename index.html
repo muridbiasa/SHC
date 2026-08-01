@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Review Kandidat SHC 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg: #0f0f13;
@@ -21,78 +22,399 @@
       --radius: 12px
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px }
-    .container { max-width: 700px; margin: 0 auto }
-    .header { text-align: center; margin-bottom: 24px }
-    .header h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px }
-    .header p { font-size: 13px; color: var(--muted) }
-    
-    .back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px }
-    .back-btn:active { transform: scale(0.96) }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s }
-    .card:hover { border-color: var(--accent); transform: translateY(-2px) }
-    .card:active { transform: scale(0.96) }
-    .card-icon { font-size: 28px; margin-bottom: 8px }
-    .card-name { font-size: 13px; font-weight: 600 }
-    
-    .progress { background: var(--card); border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center }
-    .progress-text { font-size: 12px; color: var(--muted); margin-bottom: 8px }
-    .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden }
-    .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s }
-    
-    .candidate-photo { width: 100%; height: auto; max-height: 350px; object-fit: contain; border-radius: var(--radius); margin-bottom: 16px; background: var(--card); border: 1px solid var(--border) }
-    .candidate-photo.placeholder { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--muted) }
-    
-    .info-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px }
-    .info-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 8px }
-    .info-text { font-size: 14px; line-height: 1.5 }
-    
-    .questions-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px }
-    .questions-title { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px }
-    .question-item { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border) }
-    .question-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none }
-    .question-number { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px }
-    .question-text { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4 }
-    .question-answer { font-size: 13px; color: var(--muted); line-height: 1.5; padding: 8px 12px; background: var(--surface); border-radius: 6px }
-    .question-answer.empty { font-style: italic; color: var(--muted); opacity: 0.7 }
-    
-    .rating-section { margin-top: 20px }
-    .rating-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; text-align: center }
-    .rating-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px }
-    .rating-btn { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s }
-    .rating-btn.selected { border-color: var(--accent); background: rgba(124, 107, 255, 0.1) }
-    .rating-btn:active { transform: scale(0.96) }
-    .rating-stars { font-size: 18px; margin-bottom: 4px }
-    .rating-label { font-size: 12px; font-weight: 600 }
-    
-    .comment-box { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; color: var(--text); font-family: inherit; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 8px }
-    .comment-box:focus { outline: none; border-color: var(--accent) }
-    .char-count { text-align: right; font-size: 12px; color: var(--muted); margin-bottom: 16px }
-    .char-count.valid { color: var(--success) }
-    .char-count.invalid { color: var(--warning) }
-    
-    .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
-    .btn { padding: 12px; border: none; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s }
-    .btn:active { transform: scale(0.96) }
-    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border) }
-    .btn-primary { background: var(--accent); color: white }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed }
-    
-    .empty { text-align: center; padding: 40px 20px }
-    .empty-icon { font-size: 48px; margin-bottom: 12px }
-    .empty-text { color: var(--muted); margin-bottom: 20px }
-    
-    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border: 1px solid var(--border); padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 9999 }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1 }
-    .toast.success { border-left: 4px solid var(--success); color: var(--success) }
-    .toast.error { border-left: 4px solid var(--error); color: var(--error) }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px
+    }
+
+    .back-btn:active {
+      transform: scale(0.96)
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px)
+    }
+
+    .card:active {
+      transform: scale(0.96)
+    }
+
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 8px
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 600
+    }
+
+    .progress {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+      text-align: center
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s
+    }
+
+    .candidate-photo {
+      width: 100%;
+      height: auto;
+      max-height: 350px;
+      object-fit: contain;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      background: var(--card);
+      border: 1px solid var(--border)
+    }
+
+    .candidate-photo.placeholder {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: var(--muted)
+    }
+
+    .info-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px
+    }
+
+    .info-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px
+    }
+
+    .info-text {
+      font-size: 14px;
+      line-height: 1.5
+    }
+
+    .questions-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px
+    }
+
+    .questions-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .question-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .question-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none
+    }
+
+    .question-number {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px
+    }
+
+    .question-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.4
+    }
+
+    .question-answer {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-radius: 6px
+    }
+
+    .question-answer.empty {
+      font-style: italic;
+      color: var(--muted);
+      opacity: 0.7
+    }
+
+    .rating-section {
+      margin-top: 20px
+    }
+
+    .rating-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center
+    }
+
+    .rating-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px
+    }
+
+    .rating-btn {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .rating-btn.selected {
+      border-color: var(--accent);
+      background: rgba(124, 107, 255, 0.1)
+    }
+
+    .rating-btn:active {
+      transform: scale(0.96)
+    }
+
+    .rating-stars {
+      font-size: 18px;
+      margin-bottom: 4px
+    }
+
+    .rating-label {
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .comment-box {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+      margin-bottom: 8px
+    }
+
+    .comment-box:focus {
+      outline: none;
+      border-color: var(--accent)
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px
+    }
+
+    .char-count.valid {
+      color: var(--success)
+    }
+
+    .char-count.invalid {
+      color: var(--warning)
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .btn {
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .btn:active {
+      transform: scale(0.96)
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border)
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px
+    }
+
+    .empty-text {
+      color: var(--muted);
+      margin-bottom: 20px
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 9999
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--success);
+      color: var(--success)
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--error);
+      color: var(--error)
+    }
 
     @media(max-width:640px) {
-      .rating-grid, .btn-group { grid-template-columns: 1fr }
-      .candidate-photo { max-height: 400px }
+
+      .rating-grid,
+      .btn-group {
+        grid-template-columns: 1fr
+      }
+
+      .candidate-photo {
+        max-height: 400px
+      }
     }
   </style>
 </head>
@@ -125,42 +447,42 @@
       <div id="candidateContent"></div>
     </div>
   </div>
-  
+
   <div class="toast" id="toast"></div>
 
   <script>
     // ⚠️ PENTING: Ganti URL di bawah ini dengan URL Web App Google Apps Script kamu yang TERBARU!
-    const API_BASE = "https://script.google.com/macros/s/AKfycbwMqFdsMWmo03OUC6HA0mLw2ih6gHw3VQrmfQ71FbTqXcr-a3vnBICcld4_t4k5Cr-qhw/exec";
-    
+    const API_BASE = "https://script.google.com/macros/s/AKfycbwZsfqXZHSSDZT2Sj4lDUSDY-ru-wQD_4VKyC-sED2Lat_3Vze-qlUgxBPfGTvVY1VB/exec";
+
     // Daftar pertanyaan (index dimulai dari 0)
     const QUESTIONS = [
-      "Cap Waktu", "Nama Lengkap", "Kelas", "Tanggal Lahir", "Nomor HP", 
-      "Apa tujuanmu mengikuti pendaftaran kepanitiaan SHC ini?", 
-      "Sebutkan kekurangan serta kelebihanmu dalam hal sikap maupun sifat!", 
-      "Bila terdapat seseorang yang memiliki pendapat yang berbeda denganmu, bagaimana tanggapanmu?", 
-      "Adakah pengalaman dalam berorganisasi? Jika sudah pernah sebutkanlah!", 
-      "Pernahkah melakukan sesuatu kesalahan selama bekerja sama dengan orang lain? Bagaimana caramu mempertanggungjawabkan kesalahan tersebut?", 
-      "Apa solusimu apabila jadwal pribadimu bertabrakan dengan jadwal SHC nantinya? Jelaskan!", 
-      "Apakah orang tua atau wali sudah memberikan perizinan untuk mengikuti kepanitiaan ini? Adakah batasan jam malam dari orang tua? Sebutkan!", 
-      "Pilihlah divisi yang Anda inginkan (minimal 1, maksimal 3 divisi). Tugas divisi KLIK AKU", 
-      "Manakah divisi yang lebih kamu prioritaskan diantara semua divisi yang kamu pilih? Mengapa?", 
-      "Sebutkan skill yang bisa mendukung kamu untuk bergabung dengan divisi yang kamu inginkan! (Sebutkan setiap divisi apabila memilih divisi lebih dari 1)", 
-      "Silahkan download lembar pernyataan KLIK AKU, lalu isi dengan tanda tangan yang telah discan, pastikan telah terisi semua lalu upload kembali dengan format yang sama!", 
-      "Foto 3x4", 
-      "Mengapa anda memilih 3 jobdesc tersebut?", 
-      "Apakah kamu bersedia menginap di sekolah apabila masih banyak persiapan yang perlu dilakukan?", 
+      "Cap Waktu", "Nama Lengkap", "Kelas", "Tanggal Lahir", "Nomor HP",
+      "Apa tujuanmu mengikuti pendaftaran kepanitiaan SHC ini?",
+      "Sebutkan kekurangan serta kelebihanmu dalam hal sikap maupun sifat!",
+      "Bila terdapat seseorang yang memiliki pendapat yang berbeda denganmu, bagaimana tanggapanmu?",
+      "Adakah pengalaman dalam berorganisasi? Jika sudah pernah sebutkanlah!",
+      "Pernahkah melakukan sesuatu kesalahan selama bekerja sama dengan orang lain? Bagaimana caramu mempertanggungjawabkan kesalahan tersebut?",
+      "Apa solusimu apabila jadwal pribadimu bertabrakan dengan jadwal SHC nantinya? Jelaskan!",
+      "Apakah orang tua atau wali sudah memberikan perizinan untuk mengikuti kepanitiaan ini? Adakah batasan jam malam dari orang tua? Sebutkan!",
+      "Pilihlah divisi yang Anda inginkan (minimal 1, maksimal 3 divisi). Tugas divisi KLIK AKU",
+      "Manakah divisi yang lebih kamu prioritaskan diantara semua divisi yang kamu pilih? Mengapa?",
+      "Sebutkan skill yang bisa mendukung kamu untuk bergabung dengan divisi yang kamu inginkan! (Sebutkan setiap divisi apabila memilih divisi lebih dari 1)",
+      "Silahkan download lembar pernyataan KLIK AKU, lalu isi dengan tanda tangan yang telah discan, pastikan telah terisi semua lalu upload kembali dengan format yang sama!",
+      "Foto 3x4",
+      "Mengapa anda memilih 3 jobdesc tersebut?",
+      "Apakah kamu bersedia menginap di sekolah apabila masih banyak persiapan yang perlu dilakukan?",
       "UPLOAD DI SINI!"
     ];
-    
+
     // Index pertanyaan yang ingin ditampilkan di layar review
     const QUESTIONS_TO_SHOW = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18];
-    
+
     let currentDivisi = null, candidates = [], currentIndex = 0, selectedRating = null;
-    const RATING_MAP = { 
-      1: { stars: '⭐', label: 'KURANG' }, 
-      2: { stars: '⭐⭐', label: 'RAGU-RAGU' }, 
-      3: { stars: '⭐⭐⭐', label: 'BAIK' }, 
-      4: { stars: '⭐⭐⭐⭐', label: 'BAGUS' } 
+    const RATING_MAP = {
+      1: { stars: '⭐', label: 'KURANG' },
+      2: { stars: '⭐⭐', label: 'RAGU-RAGU' },
+      3: { stars: '⭐⭐⭐', label: 'BAIK' },
+      4: { stars: '⭐⭐⭐⭐', label: 'BAGUS' }
     };
 
     // ⚡ HELPER: SessionStorage cache untuk mempercepat loading
@@ -192,12 +514,12 @@
         if (!data) {
           const res = await fetch(API_BASE + '?action=getDivisions');
           if (!res.ok) throw new Error(`Gagal memuat data (Status: ${res.status})`);
-          
+
           const contentType = res.headers.get("content-type");
           if (!contentType || !contentType.includes("application/json")) {
             throw new Error("Backend mengembalikan format HTML, bukan JSON. Periksa log Google Apps Script.");
           }
-          
+
           data = await res.json();
           if (data.success) setCache('divisions', data);
         }
@@ -211,7 +533,7 @@
 
     function renderDivisions(divisions) {
       const icons = { 'acara': '🎭', 'sekretaris': '📝', 'bendahara': '💰', 'perlengkapan': '🔧', 'keamanan': '🛡️', 'konsumsi': '🍽️', 'dana': '💵', 'promosi': '📢', 'dokumentasi': '📷', 'dekorasi': '🎨', 'desain': '✏️', 'art galery': '🖼️', 'akomodasi': '🏨', 'p3k': '🩹', 'mc': '🎤' };
-      
+
       document.getElementById('divisionGrid').innerHTML = divisions.map(d =>
         `<div class="card" onclick="selectDivision('${d.id}','${d.name}')">
           <div class="card-icon">${icons[d.id] || '📋'}</div>
@@ -244,17 +566,17 @@
         if (!data) {
           const res = await fetch(API_BASE + '?action=getDataByDivisi&divisi=' + encodeURIComponent(currentDivisi.id));
           if (!res.ok) throw new Error(`Gagal memuat kandidat (Status: ${res.status})`);
-          
+
           const contentType = res.headers.get("content-type");
           if (!contentType || !contentType.includes("application/json")) {
             throw new Error("Backend mengembalikan format HTML, bukan JSON. Periksa log Google Apps Script.");
           }
-          
+
           data = await res.json();
           if (data.success) setCache('divisi_' + currentDivisi.id, data);
         }
         if (!data.success) throw new Error(data.error || "Data kandidat kosong");
-        
+
         candidates = data.data || [];
         currentIndex = 0;
         renderCandidate();
@@ -273,14 +595,14 @@
       }
 
       const c = candidates[currentIndex];
-      
+
       // Fallback mapping agar tidak error jika backend mengirim key yang sedikit berbeda
       const nama = c.nama || c["Nama Lengkap"] || "Tidak Diketahui";
       const kelas = c.kelas || c["Kelas"] || "-";
       const prioritas = c.prioritas || c["Divisi Prioritas"] || "-";
       const fotoRaw = c.foto || c["Foto 3x4"] || "";
       const rowIndex = c.rowIndex || c["Row Index"] || (currentIndex + 2);
-      
+
       const fotoUrl = convertDriveUrl(fotoRaw);
       const progress = ((currentIndex + 1) / candidates.length) * 100;
 
@@ -293,7 +615,7 @@
           answer = c.answers[qIndex] || '-';
         } else {
           // Fallback jika data berbentuk flat object (sesuaikan string-nya dengan header sheet)
-          answer = c[QUESTIONS[qIndex]] || '-'; 
+          answer = c[QUESTIONS[qIndex]] || '-';
         }
 
         return `<div class="question-item">
@@ -320,11 +642,11 @@
           <div class="rating-title">😐 Beri Rating</div>
           <div class="rating-grid">
             ${Object.entries(RATING_MAP).map(([val, conf]) =>
-              `<div class="rating-btn" data-val="${val}" onclick="pickRating(${val})">
+          `<div class="rating-btn" data-val="${val}" onclick="pickRating(${val})">
                 <div class="rating-stars">${conf.stars}</div>
                 <div class="rating-label">${conf.label}</div>
               </div>`
-            ).join('')}
+        ).join('')}
           </div>
           <textarea class="comment-box" id="commentBox" placeholder="Alasan rating (wajib min. 100 karakter)..." oninput="checkComment()"></textarea>
           <div class="char-count invalid" id="charCount">0 / 100 karakter</div>
@@ -384,10 +706,10 @@
       try {
         const res = await fetch(API_BASE, { method: 'POST', body: params, cache: 'no-store' });
         if (!res.ok) throw new Error(`Gagal menyimpan (Status: ${res.status})`);
-        
+
         const contentType = res.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
-           throw new Error("Respon server tidak valid (bukan JSON).");
+          throw new Error("Respon server tidak valid (bukan JSON).");
         }
 
         const data = await res.json();
@@ -429,4 +751,5 @@
     }
   </script>
 </body>
+
 </html>
