@@ -1,326 +1,1570 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
   <meta name="theme-color" content="#0f0f13">
   <title>Dashboard Review SHC 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
-    :root{
-      --bg:#0a0a0f;--surface:#14141c;--surface-2:#1e1e2a;--card:#232330;
-      --border:#2a2a3a;--accent:#7c6bff;--accent-light:#9b8eff;
-      --text:#f0eeff;--text-secondary:#b8b5d0;--muted:#7a7794;
-      --star-1:#ff4757;--star-2:#ff9f43;--star-3:#2ed573;--star-4:#7c6bff;
-      --radius-md:12px;--radius-lg:16px;
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px)
+    :root {
+      --bg: #0a0a0f;
+      --surface: #14141c;
+      --surface-2: #1e1e2a;
+      --card: #232330;
+      --border: #2a2a3a;
+      --accent: #7c6bff;
+      --accent-light: #9b8eff;
+      --text: #f0eeff;
+      --text-secondary: #b8b5d0;
+      --muted: #7a7794;
+      --star-1: #ff4757;
+      --star-2: #ff9f43;
+      --star-3: #2ed573;
+      --star-4: #7c6bff;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px)
     }
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    html{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;font-size:14px}
-    body{background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
-    .dashboard{display:flex;min-height:100dvh}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    html {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      font-size: 14px
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden
+    }
+
+    .dashboard {
+      display: flex;
+      min-height: 100dvh
+    }
 
     /* ---- SIDEBAR ---- */
-    .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);padding:calc(20px + var(--safe-top)) 12px 20px;position:fixed;height:100dvh;overflow-y:auto;z-index:1000;left:0;top:0;transition:transform 0.3s ease}
-    .sidebar-header{padding:8px 8px 16px;border-bottom:1px solid var(--border);margin-bottom:16px}
-    .sidebar-logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent-light),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .sidebar-subtitle{font-size:11px;color:var(--muted)}
-    .sidebar-title{font-size:10px;font-weight:700;color:var(--muted);margin:10px 0;text-transform:uppercase;letter-spacing:0.8px;padding:0 8px}
-    .div-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;margin-bottom:4px;background:transparent;border:1px solid transparent;border-radius:var(--radius-md);color:var(--text-secondary);font-size:13px;font-weight:500;text-align:left;cursor:pointer;transition:all 0.2s ease;min-height:44px;font-family:inherit}
-    .div-btn:hover{background:rgba(124,107,255,0.08);color:var(--text)}
-    .div-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600}
-    .div-btn-icon{font-size:16px;flex-shrink:0}
-    .div-btn-config{margin-left:auto;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:4px}
-    .div-btn-config:hover{color:var(--accent)}
+    .sidebar {
+      width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: calc(20px + var(--safe-top)) 12px 20px;
+      position: fixed;
+      height: 100dvh;
+      overflow-y: auto;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      transition: transform 0.3s ease
+    }
 
-    .sidebar-count-badge{
-      background:rgba(124,107,255,0.2);
-      color:var(--accent-light);
-      font-size:11px;
-      font-weight:700;
-      padding:2px 7px;
-      border-radius:20px;
-      margin-left:auto;
-      min-width:24px;
-      text-align:center;
+    .sidebar-header {
+      padding: 8px 8px 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px
+    }
+
+    .sidebar-logo {
+      font-size: 18px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    .sidebar-subtitle {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .sidebar-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      margin: 10px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0 8px
+    }
+
+    .div-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 4px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      font-family: inherit
+    }
+
+    .div-btn:hover {
+      background: rgba(124, 107, 255, 0.08);
+      color: var(--text)
+    }
+
+    .div-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      font-weight: 600
+    }
+
+    .div-btn-icon {
+      font-size: 16px;
+      flex-shrink: 0
+    }
+
+    .div-btn-config {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    .div-btn-config:hover {
+      color: var(--accent)
+    }
+
+    .sidebar-count-badge {
+      background: rgba(124, 107, 255, 0.2);
+      color: var(--accent-light);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      margin-left: auto;
+      min-width: 24px;
+      text-align: center;
     }
 
     /* ---- MOBILE ---- */
-    .menu-toggle{display:none;position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:1100;width:48px;height:48px;background:var(--accent);border:none;border-radius:var(--radius-md);color:white;font-size:20px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,107,255,0.25)}
-    .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.3s ease}
-    .overlay.show{display:block;opacity:1}
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: calc(12px + var(--safe-top));
+      left: 12px;
+      z-index: 1100;
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(124, 107, 255, 0.25)
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease
+    }
+
+    .overlay.show {
+      display: block;
+      opacity: 1
+    }
 
     /* ---- MAIN ---- */
-    .main{margin-left:260px;flex:1;padding:calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom));min-height:100dvh}
-    .header{margin-bottom:24px}
-    .header h1{font-size:22px;font-weight:800}
-    .header p{color:var(--muted);font-size:13px;margin-top:8px}
+    .main {
+      margin-left: 260px;
+      flex: 1;
+      padding: calc(24px + var(--safe-top)) 24px calc(24px + var(--safe-bottom));
+      min-height: 100dvh
+    }
+
+    .header {
+      margin-bottom: 24px
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 800
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px
+    }
 
     /* ---- SEARCH ---- */
-    .search-wrapper{margin:16px 0 20px}
-    .search-box{position:relative;max-width:100%}
-    .search-input{width:100%;padding:10px 14px 10px 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:13px;transition:border-color 0.2s ease}
-    .search-input:focus{outline:none;border-color:var(--accent)}
-    .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
-    .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;display:none}
-    .search-clear.visible{display:block}
-    .search-hint{font-size:11px;color:var(--muted);margin-top:6px}
+    .search-wrapper {
+      margin: 16px 0 20px
+    }
+
+    .search-box {
+      position: relative;
+      max-width: 100%
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 14px 10px 36px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      transition: border-color 0.2s ease
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent)
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+      pointer-events: none
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      display: none
+    }
+
+    .search-clear.visible {
+      display: block
+    }
+
+    .search-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px
+    }
 
     /* ---- QUOTA TRACKER ---- */
-    .quota-tracker{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;margin-bottom:16px}
-    .quota-tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-    .quota-tracker-title{font-size:13px;font-weight:600;color:var(--text)}
-    .quota-tracker-bars{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .quota-bar{display:flex;flex-direction:column;gap:4px}
-    .quota-bar-label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
-    .quota-bar-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-    .quota-bar-fill{height:100%;background:var(--accent);transition:width 0.3s ease;border-radius:3px}
-    .quota-bar-fill.cadangan{background:var(--star-2)}
-    .quota-status{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
-    .quota-status.full{color:var(--star-3);font-weight:600}
+    .quota-tracker {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 16px
+    }
+
+    .quota-tracker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px
+    }
+
+    .quota-tracker-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .quota-tracker-bars {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .quota-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .quota-bar-label {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between
+    }
+
+    .quota-bar-progress {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .quota-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.3s ease;
+      border-radius: 3px
+    }
+
+    .quota-bar-fill.cadangan {
+      background: var(--star-2)
+    }
+
+    .quota-status {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: center
+    }
+
+    .quota-status.full {
+      color: var(--star-3);
+      font-weight: 600
+    }
 
     /* ---- STATS ---- */
-    .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px}
-    .stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}
-    .stat-value{font-size:24px;font-weight:800;color:var(--accent-light);margin-top:4px}
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent-light);
+      margin-top: 4px
+    }
 
     /* ---- CANDIDATE CARDS ---- */
-    .candidate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column;gap:0;cursor:pointer;transition:all 0.25s ease;position:relative;}
-    .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
-    .card:active{transform:scale(0.985)}
-    .card-main-row{display:flex;gap:14px;width:100%}
-    .card-photo{width:70px;height:90px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
-    .card-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:32px}
-    .card-info{flex:1;min-width:0}
-    .card-name{font-size:15px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .card-class{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
-    .card-divisi{font-size:11px;color:var(--muted)}
-    .rating-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-    .rating-item{background:var(--card);border-radius:8px;padding:8px 10px;border:1px solid var(--border)}
-    .rating-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-    .rating-badge{font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px}
-    .rating-badge[data-rating="1"]{background:rgba(255,71,87,0.15);color:var(--star-1)}
-    .rating-badge[data-rating="2"]{background:rgba(255,159,67,0.15);color:var(--star-2)}
-    .rating-badge[data-rating="3"]{background:rgba(46,213,115,0.15);color:var(--star-3)}
-    .rating-badge[data-rating="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
-    .rating-div{font-size:11px;font-weight:600;color:var(--text-secondary)}
-    .rating-reason{font-size:11px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
-    .card-status-row{
-      display:flex;align-items:center;gap:8px;
-      margin-top:12px;padding-top:10px;
-      border-top:1px solid var(--border);
-    }
-    .final-status-badge{
-      display:inline-flex;align-items:center;gap:5px;
-      padding:5px 12px;border-radius:20px;
-      font-size:11px;font-weight:800;letter-spacing:0.4px;
-    }
-    .final-status-badge.lolos{
-      background:rgba(46,213,115,0.15);color:var(--star-3);
-      border:1px solid rgba(46,213,115,0.35);
-    }
-    .final-status-badge.tidak_lolos{
-      background:rgba(255,71,87,0.15);color:var(--star-1);
-      border:1px solid rgba(255,71,87,0.35);
-    }
-    .manual-badge{
-      font-size:10px;font-weight:600;color:var(--muted);
-      background:var(--surface-2);border:1px solid var(--border);
-      padding:3px 7px;border-radius:4px;
+    .candidate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px
     }
 
-    .avg-score-chip{
-      display:inline-flex;align-items:center;gap:4px;
-      background:var(--surface-2);border:1px solid var(--border);
-      border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;
-      color:var(--text-secondary);margin-top:6px;
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
     }
-    .avg-score-chip .score-val{color:var(--accent-light)}
 
-    .selection-buttons{display:flex;gap:8px;margin-top:12px}
-    .btn-status{flex:1;padding:8px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit}
-    .btn-status:disabled{opacity:0.4;cursor:not-allowed}
-    .btn-terima{background:rgba(46,213,115,0.2);color:var(--star-3);border:1px solid var(--star-3)}
-    .btn-terima:hover:not(:disabled){background:var(--star-3);color:white}
-    .btn-cadangan{background:rgba(255,159,67,0.2);color:var(--star-2);border:1px solid var(--star-2)}
-    .btn-cadangan:hover:not(:disabled){background:var(--star-2);color:white}
-    .btn-tolak{background:rgba(255,71,87,0.2);color:var(--star-1);border:1px solid var(--star-1)}
-    .btn-tolak:hover:not(:disabled){background:var(--star-1);color:white}
-    .btn-status.active{font-weight:700;box-shadow:0 0 0 2px currentColor}
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(124, 107, 255, 0.15)
+    }
 
-    .loading,.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;color:var(--muted);text-align:center}
-    .spinner{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;margin-bottom:16px}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .card:active {
+      transform: scale(0.985)
+    }
+
+    .card-main-row {
+      display: flex;
+      gap: 14px;
+      width: 100%
+    }
+
+    .card-photo {
+      width: 70px;
+      height: 90px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border)
+    }
+
+    .card-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 32px
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .card-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .card-class {
+      font-size: 12px;
+      color: var(--accent-light);
+      font-weight: 600;
+      background: rgba(124, 107, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 6px
+    }
+
+    .card-divisi {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .rating-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px
+    }
+
+    .rating-item {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border)
+    }
+
+    .rating-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px
+    }
+
+    .rating-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px
+    }
+
+    .rating-badge[data-rating="1"] {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1)
+    }
+
+    .rating-badge[data-rating="2"] {
+      background: rgba(255, 159, 67, 0.15);
+      color: var(--star-2)
+    }
+
+    .rating-badge[data-rating="3"] {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3)
+    }
+
+    .rating-badge[data-rating="4"] {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--star-4)
+    }
+
+    .rating-div {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary)
+    }
+
+    .rating-reason {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden
+    }
+
+    .card-status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .final-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+
+    .final-status-badge.lolos {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3);
+      border: 1px solid rgba(46, 213, 115, 0.35);
+    }
+
+    .final-status-badge.tidak_lolos {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1);
+      border: 1px solid rgba(255, 71, 87, 0.35);
+    }
+
+    .manual-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 3px 7px;
+      border-radius: 4px;
+    }
+
+    .avg-score-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    .avg-score-chip .score-val {
+      color: var(--accent-light)
+    }
+
+    .selection-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .btn-status {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit
+    }
+
+    .btn-status:disabled {
+      opacity: 0.4;
+      cursor: not-allowed
+    }
+
+    .btn-terima {
+      background: rgba(46, 213, 115, 0.2);
+      color: var(--star-3);
+      border: 1px solid var(--star-3)
+    }
+
+    .btn-terima:hover:not(:disabled) {
+      background: var(--star-3);
+      color: white
+    }
+
+    .btn-cadangan {
+      background: rgba(255, 159, 67, 0.2);
+      color: var(--star-2);
+      border: 1px solid var(--star-2)
+    }
+
+    .btn-cadangan:hover:not(:disabled) {
+      background: var(--star-2);
+      color: white
+    }
+
+    .btn-tolak {
+      background: rgba(255, 71, 87, 0.2);
+      color: var(--star-1);
+      border: 1px solid var(--star-1)
+    }
+
+    .btn-tolak:hover:not(:disabled) {
+      background: var(--star-1);
+      color: white
+    }
+
+    .btn-status.active {
+      font-weight: 700;
+      box-shadow: 0 0 0 2px currentColor
+    }
+
+    .loading,
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      color: var(--muted);
+      text-align: center
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin-bottom: 16px
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
 
     /* ---- MODAL DETAIL ---- */
-    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s ease}
-    .modal-overlay.active{display:flex;opacity:1}
-    .modal-content{background:var(--surface);width:100%;max-width:680px;max-height:88dvh;border-radius:var(--radius-lg);display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,0.5);border:1px solid var(--border)}
-    .modal-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;flex-shrink:0}
-    .modal-close{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .modal-close:hover{background:var(--border)}
-    .modal-photo{width:72px;height:92px;border-radius:var(--radius-md);object-fit:cover;background:var(--card);flex-shrink:0;border:1px solid var(--border)}
-    .modal-photo.placeholder{display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted)}
-    .modal-title{font-size:18px;font-weight:800;line-height:1.3}
-    .modal-subtitle{font-size:13px;color:var(--accent-light);margin-top:4px;font-weight:600}
-    .modal-body{padding:20px;overflow-y:auto;flex:1}
-    .modal-section{margin-bottom:20px}
-    .modal-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:12px;letter-spacing:0.6px}
-    .modal-divisi-list{display:flex;flex-wrap:wrap;gap:8px}
-    .modal-divisi-tag{background:rgba(124,107,255,0.12);color:var(--accent-light);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600}
-    .modal-rating-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
-    .modal-rating-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .modal-rating-badge{font-size:13px;font-weight:800;padding:4px 10px;border-radius:6px}
-    .modal-rating-badge[data-rating="1"]{background:rgba(255,71,87,0.15);color:var(--star-1)}
-    .modal-rating-badge[data-rating="2"]{background:rgba(255,159,67,0.15);color:var(--star-2)}
-    .modal-rating-badge[data-rating="3"]{background:rgba(46,213,115,0.15);color:var(--star-3)}
-    .modal-rating-badge[data-rating="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
-    .modal-rating-divname{font-size:13px;font-weight:600;color:var(--text-secondary)}
-    .modal-rating-reason{font-size:13px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100dvh;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease
+    }
 
-    .modal-avg-block{
-      display:flex;align-items:center;gap:12px;
-      background:var(--card);border:1px solid var(--border);
-      border-radius:var(--radius-md);padding:14px;margin-bottom:16px;
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1
     }
-    .modal-avg-number{font-size:36px;font-weight:800;color:var(--accent-light)}
-    .modal-avg-label{font-size:12px;color:var(--muted)}
-    .modal-avg-sub{font-size:11px;color:var(--muted);margin-top:2px}
 
-    .modal-status-pill{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;
-      margin-top:8px;
+    .modal-content {
+      background: var(--surface);
+      width: 100%;
+      max-width: 680px;
+      max-height: 88dvh;
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border)
     }
-    .modal-status-pill.lolos{background:rgba(46,213,115,0.15);color:var(--star-3);border:1px solid rgba(46,213,115,0.3)}
-    .modal-status-pill.tidak_lolos{background:rgba(255,71,87,0.15);color:var(--star-1);border:1px solid rgba(255,71,87,0.3)}
-    .modal-status-pill.pending{background:rgba(255,159,67,0.1);color:var(--star-2);border:1px solid rgba(255,159,67,0.2)}
-    .modal-status-pill.manual-tag{font-size:10px;background:rgba(124,107,255,0.2);color:var(--accent-light);border-radius:4px;padding:2px 6px;margin-left:4px}
 
-    .final-action-box{
-      background:var(--surface-2);padding:18px;border-radius:var(--radius-md);
-      margin-top:16px;border:1px solid var(--border);
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      flex-shrink: 0
     }
-    .final-action-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
-    .final-action-desc{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5}
-    .final-buttons{display:flex;gap:12px}
-    .btn-final{
-      flex:1;padding:12px;border:2px solid transparent;border-radius:var(--radius-md);
-      font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;
-      font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;
-    }
-    .btn-final:disabled{opacity:0.5;cursor:not-allowed}
-    .btn-final-lolos{
-      background:rgba(46,213,115,0.15);color:var(--star-3);
-      border-color:rgba(46,213,115,0.4);
-    }
-    .btn-final-lolos:hover:not(:disabled){background:var(--star-3);color:white;border-color:var(--star-3)}
-    .btn-final-lolos.active{background:var(--star-3);color:white;border-color:var(--star-3);box-shadow:0 0 0 3px rgba(46,213,115,0.3)}
-    .btn-final-tolak{
-      background:rgba(255,71,87,0.15);color:var(--star-1);
-      border-color:rgba(255,71,87,0.4);
-    }
-    .btn-final-tolak:hover:not(:disabled){background:var(--star-1);color:white;border-color:var(--star-1)}
-    .btn-final-tolak.active{background:var(--star-1);color:white;border-color:var(--star-1);box-shadow:0 0 0 3px rgba(255,71,87,0.3)}
 
-    .divisi-action-box{
-      border-top:1px solid var(--border);margin-top:20px;padding-top:16px;
+    .modal-close {
+      margin-left: auto;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .modal-close:hover {
+      background: var(--border)
+    }
+
+    .modal-photo {
+      width: 72px;
+      height: 92px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      background: var(--card);
+      flex-shrink: 0;
+      border: 1px solid var(--border)
+    }
+
+    .modal-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: var(--muted)
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.3
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--accent-light);
+      margin-top: 4px;
+      font-weight: 600
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1
+    }
+
+    .modal-section {
+      margin-bottom: 20px
+    }
+
+    .modal-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 0.6px
+    }
+
+    .modal-divisi-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .modal-divisi-tag {
+      background: rgba(124, 107, 255, 0.12);
+      color: var(--accent-light);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .modal-rating-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px
+    }
+
+    .modal-rating-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px
+    }
+
+    .modal-rating-badge {
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px
+    }
+
+    .modal-rating-badge[data-rating="1"] {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1)
+    }
+
+    .modal-rating-badge[data-rating="2"] {
+      background: rgba(255, 159, 67, 0.15);
+      color: var(--star-2)
+    }
+
+    .modal-rating-badge[data-rating="3"] {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3)
+    }
+
+    .modal-rating-badge[data-rating="4"] {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--star-4)
+    }
+
+    .modal-rating-divname {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary)
+    }
+
+    .modal-rating-reason {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px
+    }
+
+    .modal-avg-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .modal-avg-number {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent-light)
+    }
+
+    .modal-avg-label {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .modal-avg-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .modal-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .modal-status-pill.lolos {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3);
+      border: 1px solid rgba(46, 213, 115, 0.3)
+    }
+
+    .modal-status-pill.tidak_lolos {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1);
+      border: 1px solid rgba(255, 71, 87, 0.3)
+    }
+
+    .modal-status-pill.pending {
+      background: rgba(255, 159, 67, 0.1);
+      color: var(--star-2);
+      border: 1px solid rgba(255, 159, 67, 0.2)
+    }
+
+    .modal-status-pill.manual-tag {
+      font-size: 10px;
+      background: rgba(124, 107, 255, 0.2);
+      color: var(--accent-light);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-left: 4px
+    }
+
+    .final-action-box {
+      background: var(--surface-2);
+      padding: 18px;
+      border-radius: var(--radius-md);
+      margin-top: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .final-action-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px
+    }
+
+    .final-action-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5
+    }
+
+    .final-buttons {
+      display: flex;
+      gap: 12px
+    }
+
+    .btn-final {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid transparent;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-final:disabled {
+      opacity: 0.5;
+      cursor: not-allowed
+    }
+
+    .btn-final-lolos {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3);
+      border-color: rgba(46, 213, 115, 0.4);
+    }
+
+    .btn-final-lolos:hover:not(:disabled) {
+      background: var(--star-3);
+      color: white;
+      border-color: var(--star-3)
+    }
+
+    .btn-final-lolos.active {
+      background: var(--star-3);
+      color: white;
+      border-color: var(--star-3);
+      box-shadow: 0 0 0 3px rgba(46, 213, 115, 0.3)
+    }
+
+    .btn-final-tolak {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1);
+      border-color: rgba(255, 71, 87, 0.4);
+    }
+
+    .btn-final-tolak:hover:not(:disabled) {
+      background: var(--star-1);
+      color: white;
+      border-color: var(--star-1)
+    }
+
+    .btn-final-tolak.active {
+      background: var(--star-1);
+      color: white;
+      border-color: var(--star-1);
+      box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.3)
+    }
+
+    .divisi-action-box {
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+      padding-top: 16px;
     }
 
     /* ---- QUOTA CONFIG MODAL ---- */
-    .modal-config{position:fixed;top:0;left:0;width:100%;height:100dvh;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}
-    .modal-config.active{display:flex}
-    .modal-config-content{background:var(--surface);width:100%;max-width:400px;border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border)}
-    .modal-config-title{font-size:16px;font-weight:700;margin-bottom:16px}
-    .config-input-group{margin-bottom:16px}
-    .config-input-label{font-size:12px;color:var(--muted);margin-bottom:6px;display:block}
-    .config-input{width:100%;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-family:inherit;font-size:14px}
-    .config-input:focus{outline:none;border-color:var(--accent)}
-    .config-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-    .btn{padding:10px 16px;border:none;border-radius:var(--radius-md);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
-    .btn:active{transform:scale(0.96)}
-    .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
-    .btn-primary{background:var(--accent);color:white}
+    .modal-config {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100dvh;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px
+    }
+
+    .modal-config.active {
+      display: flex
+    }
+
+    .modal-config-content {
+      background: var(--surface);
+      width: 100%;
+      max-width: 400px;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border)
+    }
+
+    .modal-config-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px
+    }
+
+    .config-input-group {
+      margin-bottom: 16px
+    }
+
+    .config-input-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: block
+    }
+
+    .config-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px
+    }
+
+    .config-input:focus {
+      outline: none;
+      border-color: var(--accent)
+    }
+
+    .config-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .btn:active {
+      transform: scale(0.96)
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border)
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white
+    }
 
     /* ---- TOAST ---- */
-    .toast{position:fixed;bottom:calc(20px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:9999;max-width:90vw;text-align:center}
-    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-    .toast.success{border-left:4px solid var(--star-3);color:var(--star-3)}
-    .toast.error{border-left:4px solid var(--star-1);color:var(--star-1)}
-    .toast.info{border-left:4px solid var(--accent);color:var(--accent-light)}
+    .toast {
+      position: fixed;
+      bottom: calc(20px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 9999;
+      max-width: 90vw;
+      text-align: center
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--star-3);
+      color: var(--star-3)
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--star-1);
+      color: var(--star-1)
+    }
+
+    .toast.info {
+      border-left: 4px solid var(--accent);
+      color: var(--accent-light)
+    }
 
     /* ---- REKAP WAWANCARA ---- */
-    .rekap-header-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-    .rekap-count-badge{background:rgba(124,107,255,0.15);color:var(--accent-light);font-size:13px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid rgba(124,107,255,0.3)}
-    .rekap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-    .rekap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all 0.25s ease}
-    .rekap-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,107,255,0.15)}
-    .rekap-card:active{transform:scale(0.985)}
-    .rekap-card-top{display:flex;gap:14px;align-items:flex-start}
-    .rekap-photo{width:64px;height:82px;border-radius:var(--radius-md);object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border)}
-    .rekap-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:28px}
-    .rekap-info{flex:1;min-width:0}
-    .rekap-name{font-size:15px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .rekap-kelas{font-size:12px;color:var(--accent-light);font-weight:600;background:rgba(124,107,255,0.1);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px}
-    .rekap-divisi-wwc{font-size:11px;color:var(--muted);margin-bottom:4px}
-    .rekap-divisi-wwc strong{color:var(--text-secondary)}
-    .rekap-review-short{font-size:12px;color:var(--text-secondary);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-    .rekap-selengkapnya{color:var(--accent-light);font-size:11px;font-weight:600;cursor:pointer;margin-top:4px;display:inline-block}
-    .rekap-divisi-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-    .rekap-divisi-tag-item{font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;border:1px solid}
-    .rekap-divisi-tag-item.terima{background:rgba(46,213,115,0.12);color:var(--star-3);border-color:rgba(46,213,115,0.3)}
-    .rekap-divisi-tag-item.tolak{background:rgba(255,71,87,0.12);color:var(--star-1);border-color:rgba(255,71,87,0.3)}
-    .rekap-divisi-tag-item.cadangan{background:rgba(255,159,67,0.12);color:var(--star-2);border-color:rgba(255,159,67,0.3)}
-    .rekap-divisi-tag-item.pending{background:rgba(124,107,255,0.08);color:var(--muted);border-color:var(--border)}
-    .rekap-status-kelulusan{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px;display:inline-flex;align-items:center;gap:4px}
-    .rekap-status-kelulusan.lolos{background:rgba(46,213,115,0.12);color:var(--star-3);border:1px solid rgba(46,213,115,0.3)}
-    .rekap-status-kelulusan.tidak_lolos{background:rgba(255,71,87,0.12);color:var(--star-1);border:1px solid rgba(255,71,87,0.3)}
-    .rekap-status-kelulusan.pending{background:rgba(255,159,67,0.08);color:var(--star-2);border:1px solid rgba(255,159,67,0.2)}
-    .rekap-bottom-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
+    .rekap-header-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px
+    }
 
-    .rekap-modal-review{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;font-size:13px;color:var(--text-secondary);line-height:1.65;white-space:pre-wrap;margin-bottom:14px;max-height:280px;overflow-y:auto}
-    .rekap-modal-divisi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-    .rekap-modal-divisi-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
-    .rekap-modal-divisi-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px}
-    .rekap-modal-divisi-status{font-size:11px;font-weight:600}
+    .rekap-count-badge {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--accent-light);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 107, 255, 0.3)
+    }
 
-    .review-berkas-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:10px}
-    .review-berkas-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-    .review-berkas-divname{font-size:13px;font-weight:700;color:var(--text)}
-    .review-berkas-rating{font-size:12px;font-weight:800;padding:2px 8px;border-radius:4px}
-    .review-berkas-rating[data-r="1"]{background:rgba(255,71,87,0.15);color:var(--star-1)}
-    .review-berkas-rating[data-r="2"]{background:rgba(255,159,67,0.15);color:var(--star-2)}
-    .review-berkas-rating[data-r="3"]{background:rgba(46,213,115,0.15);color:var(--star-3)}
-    .review-berkas-rating[data-r="4"]{background:rgba(124,107,255,0.15);color:var(--star-4)}
-    .review-berkas-status{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;border:1px solid}
-    .review-berkas-status.terima{background:rgba(46,213,115,0.12);color:var(--star-3);border-color:rgba(46,213,115,0.3)}
-    .review-berkas-status.cadangan{background:rgba(255,159,67,0.12);color:var(--star-2);border-color:rgba(255,159,67,0.3)}
-    .review-berkas-text{font-size:12px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;padding-top:8px;border-top:1px solid var(--border)}
+    .rekap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px
+    }
 
-    @media(max-width:768px){
-      .menu-toggle{display:flex!important}
-      .sidebar{width:85vw;max-width:320px;transform:translateX(-100%);padding-top:calc(60px + var(--safe-top))}
-      .sidebar.open{transform:translateX(0);box-shadow:4px 0 32px rgba(0,0,0,0.5)}
-      .main{margin-left:0;width:100%;padding:calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom))}
-      .rekap-grid{grid-template-columns:1fr}
-      .rekap-modal-divisi-grid{grid-template-columns:1fr}
-      .candidate-grid{grid-template-columns:1fr;gap:12px}
-      .card{padding:14px;gap:12px}
-      .card-photo{width:64px;height:82px}
-      .modal-overlay{align-items:flex-end;padding:0}
-      .modal-content{max-width:100%;max-height:92dvh;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
-      .modal-header{padding:18px 16px}
-      .modal-body{padding:16px}
-      .modal-photo{width:60px;height:78px}
-      .quota-tracker-bars{grid-template-columns:1fr}
-      .final-buttons{flex-direction:column}
+    .rekap-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease
+    }
+
+    .rekap-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(124, 107, 255, 0.15)
+    }
+
+    .rekap-card:active {
+      transform: scale(0.985)
+    }
+
+    .rekap-card-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start
+    }
+
+    .rekap-photo {
+      width: 64px;
+      height: 82px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border)
+    }
+
+    .rekap-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 28px
+    }
+
+    .rekap-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .rekap-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .rekap-kelas {
+      font-size: 12px;
+      color: var(--accent-light);
+      font-weight: 600;
+      background: rgba(124, 107, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 6px
+    }
+
+    .rekap-divisi-wwc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px
+    }
+
+    .rekap-divisi-wwc strong {
+      color: var(--text-secondary)
+    }
+
+    .rekap-review-short {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border)
+    }
+
+    .rekap-selengkapnya {
+      color: var(--accent-light);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      display: inline-block
+    }
+
+    .rekap-divisi-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px
+    }
+
+    .rekap-divisi-tag-item {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 12px;
+      border: 1px solid
+    }
+
+    .rekap-divisi-tag-item.terima {
+      background: rgba(46, 213, 115, 0.12);
+      color: var(--star-3);
+      border-color: rgba(46, 213, 115, 0.3)
+    }
+
+    .rekap-divisi-tag-item.tolak {
+      background: rgba(255, 71, 87, 0.12);
+      color: var(--star-1);
+      border-color: rgba(255, 71, 87, 0.3)
+    }
+
+    .rekap-divisi-tag-item.cadangan {
+      background: rgba(255, 159, 67, 0.12);
+      color: var(--star-2);
+      border-color: rgba(255, 159, 67, 0.3)
+    }
+
+    .rekap-divisi-tag-item.pending {
+      background: rgba(124, 107, 255, 0.08);
+      color: var(--muted);
+      border-color: var(--border)
+    }
+
+    .rekap-status-kelulusan {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px
+    }
+
+    .rekap-status-kelulusan.lolos {
+      background: rgba(46, 213, 115, 0.12);
+      color: var(--star-3);
+      border: 1px solid rgba(46, 213, 115, 0.3)
+    }
+
+    .rekap-status-kelulusan.tidak_lolos {
+      background: rgba(255, 71, 87, 0.12);
+      color: var(--star-1);
+      border: 1px solid rgba(255, 71, 87, 0.3)
+    }
+
+    .rekap-status-kelulusan.pending {
+      background: rgba(255, 159, 67, 0.08);
+      color: var(--star-2);
+      border: 1px solid rgba(255, 159, 67, 0.2)
+    }
+
+    .rekap-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border)
+    }
+
+    .rekap-modal-review {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      white-space: pre-wrap;
+      margin-bottom: 14px;
+      max-height: 280px;
+      overflow-y: auto
+    }
+
+    .rekap-modal-divisi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .rekap-modal-divisi-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px
+    }
+
+    .rekap-modal-divisi-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px
+    }
+
+    .rekap-modal-divisi-status {
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .review-berkas-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 10px
+    }
+
+    .review-berkas-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px
+    }
+
+    .review-berkas-divname {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .review-berkas-rating {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px
+    }
+
+    .review-berkas-rating[data-r="1"] {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--star-1)
+    }
+
+    .review-berkas-rating[data-r="2"] {
+      background: rgba(255, 159, 67, 0.15);
+      color: var(--star-2)
+    }
+
+    .review-berkas-rating[data-r="3"] {
+      background: rgba(46, 213, 115, 0.15);
+      color: var(--star-3)
+    }
+
+    .review-berkas-rating[data-r="4"] {
+      background: rgba(124, 107, 255, 0.15);
+      color: var(--star-4)
+    }
+
+    .review-berkas-status {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid
+    }
+
+    .review-berkas-status.terima {
+      background: rgba(46, 213, 115, 0.12);
+      color: var(--star-3);
+      border-color: rgba(46, 213, 115, 0.3)
+    }
+
+    .review-berkas-status.cadangan {
+      background: rgba(255, 159, 67, 0.12);
+      color: var(--star-2);
+      border-color: rgba(255, 159, 67, 0.3)
+    }
+
+    .review-berkas-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      padding-top: 8px;
+      border-top: 1px solid var(--border)
+    }
+
+    @media(max-width:768px) {
+      .menu-toggle {
+        display: flex !important
+      }
+
+      .sidebar {
+        width: 85vw;
+        max-width: 320px;
+        transform: translateX(-100%);
+        padding-top: calc(60px + var(--safe-top))
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5)
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: calc(70px + var(--safe-top)) 16px calc(20px + var(--safe-bottom))
+      }
+
+      .rekap-grid {
+        grid-template-columns: 1fr
+      }
+
+      .rekap-modal-divisi-grid {
+        grid-template-columns: 1fr
+      }
+
+      .candidate-grid {
+        grid-template-columns: 1fr;
+        gap: 12px
+      }
+
+      .card {
+        padding: 14px;
+        gap: 12px
+      }
+
+      .card-photo {
+        width: 64px;
+        height: 82px
+      }
+
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0
+      }
+
+      .modal-content {
+        max-width: 100%;
+        max-height: 92dvh;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0
+      }
+
+      .modal-header {
+        padding: 18px 16px
+      }
+
+      .modal-body {
+        padding: 16px
+      }
+
+      .modal-photo {
+        width: 60px;
+        height: 78px
+      }
+
+      .quota-tracker-bars {
+        grid-template-columns: 1fr
+      }
+
+      .final-buttons {
+        flex-direction: column
+      }
     }
   </style>
 </head>
+
 <body>
   <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -367,7 +1611,8 @@
         <div class="search-wrapper">
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau kelas..." autocomplete="off">
+            <input type="text" class="search-input" id="searchInput" placeholder="Cari nama atau kelas..."
+              autocomplete="off">
             <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
           </div>
           <div class="search-hint">Contoh: "gwen", "12 IPA", "xii"</div>
@@ -381,11 +1626,15 @@
           <div class="quota-tracker-bars">
             <div class="quota-bar">
               <div class="quota-bar-label"><span>👥 Anggota</span><span id="quotaAnggotaText">0/6</span></div>
-              <div class="quota-bar-progress"><div class="quota-bar-fill" id="quotaAnggotaFill" style="width:0%"></div></div>
+              <div class="quota-bar-progress">
+                <div class="quota-bar-fill" id="quotaAnggotaFill" style="width:0%"></div>
+              </div>
             </div>
             <div class="quota-bar">
               <div class="quota-bar-label"><span>📦 Cadangan</span><span id="quotaCadanganText">0/4</span></div>
-              <div class="quota-bar-progress"><div class="quota-bar-fill cadangan" id="quotaCadanganFill" style="width:0%"></div></div>
+              <div class="quota-bar-progress">
+                <div class="quota-bar-fill cadangan" id="quotaCadanganFill" style="width:0%"></div>
+              </div>
             </div>
           </div>
           <div class="quota-status" id="quotaStatus">🟢 Slot tersedia</div>
@@ -393,12 +1642,21 @@
       </div>
 
       <div class="stats-bar" id="statsBar" style="display:none">
-        <div class="stat-card"><div class="stat-label">Total Kandidat</div><div class="stat-value" id="statTotal">0</div></div>
-        <div class="stat-card"><div class="stat-label">Sudah Dinilai</div><div class="stat-value" id="statReviewed">0</div></div>
+        <div class="stat-card">
+          <div class="stat-label">Total Kandidat</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sudah Dinilai</div>
+          <div class="stat-value" id="statReviewed">0</div>
+        </div>
       </div>
 
       <div id="content">
-        <div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Memuat data...</p>
+        </div>
       </div>
     </main>
   </div>
@@ -440,7 +1698,8 @@
 
         <div id="finalActionBox" class="final-action-box" style="display:none">
           <div class="final-action-title">⚖️ Keputusan Final Guru (Override Manual)</div>
-          <div class="final-action-desc">Ubah status secara manual. Ini akan menggantikan perhitungan otomatis dan ditandai sebagai keputusan guru.</div>
+          <div class="final-action-desc">Ubah status secara manual. Ini akan menggantikan perhitungan otomatis dan
+            ditandai sebagai keputusan guru.</div>
           <div class="final-buttons">
             <button id="btnFinalLolos" class="btn-final btn-final-lolos" onclick="changeFinalStatus('LOLOS')">
               ✅ Tetapkan LOLOS
@@ -454,9 +1713,12 @@
         <div id="divisiActionBox" class="divisi-action-box" style="display:none">
           <div class="modal-label">🎛️ Status Penerimaan Divisi Ini</div>
           <div class="selection-buttons">
-            <button class="btn-status btn-terima" id="btnDivTerima" onclick="setSelectionCurrent('terima')">🟢 Terima</button>
-            <button class="btn-status btn-cadangan" id="btnDivCadangan" onclick="setSelectionCurrent('cadangan')">🟡 Cadangan</button>
-            <button class="btn-status btn-tolak" id="btnDivTolak" onclick="setSelectionCurrent('tolak')">🔴 Tolak</button>
+            <button class="btn-status btn-terima" id="btnDivTerima" onclick="setSelectionCurrent('terima')">🟢
+              Terima</button>
+            <button class="btn-status btn-cadangan" id="btnDivCadangan" onclick="setSelectionCurrent('cadangan')">🟡
+              Cadangan</button>
+            <button class="btn-status btn-tolak" id="btnDivTolak" onclick="setSelectionCurrent('tolak')">🔴
+              Tolak</button>
           </div>
         </div>
       </div>
@@ -518,7 +1780,7 @@
     // ============================================================
     // KONFIGURASI
     // ============================================================
-    const API_BASE = "https://script.google.com/macros/s/AKfycbwMqFdsMWmo03OUC6HA0mLw2ih6gHw3VQrmfQ71FbTqXcr-a3vnBICcld4_t4k5Cr-qhw/exec";
+    const API_BASE = "https://script.google.com/macros/s/AKfycbyOO7J7R7zv_SUwJipMNteu2kDT4ydqe04_P04jtDmfxEbATK5YjoHrFsP3LwgfLJ2D/exec";
 
     // ============================================================
     // STATE
@@ -549,25 +1811,25 @@
       try {
         const cached = sessionStorage.getItem('shc_' + key);
         if (cached) {
-          const {data, ts} = JSON.parse(cached);
+          const { data, ts } = JSON.parse(cached);
           if (Date.now() - ts < 3 * 60 * 1000) return data;
         }
-      } catch(e) {}
+      } catch (e) { }
       return null;
     }
 
     function setCache(key, data) {
-      try { sessionStorage.setItem('shc_' + key, JSON.stringify({data, ts: Date.now()})); } catch(e) {}
+      try { sessionStorage.setItem('shc_' + key, JSON.stringify({ data, ts: Date.now() })); } catch (e) { }
     }
 
     function clearCache(key) {
-      try { sessionStorage.removeItem('shc_' + key); } catch(e) {}
+      try { sessionStorage.removeItem('shc_' + key); } catch (e) { }
     }
 
     function clearAllCache() {
       try {
         Object.keys(sessionStorage).filter(k => k.startsWith('shc_')).forEach(k => sessionStorage.removeItem(k));
-      } catch(e) {}
+      } catch (e) { }
     }
 
     // ============================================================
@@ -575,13 +1837,13 @@
     // ============================================================
     async function apiGet(params) {
       const url = API_BASE + '?' + new URLSearchParams(params).toString();
-      const res = await fetch(url, {cache: 'no-store'});
+      const res = await fetch(url, { cache: 'no-store' });
       return res.json();
     }
 
     async function apiPost(params) {
       const body = new URLSearchParams(params);
-      const res = await fetch(API_BASE, {method: 'POST', body, cache: 'no-store'});
+      const res = await fetch(API_BASE, { method: 'POST', body, cache: 'no-store' });
       return res.json();
     }
 
@@ -643,7 +1905,7 @@
     async function loadQuotaConfig() {
       let result = getCached('quota_config');
       if (!result) {
-        result = await apiGet({action: 'getQuotaConfig'});
+        result = await apiGet({ action: 'getQuotaConfig' });
         if (result.success) setCache('quota_config', result);
       }
       if (result && result.success) {
@@ -657,13 +1919,13 @@
       if (!config) { document.getElementById('quotaTracker').style.display = 'none'; return; }
       document.getElementById('quotaTracker').style.display = 'block';
       document.getElementById('quotaDivisiName').textContent = config.nama_divisi;
-      document.getElementById('quotaAnggotaText').textContent = `${counts.terima||0}/${config.kuota_anggota}`;
-      document.getElementById('quotaCadanganText').textContent = `${counts.cadangan||0}/${config.kuota_cadangan}`;
-      const fillA = config.kuota_anggota > 0 ? Math.min(100, ((counts.terima||0) / config.kuota_anggota) * 100) : 0;
-      const fillC = config.kuota_cadangan > 0 ? Math.min(100, ((counts.cadangan||0) / config.kuota_cadangan) * 100) : 0;
+      document.getElementById('quotaAnggotaText').textContent = `${counts.terima || 0}/${config.kuota_anggota}`;
+      document.getElementById('quotaCadanganText').textContent = `${counts.cadangan || 0}/${config.kuota_cadangan}`;
+      const fillA = config.kuota_anggota > 0 ? Math.min(100, ((counts.terima || 0) / config.kuota_anggota) * 100) : 0;
+      const fillC = config.kuota_cadangan > 0 ? Math.min(100, ((counts.cadangan || 0) / config.kuota_cadangan) * 100) : 0;
       document.getElementById('quotaAnggotaFill').style.width = fillA + '%';
       document.getElementById('quotaCadanganFill').style.width = fillC + '%';
-      const sisa = config.kuota_anggota - (counts.terima||0);
+      const sisa = config.kuota_anggota - (counts.terima || 0);
       const statusEl = document.getElementById('quotaStatus');
       if (sisa > 0) { statusEl.textContent = `🟢 ${sisa} slot tersedia`; statusEl.className = 'quota-status'; }
       else if (sisa === 0) { statusEl.textContent = `✅ Kuota terpenuhi!`; statusEl.className = 'quota-status full'; }
@@ -674,7 +1936,7 @@
       if (!divisi || divisi === 'all') return;
       let result = getCached('counts_' + divisi);
       if (!result) {
-        result = await apiGet({action: 'getSelectionCounts', divisi});
+        result = await apiGet({ action: 'getSelectionCounts', divisi });
         if (result.success) setCache('counts_' + divisi, result);
       }
       if (result && result.success) updateQuotaTracker(divisi, result.data);
@@ -732,7 +1994,7 @@
     async function loadDivisions() {
       let data = getCached('divisions');
       if (!data) {
-        data = await apiGet({action: 'getDashboardDivisions'});
+        data = await apiGet({ action: 'getDashboardDivisions' });
         if (data.success) setCache('divisions', data);
       }
       if (!data || !data.success) return;
@@ -794,7 +2056,7 @@
       const cacheKey = 'dashboard_' + (divisi || 'all');
       let result = getCached(cacheKey);
       if (!result) {
-        result = await apiGet({action: 'getDashboardData', divisi: divisi || 'all'});
+        result = await apiGet({ action: 'getDashboardData', divisi: divisi || 'all' });
         if (result.success) setCache(cacheKey, result);
       }
 
@@ -832,7 +2094,7 @@
       if (clickedBtn) {
         setActiveSidebarBtn(clickedBtn);
       } else {
-        const map = {all: 'btnMenuSemua', lolos: 'btnMenuLolos', tidak_lolos: 'btnMenuTidak'};
+        const map = { all: 'btnMenuSemua', lolos: 'btnMenuLolos', tidak_lolos: 'btnMenuTidak' };
         const btn = document.getElementById(map[filterType]);
         if (btn) setActiveSidebarBtn(btn);
       }
@@ -851,7 +2113,7 @@
       const content = document.getElementById('content');
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Menghitung status final...</p></div>';
 
-      const result = await apiGet({action: 'getFinalSelectionData', filterType});
+      const result = await apiGet({ action: 'getFinalSelectionData', filterType });
 
       if (!result || !result.success) {
         content.innerHTML = `<div class="empty"><p>⚠️ ${result?.error || 'Gagal memuat data'}</p></div>`;
@@ -916,9 +2178,9 @@
         if (r) {
           const st = c.selectionStatus?.[currentDivisi] || '';
           actionHtml = `<div class="selection-buttons">
-            <button class="btn-status btn-terima${st==='terima'?' active':''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','terima',${idx})">✓ Terima</button>
-            <button class="btn-status btn-cadangan${st==='cadangan'?' active':''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','cadangan',${idx})">~ Cad</button>
-            <button class="btn-status btn-tolak${st==='tolak'?' active':''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','tolak',${idx})">✗ Tolak</button>
+            <button class="btn-status btn-terima${st === 'terima' ? ' active' : ''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','terima',${idx})">✓ Terima</button>
+            <button class="btn-status btn-cadangan${st === 'cadangan' ? ' active' : ''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','cadangan',${idx})">~ Cad</button>
+            <button class="btn-status btn-tolak${st === 'tolak' ? ' active' : ''}" onclick="event.stopPropagation();quickSetStatus(${r.rowIndex},'${currentDivisi}','tolak',${idx})">✗ Tolak</button>
           </div>`;
         }
       }
@@ -956,7 +2218,7 @@
     // QUICK STATUS
     // ============================================================
     async function quickSetStatus(rowIndex, divisi, status, cardIdx) {
-      const result = await apiPost({action: 'updateSelectionStatus', rowIndex, divisi, status});
+      const result = await apiPost({ action: 'updateSelectionStatus', rowIndex, divisi, status });
       if (result.success) {
         const c = allCandidatesData[cardIdx];
         if (c) {
@@ -984,14 +2246,14 @@
         return;
       }
 
-      ['btnDivTerima','btnDivCadangan','btnDivTolak'].forEach(id => {
+      ['btnDivTerima', 'btnDivCadangan', 'btnDivTolak'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.disabled = true;
       });
 
-      const result = await apiPost({action: 'updateSelectionStatus', rowIndex: r.rowIndex, divisi: currentDivisi, status});
+      const result = await apiPost({ action: 'updateSelectionStatus', rowIndex: r.rowIndex, divisi: currentDivisi, status });
 
-      ['btnDivTerima','btnDivCadangan','btnDivTolak'].forEach(id => {
+      ['btnDivTerima', 'btnDivCadangan', 'btnDivTolak'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.disabled = false;
       });
@@ -1011,7 +2273,7 @@
     }
 
     function updateDivisiActionButtons(activeStatus) {
-      const btnMap = {terima: 'btnDivTerima', cadangan: 'btnDivCadangan', tolak: 'btnDivTolak'};
+      const btnMap = { terima: 'btnDivTerima', cadangan: 'btnDivCadangan', tolak: 'btnDivTolak' };
       Object.entries(btnMap).forEach(([s, id]) => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', s === activeStatus);
@@ -1220,7 +2482,7 @@
 
       let result = getCached('rekap_wawancara');
       if (!result) {
-        result = await apiGet({action: 'getRekapWawancara'});
+        result = await apiGet({ action: 'getRekapWawancara' });
         if (result && result.success) setCache('rekap_wawancara', result);
       }
 
@@ -1249,9 +2511,9 @@
           divisiSet.add(divisi);
         }
       });
-      
+
       const divisiList = Array.from(divisiSet).sort();
-      const divisiOptions = divisiList.map(div => 
+      const divisiOptions = divisiList.map(div =>
         `<option value="${div}">${capitalize(div.toLowerCase())}</option>`
       ).join('');
 
@@ -1278,7 +2540,7 @@
       `;
 
       filteredRekapData = data;
-      
+
       // Restore dropdown ke nilai filter aktif
       const sel = document.getElementById('rekapDivisiSelect');
       if (sel) sel.value = rekapDivisiFilter !== 'all' ? rekapDivisiFilter.toUpperCase() : 'all';
@@ -1300,7 +2562,7 @@
     }
 
     function applyRekapFilters() {
-      const q   = (document.getElementById('rekapSearchInput')?.value || '').toLowerCase().trim();
+      const q = (document.getElementById('rekapSearchInput')?.value || '').toLowerCase().trim();
       let filtered = allRekapData;
 
       // ✅ UBAH: Filter berdasarkan divisi_pewawancara atau kelas
@@ -1310,10 +2572,10 @@
           return rDivisi === rekapDivisiFilter.toUpperCase();
         });
       }
-      
+
       if (q) {
         filtered = filtered.filter(r =>
-          (r.nama  || '').toLowerCase().includes(q) ||
+          (r.nama || '').toLowerCase().includes(q) ||
           (r.kelas || '').toLowerCase().includes(q) ||
           (r.divisi_pewawancara || '').toLowerCase().includes(q)
         );
@@ -1365,7 +2627,7 @@
       const reviewShort = isLong ? reviewText.substring(0, 180) + '...' : reviewText;
 
       // Status kelulusan
-      const rawKel = (r.status_kelulusan || r.status || '').toLowerCase().replace(/\s+/g,'_');
+      const rawKel = (r.status_kelulusan || r.status || '').toLowerCase().replace(/\s+/g, '_');
       const kelulusanClass = rawKel.includes('lolos') && !rawKel.includes('tidak') ? 'lolos' : rawKel.includes('tidak') ? 'tidak_lolos' : 'pending';
       const kelulusanLabel = r.status_kelulusan || r.status || 'Sudah Direview';
 
@@ -1377,12 +2639,12 @@
           ${fotoHtml}
           <div class="rekap-info">
             <div class="rekap-name">${escHtml(r.nama)}</div>
-            <span class="rekap-kelas">${escHtml(r.kelas||'-')}</span>
+            <span class="rekap-kelas">${escHtml(r.kelas || '-')}</span>
             <div class="rekap-divisi-wwc">🎤 <strong>Divisi:</strong> ${escHtml(displayDivisi)}</div>
           </div>
         </div>
         ${divisiTagsHtml ? `<div class="rekap-divisi-tags">${divisiTagsHtml}</div>` : ''}
-        ${reviewText ? `<div class="rekap-review-short">${escHtml(reviewShort)}${isLong?'<span class="rekap-selengkapnya"> Selengkapnya →</span>':''}</div>` : ''}
+        ${reviewText ? `<div class="rekap-review-short">${escHtml(reviewShort)}${isLong ? '<span class="rekap-selengkapnya"> Selengkapnya →</span>' : ''}</div>` : ''}
         <div class="rekap-bottom-row">
           <span class="rekap-status-kelulusan ${kelulusanClass}">${statusKelulusanIcon(kelulusanClass)} ${escHtml(kelulusanLabel)}</span>
         </div>
@@ -1413,34 +2675,34 @@
       if (!r) return;
 
       document.getElementById('rekapModalPhoto').innerHTML = buildPhotoHtml(r.foto, 'modal-photo');
-      document.getElementById('rekapModalName').textContent  = r.nama;
+      document.getElementById('rekapModalName').textContent = r.nama;
       document.getElementById('rekapModalClass').textContent = 'Kelas ' + (r.kelas || '-');
 
-      const STATUS_MAP   = { 'S': 'Setuju', 'RR': 'Ragu-ragu', 'TS': 'Tidak Setuju' };
-      const statusRaw    = r.status_raw || '';
-      const statusLabel  = STATUS_MAP[statusRaw] || r.status_label || r.status || 'Sudah Direview';
-      const statusClass  = statusRaw === 'S' ? 'terima' : statusRaw === 'TS' ? 'tolak' : statusRaw === 'RR' ? 'cadangan' : 'pending';
+      const STATUS_MAP = { 'S': 'Setuju', 'RR': 'Ragu-ragu', 'TS': 'Tidak Setuju' };
+      const statusRaw = r.status_raw || '';
+      const statusLabel = STATUS_MAP[statusRaw] || r.status_label || r.status || 'Sudah Direview';
+      const statusClass = statusRaw === 'S' ? 'terima' : statusRaw === 'TS' ? 'tolak' : statusRaw === 'RR' ? 'cadangan' : 'pending';
       document.getElementById('rekapModalStatusPill').innerHTML =
         `<span class="rekap-divisi-tag-item ${statusClass}" style="margin-top:6px">🗣 ${escHtml(statusLabel)}</span>`;
 
-      const divisiPilihan      = parseDivisiPilihan(r.divisi_pilihan || '');
+      const divisiPilihan = parseDivisiPilihan(r.divisi_pilihan || '');
       const divisiStatusBerkas = r.divisi_status_berkas || {};
       const gridHtml = divisiPilihan.length > 0
         ? divisiPilihan.map(div => {
-            const key    = div.toLowerCase();
-            const status = divisiStatusBerkas[key] || 'pending';
-            return `<div class="rekap-modal-divisi-item">
+          const key = div.toLowerCase();
+          const status = divisiStatusBerkas[key] || 'pending';
+          return `<div class="rekap-modal-divisi-item">
               <div class="rekap-modal-divisi-name">${escHtml(capitalize(div))}</div>
               <div class="rekap-modal-divisi-status rekap-divisi-tag-item ${status}">${statusBerkasLabel(status)}</div>
             </div>`;
-          }).join('')
+        }).join('')
         : '<p style="color:var(--muted);font-size:13px">—</p>';
       document.getElementById('rekapModalDivisiGrid').innerHTML = gridHtml;
       document.getElementById('rekapModalReview').textContent = r.review || r.catatan || 'Tidak ada catatan';
 
       const reviewBerkasList = r.review_berkas || [];
-      const berkasSection    = document.getElementById('rekapModalBerkasSection');
-      const berkasList       = document.getElementById('rekapModalBerkasList');
+      const berkasSection = document.getElementById('rekapModalBerkasSection');
+      const berkasList = document.getElementById('rekapModalBerkasList');
 
       if (reviewBerkasList.length > 0) {
         berkasSection.style.display = 'block';
@@ -1481,4 +2743,5 @@
     }
   </script>
 </body>
+
 </html>
