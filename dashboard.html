@@ -83,6 +83,7 @@
       font-size: 18px;
       font-weight: 800;
       background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent
     }
@@ -443,6 +444,14 @@
       font-size: 32px
     }
 
+    .card-photo.loading,
+    .modal-photo.loading,
+    .rekap-photo.loading {
+      filter: blur(6px);
+      transform: scale(1.01);
+      background: var(--card)
+    }
+
     .card-info {
       flex: 1;
       min-width: 0
@@ -533,6 +542,7 @@
       line-height: 1.45;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden
     }
@@ -1275,6 +1285,7 @@
       line-height: 1.45;
       display: -webkit-box;
       -webkit-line-clamp: 3;
+      line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
       margin-top: 8px;
@@ -1795,6 +1806,7 @@
     let currentModalCandidate = null;
     let isFinalSelectionMode = false;
     let currentFilterType = 'all';
+    let photoCache = new Map();
 
     // ============================================================
     // REKAP WAWANCARA STATE
@@ -2151,6 +2163,7 @@
       filteredCandidatesData = candidates;
       const html = candidates.map((c, idx) => buildCandidateCard(c, idx)).join('');
       content.innerHTML = `<div class="candidate-grid">${html}</div>`;
+      hydrateOptimizedPhotos(content);
     }
 
     function buildCandidateCard(c, idx) {
@@ -2397,6 +2410,7 @@
         divisiActionBox.style.display = 'none';
       }
 
+      hydrateOptimizedPhotos(document.getElementById('detailModal'));
       document.getElementById('detailModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
@@ -2436,7 +2450,7 @@
     function buildPhotoHtml(url, cls) {
       const converted = convertDriveUrl(url);
       if (converted) {
-        return `<img class="${cls}" src="${converted}" alt="Foto" loading="lazy" onerror="this.outerHTML='<div class=\\'${cls} placeholder\\'>👤</div>'">`;
+        return `<img class="${cls} loading" data-original-url="${escHtml(String(url || ''))}" src="" alt="Foto" loading="lazy">`;
       }
       return `<div class="${cls} placeholder">👤</div>`;
     }
@@ -2446,6 +2460,78 @@
       const s = String(url).trim();
       const match = s.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || s.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
       return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : s;
+    }
+
+    function getDriveThumbnailUrl(url, size = 320) {
+      if (!url) return '';
+      const s = String(url).trim();
+      const match = s.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || s.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
+      if (!match) return s;
+      return `https://lh3.googleusercontent.com/d/${match[1]}=w${size}-h${size}-p-k-nu`;
+    }
+
+    function hydrateOptimizedPhotos(root) {
+      if (!root) return;
+      const photos = Array.from(root.querySelectorAll('img[data-original-url]'));
+      photos.forEach((img, index) => {
+        if (img.dataset.hydrated === '1') return;
+        img.dataset.hydrated = '1';
+        setTimeout(() => loadOptimizedPhoto(img), index * 45);
+      });
+    }
+
+    function loadOptimizedPhoto(imgEl) {
+      const original = imgEl.getAttribute('data-original-url');
+      if (!original) return;
+
+      const rawUrl = convertDriveUrl(original);
+      const lowResUrl = getDriveThumbnailUrl(rawUrl, 320);
+      if (!lowResUrl) return;
+
+      imgEl.setAttribute('src', lowResUrl);
+      imgEl.classList.add('loading');
+
+      const cacheKey = `photo:${original}`;
+      const cached = photoCache.get(cacheKey);
+      if (cached) {
+        imgEl.setAttribute('src', cached);
+        imgEl.classList.remove('loading');
+        return;
+      }
+
+      const temp = new Image();
+      temp.crossOrigin = 'anonymous';
+      temp.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxSide = 640;
+        const scale = Math.min(1, maxSide / Math.max(temp.naturalWidth, temp.naturalHeight));
+        canvas.width = Math.max(1, Math.round(temp.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(temp.naturalHeight * scale));
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          imgEl.setAttribute('src', lowResUrl);
+          imgEl.classList.remove('loading');
+          return;
+        }
+
+        ctx.drawImage(temp, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const blobUrl = URL.createObjectURL(blob);
+            photoCache.set(cacheKey, blobUrl);
+            imgEl.setAttribute('src', blobUrl);
+            imgEl.classList.remove('loading');
+          } else {
+            imgEl.setAttribute('src', lowResUrl);
+            imgEl.classList.remove('loading');
+          }
+        }, 'image/jpeg', 0.78);
+      };
+      temp.onerror = () => {
+        imgEl.setAttribute('src', lowResUrl);
+        imgEl.classList.remove('loading');
+      };
+      temp.src = lowResUrl;
     }
 
     function capitalize(str) {
@@ -2540,6 +2626,7 @@
       `;
 
       filteredRekapData = data;
+      hydrateOptimizedPhotos(content);
 
       // Restore dropdown ke nilai filter aktif
       const sel = document.getElementById('rekapDivisiSelect');
@@ -2720,6 +2807,7 @@
         berkasSection.style.display = 'none';
       }
 
+      hydrateOptimizedPhotos(document.getElementById('rekapModal'));
       document.getElementById('rekapModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
