@@ -551,6 +551,36 @@
       return null;
     }
 
+    function buildDivisionVariants(divisiId, divisiName) {
+      const variants = [];
+      const seen = new Set();
+      const addVariant = (value) => {
+        if (typeof value !== 'string') return;
+        const trimmed = value.trim();
+        if (!trimmed) return;
+        const normalized = normalizeText(trimmed);
+        const candidates = [trimmed, trimmed.toLowerCase(), trimmed.toUpperCase(), trimmed.replace(/\s+/g, ' '), trimmed.replace(/\s+/g, '-')];
+        candidates.forEach((candidate) => {
+          if (!candidate) return;
+          const key = candidate.toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            variants.push(candidate);
+          }
+        });
+        if (normalized && !seen.has(normalized)) {
+          seen.add(normalized);
+          variants.push(normalized);
+        }
+      };
+
+      addVariant(divisiId);
+      addVariant(divisiName);
+      addVariant(divisiName ? divisiName.replace(/\s+/g, ' ') : '');
+      addVariant(divisiId ? divisiId.replace(/\s+/g, ' ') : '');
+      return variants;
+    }
+
     function normalizeCandidateRows(rawCandidates, headers = []) {
       if (!Array.isArray(rawCandidates)) return [];
 
@@ -689,16 +719,41 @@
         if (!forceReload) {
           data = getCached('divisi_' + currentDivisi.id);
         }
-        if (!data) {
-          const res = await fetch(API_BASE + '?action=getDataByDivisi&divisi=' + encodeURIComponent(currentDivisi.id));
-          if (!res.ok) throw new Error(`Gagal memuat kandidat (Status: ${res.status})`);
 
-          const contentType = res.headers.get("content-type");
-          if (!contentType || !contentType.includes("application/json")) {
-            throw new Error("Backend mengembalikan format HTML, bukan JSON. Periksa log Google Apps Script.");
+        if (!data) {
+          const variants = buildDivisionVariants(currentDivisi?.id, currentDivisi?.name);
+          let lastError = null;
+
+          for (const variant of variants) {
+            try {
+              const res = await fetch(API_BASE + '?action=getDataByDivisi&divisi=' + encodeURIComponent(variant));
+              if (!res.ok) continue;
+
+              const contentType = res.headers.get("content-type");
+              if (!contentType || !contentType.includes("application/json")) {
+                continue;
+              }
+
+              const payload = await res.json();
+              if (payload?.success && Array.isArray(payload.data || payload.rows || payload.values) && (payload.data || payload.rows || payload.values).length > 0) {
+                data = payload;
+                break;
+              }
+              if (payload?.success) {
+                data = payload;
+                break;
+              }
+              lastError = new Error(payload?.error || 'Data kandidat kosong');
+            } catch (e) {
+              lastError = e;
+            }
           }
 
-          data = await res.json();
+          if (!data) {
+            if (lastError) throw lastError;
+            throw new Error('Tidak ada data kandidat yang bisa dimuat');
+          }
+
           if (data.success) setCache('divisi_' + currentDivisi.id, data);
         }
         if (!data.success) throw new Error(data.error || "Data kandidat kosong");
