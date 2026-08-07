@@ -505,6 +505,108 @@
       try { sessionStorage.removeItem('divisi_' + divId); } catch (e) { }
     }
 
+    function normalizeText(value) {
+      return (value || '')
+        .toString()
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+    }
+
+    function getFieldValue(candidate, fieldNames) {
+      if (!candidate || typeof candidate !== 'object') return null;
+
+      const names = Array.isArray(fieldNames) ? fieldNames : [fieldNames];
+      for (const fieldName of names) {
+        if (candidate[fieldName] !== undefined && candidate[fieldName] !== null && candidate[fieldName] !== '') {
+          return candidate[fieldName];
+        }
+
+        const normalizedField = normalizeText(fieldName);
+        const matchingKey = Object.keys(candidate).find((key) => normalizeText(key) === normalizedField);
+        if (matchingKey) {
+          const value = candidate[matchingKey];
+          if (value !== undefined && value !== null && value !== '') return value;
+        }
+      }
+
+      return null;
+    }
+
+    function normalizeCandidateRows(rawCandidates, headers = []) {
+      if (!Array.isArray(rawCandidates)) return [];
+
+      return rawCandidates.map((row, index) => {
+        if (Array.isArray(row)) {
+          const obj = {};
+          headers.forEach((header, headerIndex) => {
+            obj[header] = row[headerIndex];
+          });
+          obj.values = row;
+          obj.headers = headers;
+          obj.rowIndex = row.rowIndex ?? row['rowIndex'] ?? (index + 2);
+          return obj;
+        }
+
+        if (row && typeof row === 'object') {
+          const normalized = { ...row };
+          normalized.values = Array.isArray(row.values) ? row.values : null;
+          normalized.headers = normalized.headers || headers;
+          normalized.rowIndex = normalized.rowIndex ?? normalized['Row Index'] ?? normalized['rowIndex'] ?? (index + 2);
+          return normalized;
+        }
+
+        return { value: row, rowIndex: index + 2 };
+      });
+    }
+
+    function getAnswerFromCandidate(candidate, questionText, questionIndex) {
+      if (!candidate || typeof candidate !== 'object') return '-';
+
+      const directValue = getFieldValue(candidate, [questionText, questionText.toLowerCase(), questionText.toUpperCase()]);
+      if (directValue !== null && directValue !== undefined && directValue !== '') return directValue;
+
+      if (Array.isArray(candidate.answers)) {
+        if (candidate.answers[questionIndex] !== undefined && candidate.answers[questionIndex] !== '') {
+          return candidate.answers[questionIndex];
+        }
+        return '-';
+      }
+
+      if (candidate.answers && typeof candidate.answers === 'object') {
+        const answers = candidate.answers;
+        const exact = Object.keys(answers).find((key) => normalizeText(key) === normalizeText(questionText));
+        if (exact) return answers[exact];
+
+        const partial = Object.keys(answers).find((key) =>
+          normalizeText(key).includes(normalizeText(questionText)) || normalizeText(questionText).includes(normalizeText(key))
+        );
+        if (partial) return answers[partial];
+      }
+
+      if (Array.isArray(candidate.values) && Array.isArray(candidate.headers)) {
+        const target = normalizeText(questionText);
+        const matchIndex = candidate.headers.findIndex((header) => normalizeText(header) === target);
+        if (matchIndex >= 0 && candidate.values[matchIndex] !== undefined && candidate.values[matchIndex] !== '') {
+          return candidate.values[matchIndex];
+        }
+      }
+
+      const normalizedMap = {};
+      Object.keys(candidate).forEach((key) => {
+        normalizedMap[normalizeText(key)] = candidate[key];
+      });
+
+      const normalizedQuestion = normalizeText(questionText);
+      if (normalizedMap[normalizedQuestion] !== undefined && normalizedMap[normalizedQuestion] !== null && normalizedMap[normalizedQuestion] !== '') {
+        return normalizedMap[normalizedQuestion];
+      }
+
+      return '-';
+    }
+
     document.addEventListener('DOMContentLoaded', loadDivisions);
 
     // 🛡️ ROBUST: Load Divisi dengan validasi tipe konten
@@ -577,7 +679,9 @@
         }
         if (!data.success) throw new Error(data.error || "Data kandidat kosong");
 
-        candidates = data.data || [];
+        const rawCandidates = data.data || data.rows || data.values || [];
+        const headers = Array.isArray(data.headers) ? data.headers : (Array.isArray(data.columns) ? data.columns : []);
+        candidates = normalizeCandidateRows(rawCandidates, headers);
         currentIndex = 0;
         renderCandidate();
       } catch (e) {
@@ -596,12 +700,11 @@
 
       const c = candidates[currentIndex];
 
-      // Fallback mapping agar tidak error jika backend mengirim key yang sedikit berbeda
-      const nama = c.nama || c["Nama Lengkap"] || "Tidak Diketahui";
-      const kelas = c.kelas || c["Kelas"] || "-";
-      const prioritas = c.prioritas || c["Divisi Prioritas"] || "-";
-      const fotoRaw = c.foto || c["Foto 3x4"] || "";
-      const rowIndex = c.rowIndex || c["Row Index"] || (currentIndex + 2);
+      const nama = getFieldValue(c, ['nama', 'Nama Lengkap', 'name', 'Name']) || 'Tidak Diketahui';
+      const kelas = getFieldValue(c, ['kelas', 'Kelas']) || '-';
+      const prioritas = getFieldValue(c, ['prioritas', 'Divisi Prioritas', 'priority']) || '-';
+      const fotoRaw = getFieldValue(c, ['foto', 'Foto 3x4', 'Foto', 'photo']) || '';
+      const rowIndex = c.rowIndex ?? getFieldValue(c, ['rowIndex', 'Row Index', 'row', 'baris']) ?? (currentIndex + 2);
 
       const fotoUrl = convertDriveUrl(fotoRaw);
       const progress = ((currentIndex + 1) / candidates.length) * 100;
@@ -610,18 +713,14 @@
       document.getElementById('progressFill').style.width = progress + '%';
 
       const questionsHtml = QUESTIONS_TO_SHOW.map((qIndex, idx) => {
-        let answer = '-';
-        if (Array.isArray(c.answers)) {
-          answer = c.answers[qIndex] || '-';
-        } else {
-          // Fallback jika data berbentuk flat object (sesuaikan string-nya dengan header sheet)
-          answer = c[QUESTIONS[qIndex]] || '-';
-        }
+        const questionText = QUESTIONS[qIndex];
+        const answer = getAnswerFromCandidate(c, questionText, qIndex);
+        const answerText = answer === null || answer === undefined || answer === '' ? '-' : String(answer);
 
         return `<div class="question-item">
           <div class="question-number">Pertanyaan ${idx + 1}</div>
-          <div class="question-text">${QUESTIONS[qIndex]}</div>
-          <div class="question-answer ${answer === '-' ? 'empty' : ''}">${answer}</div>
+          <div class="question-text">${questionText}</div>
+          <div class="question-answer ${answerText === '-' ? 'empty' : ''}">${answerText}</div>
         </div>`;
       }).join('');
 
@@ -698,7 +797,7 @@
       const c = candidates[currentIndex];
       const params = new URLSearchParams();
       params.append('action', 'saveRating');
-      params.append('rowIndex', c.rowIndex);
+      params.append('rowIndex', c.rowIndex ?? getFieldValue(c, ['rowIndex', 'Row Index', 'row', 'baris']) ?? '');
       params.append('rating', selectedRating);
       params.append('catatan', comment);
       params.append('divisi', currentDivisi.id);
