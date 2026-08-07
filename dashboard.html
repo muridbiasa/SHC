@@ -2450,7 +2450,7 @@
     function buildPhotoHtml(url, cls) {
       const converted = convertDriveUrl(url);
       if (converted) {
-        return `<img class="${cls} loading" data-original-url="${escHtml(String(url || ''))}" src="" alt="Foto" loading="lazy">`;
+        return `<img class="${cls} loading" data-original-url="${escHtml(String(url || ''))}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Foto" loading="lazy" decoding="async" fetchpriority="low">`;
       }
       return `<div class="${cls} placeholder">👤</div>`;
     }
@@ -2473,10 +2473,35 @@
     function hydrateOptimizedPhotos(root) {
       if (!root) return;
       const photos = Array.from(root.querySelectorAll('img[data-original-url]'));
-      photos.forEach((img, index) => {
+      if (!photos.length) return;
+
+      let batchIndex = 0;
+      const activatePhoto = (img, index) => {
         if (img.dataset.hydrated === '1') return;
         img.dataset.hydrated = '1';
-        setTimeout(() => loadOptimizedPhoto(img), index * 45);
+        setTimeout(() => loadOptimizedPhoto(img), index * 60);
+      };
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const img = entry.target;
+            const idx = Number(img.dataset.photoIndex || 0);
+            activatePhoto(img, idx);
+            obs.unobserve(img);
+          });
+        }, { rootMargin: '220px 0px 220px 0px', threshold: 0.01 });
+
+        photos.forEach((img, index) => {
+          img.dataset.photoIndex = String(index);
+          observer.observe(img);
+        });
+        return;
+      }
+
+      photos.forEach((img, index) => {
+        activatePhoto(img, index);
       });
     }
 
@@ -2503,7 +2528,7 @@
       temp.crossOrigin = 'anonymous';
       temp.onload = () => {
         const canvas = document.createElement('canvas');
-        const maxSide = 640;
+        const maxSide = 720;
         const scale = Math.min(1, maxSide / Math.max(temp.naturalWidth, temp.naturalHeight));
         canvas.width = Math.max(1, Math.round(temp.naturalWidth * scale));
         canvas.height = Math.max(1, Math.round(temp.naturalHeight * scale));
@@ -2525,7 +2550,7 @@
             imgEl.setAttribute('src', lowResUrl);
             imgEl.classList.remove('loading');
           }
-        }, 'image/jpeg', 0.78);
+        }, 'image/jpeg', 0.74);
       };
       temp.onerror = () => {
         imgEl.setAttribute('src', lowResUrl);
