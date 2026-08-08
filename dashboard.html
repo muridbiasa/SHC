@@ -2444,12 +2444,13 @@
       if (e.target === e.currentTarget) closeModal();
     }
 
-    // ============================================================
-    // UTILITIES
+// ============================================================
+    // UTILITIES (REVISI FIX ANOMALI GAMBAR)
     // ============================================================
     function buildPhotoHtml(url, cls) {
       const converted = convertDriveUrl(url);
       if (converted) {
+        // Menggunakan loading="lazy" agar browser hanya memuat gambar saat di-scroll
         return `<img class="${cls} loading" data-original-url="${escHtml(String(url || ''))}" src="" alt="Foto" loading="lazy">`;
       }
       return `<div class="${cls} placeholder">👤</div>`;
@@ -2458,16 +2459,10 @@
     function convertDriveUrl(url) {
       if (!url) return '';
       const s = String(url).trim();
-      const match = s.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || s.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
-      return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : s;
-    }
-
-    function getDriveThumbnailUrl(url, size = 320) {
-      if (!url) return '';
-      const s = String(url).trim();
-      const match = s.match(/\/d\/([a-zA-Z0-9-_]{25,})/) || s.match(/[?&]id=([a-zA-Z0-9-_]{25,})/);
-      if (!match) return s;
-      return `https://lh3.googleusercontent.com/d/${match[1]}=w${size}-h${size}-p-k-nu`;
+      // Regex untuk mendeteksi berbagai format link Drive
+      const match = s.match(/[?&]id=([a-zA-Z0-9-_]{25,})/) || s.match(/\/d\/([a-zA-Z0-9-_]{25,})/);
+      // Gunakan endpoint direct view bawaan Google yang paling stabil dan tidak akan kena blokir CORS
+      return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : s;
     }
 
     function hydrateOptimizedPhotos(root) {
@@ -2476,7 +2471,8 @@
       photos.forEach((img, index) => {
         if (img.dataset.hydrated === '1') return;
         img.dataset.hydrated = '1';
-        setTimeout(() => loadOptimizedPhoto(img), index * 45);
+        // Memberikan sedikit jeda antar gambar agar tidak memberatkan browser
+        setTimeout(() => loadOptimizedPhoto(img), index * 30);
       });
     }
 
@@ -2484,20 +2480,36 @@
       const original = imgEl.getAttribute('data-original-url');
       if (!original) return;
 
-      const rawUrl = convertDriveUrl(original);
-      const lowResUrl = getDriveThumbnailUrl(rawUrl, 320);
-      if (!lowResUrl) return;
-
-      imgEl.setAttribute('src', lowResUrl);
-      imgEl.classList.add('loading');
-
-      const cacheKey = `photo:${original}`;
+      const safeUrl = convertDriveUrl(original);
+      const cacheKey = `photo:${safeUrl}`;
       const cached = photoCache.get(cacheKey);
+
+      // Jika gambar sudah pernah di-load, ambil dari memory (Instant Load)
       if (cached) {
         imgEl.setAttribute('src', cached);
         imgEl.classList.remove('loading');
         return;
       }
+
+      const temp = new Image();
+      // HAPUS bagian temp.crossOrigin buatan temanmu karena itu penyebab utama diblokir Google
+      
+      temp.onload = () => {
+        photoCache.set(cacheKey, safeUrl);
+        imgEl.setAttribute('src', safeUrl);
+        imgEl.classList.remove('loading');
+      };
+      
+      temp.onerror = () => {
+        // Jika gagal dimuat, ganti dengan icon placeholder agar UI tidak rusak
+        imgEl.classList.remove('loading');
+        imgEl.outerHTML = `<div class="${imgEl.className} placeholder">👤</div>`;
+      };
+      
+      temp.src = safeUrl;
+    }
+    
+    // Fungsi capitalize dan escHtml di bawahnya tetap biarkan seperti aslinya...
 
       const temp = new Image();
       temp.crossOrigin = 'anonymous';
