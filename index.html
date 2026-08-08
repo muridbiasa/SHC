@@ -160,12 +160,6 @@
       color: var(--muted)
     }
 
-    .candidate-photo.loading {
-      filter: blur(8px);
-      transform: scale(1.01);
-      background: var(--card)
-    }
-
     .info-box {
       background: var(--card);
       border: 1px solid var(--border);
@@ -483,7 +477,7 @@
     // Index pertanyaan yang ingin ditampilkan di layar review
     const QUESTIONS_TO_SHOW = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18];
 
-    let currentDivisi = null, candidates = [], currentIndex = 0, selectedRating = null, photoCache = new Map(), currentCandidateToken = 0;
+    let currentDivisi = null, candidates = [], currentIndex = 0, selectedRating = null;
     const RATING_MAP = {
       1: { stars: '⭐', label: 'KURANG' },
       2: { stars: '⭐⭐', label: 'RAGU-RAGU' },
@@ -509,16 +503,6 @@
 
     function clearDivisionCache(divId) {
       try { sessionStorage.removeItem('divisi_' + divId); } catch (e) { }
-    }
-
-    function resetReviewState() {
-      selectedRating = null;
-      document.getElementById('commentBox')?.remove();
-      document.getElementById('charCount')?.remove();
-      document.getElementById('saveBtn')?.remove();
-      document.getElementById('progressText').textContent = '0/0 Kandidat';
-      document.getElementById('progressFill').style.width = '0%';
-      document.getElementById('candidateContent').innerHTML = '';
     }
 
     function normalizeText(value) {
@@ -549,36 +533,6 @@
       }
 
       return null;
-    }
-
-    function buildDivisionVariants(divisiId, divisiName) {
-      const variants = [];
-      const seen = new Set();
-      const addVariant = (value) => {
-        if (typeof value !== 'string') return;
-        const trimmed = value.trim();
-        if (!trimmed) return;
-        const normalized = normalizeText(trimmed);
-        const candidates = [trimmed, trimmed.toLowerCase(), trimmed.toUpperCase(), trimmed.replace(/\s+/g, ' '), trimmed.replace(/\s+/g, '-')];
-        candidates.forEach((candidate) => {
-          if (!candidate) return;
-          const key = candidate.toLowerCase();
-          if (!seen.has(key)) {
-            seen.add(key);
-            variants.push(candidate);
-          }
-        });
-        if (normalized && !seen.has(normalized)) {
-          seen.add(normalized);
-          variants.push(normalized);
-        }
-      };
-
-      addVariant(divisiId);
-      addVariant(divisiName);
-      addVariant(divisiName ? divisiName.replace(/\s+/g, ' ') : '');
-      addVariant(divisiId ? divisiId.replace(/\s+/g, ' ') : '');
-      return variants;
     }
 
     function normalizeCandidateRows(rawCandidates, headers = []) {
@@ -692,73 +646,38 @@
 
     async function selectDivision(id, name) {
       currentDivisi = { id, name };
-      currentCandidateToken += 1;
       document.getElementById('divisionView').style.display = 'none';
       document.getElementById('candidateView').style.display = 'block';
-      resetReviewState();
-      await loadCandidates(true);
+      await loadCandidates();
     }
 
     function backToDivisions() {
       if (confirm('Kembali ke pilihan divisi? Progress yang belum tersimpan akan hilang.')) {
-        currentCandidateToken += 1;
         document.getElementById('divisionView').style.display = 'block';
         document.getElementById('candidateView').style.display = 'none';
         currentDivisi = null;
         candidates = [];
         currentIndex = 0;
-        selectedRating = null;
       }
     }
 
     // 🛡️ ROBUST: Load Kandidat dengan validasi tipe konten
-    async function loadCandidates(forceReload = false) {
-      const token = currentCandidateToken;
+    async function loadCandidates() {
       try {
-        let data = null;
-        if (!forceReload) {
-          data = getCached('divisi_' + currentDivisi.id);
-        }
-
+        let data = getCached('divisi_' + currentDivisi.id);
         if (!data) {
-          const variants = buildDivisionVariants(currentDivisi?.id, currentDivisi?.name);
-          let lastError = null;
+          const res = await fetch(API_BASE + '?action=getDataByDivisi&divisi=' + encodeURIComponent(currentDivisi.id));
+          if (!res.ok) throw new Error(`Gagal memuat kandidat (Status: ${res.status})`);
 
-          for (const variant of variants) {
-            try {
-              const res = await fetch(API_BASE + '?action=getDataByDivisi&divisi=' + encodeURIComponent(variant));
-              if (!res.ok) continue;
-
-              const contentType = res.headers.get("content-type");
-              if (!contentType || !contentType.includes("application/json")) {
-                continue;
-              }
-
-              const payload = await res.json();
-              if (payload?.success && Array.isArray(payload.data || payload.rows || payload.values) && (payload.data || payload.rows || payload.values).length > 0) {
-                data = payload;
-                break;
-              }
-              if (payload?.success) {
-                data = payload;
-                break;
-              }
-              lastError = new Error(payload?.error || 'Data kandidat kosong');
-            } catch (e) {
-              lastError = e;
-            }
+          const contentType = res.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("Backend mengembalikan format HTML, bukan JSON. Periksa log Google Apps Script.");
           }
 
-          if (!data) {
-            if (lastError) throw lastError;
-            throw new Error('Tidak ada data kandidat yang bisa dimuat');
-          }
-
+          data = await res.json();
           if (data.success) setCache('divisi_' + currentDivisi.id, data);
         }
         if (!data.success) throw new Error(data.error || "Data kandidat kosong");
-
-        if (token !== currentCandidateToken) return;
 
         const rawCandidates = data.data || data.rows || data.values || [];
         const headers = Array.isArray(data.headers) ? data.headers : (Array.isArray(data.columns) ? data.columns : []);
@@ -767,8 +686,7 @@
         renderCandidate();
       } catch (e) {
         console.error("Load Candidates Error:", e);
-        if (token !== currentCandidateToken) return;
-        document.getElementById('candidateContent').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>Gagal memuat kandidat: ${e.message}</p><button class="btn btn-primary" onclick="loadCandidates(true)" style="margin-top:12px">Coba Lagi</button></div>`;
+        document.getElementById('candidateContent').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>Gagal memuat kandidat: ${e.message}</p><button class="btn btn-primary" onclick="loadCandidates()" style="margin-top:12px">Coba Lagi</button></div>`;
       }
     }
 
@@ -784,7 +702,7 @@
 
       const nama = getFieldValue(c, ['nama', 'Nama Lengkap', 'name', 'Name']) || 'Tidak Diketahui';
       const kelas = getFieldValue(c, ['kelas', 'Kelas']) || '-';
-      const prioritas = getFieldValue(c, ['prioritas', 'Divisi Prioritas', 'priority']) || '-';
+      const prioritas = getFieldValue(c, ['prioritas', 'Divisi Prioritas', 'priority', 'Manakah divisi yang lebih kamu prioritaskan diantara semua divisi yang kamu pilih? Mengapa?']) || '-';
       const fotoRaw = getFieldValue(c, ['foto', 'Foto 3x4', 'Foto', 'photo']) || '';
       const rowIndex = c.rowIndex ?? getFieldValue(c, ['rowIndex', 'Row Index', 'row', 'baris']) ?? (currentIndex + 2);
 
@@ -806,16 +724,11 @@
         </div>`;
       }).join('');
 
-      const photoContainer = document.createElement('div');
-      if (fotoUrl) {
-        photoContainer.innerHTML = '<img src="" class="candidate-photo loading" alt="Foto kandidat" loading="lazy" crossorigin="anonymous">';
-      } else {
-        photoContainer.innerHTML = '<div class="candidate-photo placeholder">👤</div>';
-      }
-
-      container.innerHTML = '';
-      container.appendChild(photoContainer);
-      container.insertAdjacentHTML('beforeend', `
+      container.innerHTML = `
+        ${fotoUrl
+          ? `<img src="${fotoUrl}" class="candidate-photo" alt="Foto" loading="lazy" crossorigin="anonymous" onerror="this.outerHTML='<div class=\\'candidate-photo placeholder\\'>👤</div>'">`
+          : '<div class="candidate-photo placeholder">👤</div>'
+        }
         <div class="info-box">
           <div class="info-title">👤 Data Kandidat</div>
           <div class="info-text"><b>Nama:</b> ${nama}<br><b>Kelas:</b> ${kelas}<br><b>Prioritas:</b> ${prioritas}</div>
@@ -841,12 +754,8 @@
             <button class="btn btn-primary" id="saveBtn" onclick="saveRating()" disabled>💾 Simpan</button>
           </div>
         </div>
-      `);
+      `;
       selectedRating = null;
-
-      if (fotoUrl) {
-        renderCandidatePhoto(fotoUrl, photoContainer);
-      }
     }
 
     function pickRating(val) {
@@ -867,7 +776,6 @@
 
     function skipCandidate() {
       if (confirm('Lewati kandidat ini?')) {
-        currentCandidateToken += 1;
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setTimeout(() => {
           currentIndex++;
@@ -908,7 +816,6 @@
 
         // Hapus cache agar data terbaru muncul saat kembali
         clearDivisionCache(currentDivisi.id);
-        currentCandidateToken += 1;
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
         showToast('✅ Rating berhasil disimpan!', 'success');
@@ -940,52 +847,6 @@
         if (m) return 'https://lh3.googleusercontent.com/d/' + m[1];
       }
       return url;
-    }
-
-    function getOptimizedDriveUrl(url, size = 320) {
-      if (!url) return '';
-      const base = convertDriveUrl(url);
-      const match = base.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if (!match) return base;
-      return `https://lh3.googleusercontent.com/d/${match[1]}=w${size}-h${size}-p-k-nu`;
-    }
-
-    function preloadImage(url) {
-      if (!url || photoCache.has(url)) return Promise.resolve(url);
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          photoCache.set(url, true);
-          resolve(url);
-        };
-        img.onerror = () => resolve('');
-        img.src = url;
-      });
-    }
-
-    async function renderCandidatePhoto(photoUrl, container) {
-      const optimizedUrl = getOptimizedDriveUrl(photoUrl, 320);
-      if (!optimizedUrl) {
-        container.innerHTML = '<div class="candidate-photo placeholder">👤</div>';
-        return;
-      }
-
-      const img = container.querySelector('img');
-      if (!img) return;
-      img.src = optimizedUrl;
-      img.classList.add('loading');
-
-      const readyUrl = await preloadImage(optimizedUrl);
-      if (!readyUrl) {
-        container.innerHTML = '<div class="candidate-photo placeholder">👤</div>';
-        return;
-      }
-
-      img.src = readyUrl;
-      img.classList.remove('loading');
-      img.onerror = () => {
-        container.innerHTML = '<div class="candidate-photo placeholder">👤</div>';
-      };
     }
   </script>
 </body>
