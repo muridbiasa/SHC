@@ -229,6 +229,12 @@
       margin-top: 8px
     }
 
+    #content {
+      min-height: 70vh;
+      /* Memesan tempat setidaknya 70% dari tinggi layar */
+      position: relative;
+    }
+
     /* ---- SEARCH ---- */
     .search-wrapper {
       margin: 16px 0 20px
@@ -2062,8 +2068,8 @@
       const quotaTracker = document.getElementById('quotaTracker');
 
       content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Memuat data...</p></div>';
-      statsBar.style.display = 'none';
-      quotaTracker.style.display = 'none';
+      // statsBar.style.display = 'none';
+      // quotaTracker.style.display = 'none';
 
       const cacheKey = 'dashboard_' + (divisi || 'all');
       let result = getCached(cacheKey);
@@ -2450,7 +2456,7 @@
     function buildPhotoHtml(url, cls) {
       const converted = convertDriveUrl(url);
       if (converted) {
-        return `<img class="${cls} loading" data-original-url="${escHtml(String(url || ''))}" src="" alt="Foto" loading="lazy">`;
+        return `<img class="${cls} loading" width="70" height="90" data-original-url="${escHtml(String(url || ''))}" src="" alt="Foto" loading="lazy">`;
       }
       return `<div class="${cls} placeholder">👤</div>`;
     }
