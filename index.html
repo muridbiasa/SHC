@@ -747,7 +747,7 @@
               </div>`
         ).join('')}
           </div>
-          <textarea class="comment-box" id="commentBox" placeholder="Alasan rating (wajib min. 100 karakter)..." oninput="checkComment()"></textarea>
+          <textarea class="comment-box" id="commentBox" placeholder="Alasan rating..." oninput="checkComment()"></textarea>
           <div class="char-count invalid" id="charCount">0 / 100 karakter</div>
           <div class="btn-group">
             <button class="btn btn-secondary" onclick="skipCandidate()">⏭ Lewati</button>
@@ -788,7 +788,7 @@
     // 🛡️ ROBUST: Simpan Rating dengan validasi respon server
     async function saveRating() {
       const comment = document.getElementById('commentBox').value.trim();
-      if (!selectedRating || comment.length < 100) return showToast('Lengkapi rating & komentar min. 100 karakter', 'error');
+      if (!selectedRating) return showToast('Lengkapi rating & komentar min. 100 karakter', 'error');
 
       const btn = document.getElementById('saveBtn');
       btn.disabled = true;
