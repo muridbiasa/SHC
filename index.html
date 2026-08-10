@@ -769,9 +769,9 @@
       const box = document.getElementById('commentBox');
       const len = box.value.length;
       const countEl = document.getElementById('charCount');
-      countEl.textContent = len + 'Isi Komentar';
+      countEl.textContent = len + '';
       countEl.className = len >= 0? 'char-count valid' : 'char-count invalid';
-      document.getElementById('saveBtn').disabled = !(selectedRating && len >= 100);
+      document.getElementById('saveBtn').disabled = !(selectedRating && len >= 0);
     }
 
     function skipCandidate() {
