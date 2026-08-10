@@ -769,8 +769,8 @@
       const box = document.getElementById('commentBox');
       const len = box.value.length;
       const countEl = document.getElementById('charCount');
-      countEl.textContent = len + ' / 100 karakter';
-      countEl.className = len >= 100 ? 'char-count valid' : 'char-count invalid';
+      countEl.textContent = len + 'Isi Komentar';
+      countEl.className = len >= 0? 'char-count valid' : 'char-count invalid';
       document.getElementById('saveBtn').disabled = !(selectedRating && len >= 100);
     }
 
