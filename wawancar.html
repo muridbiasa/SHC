@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,27 +9,86 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #eee; scroll-behavior: smooth; }
-        .dark-card { background: #141414; border: 1px solid #222; }
-        .btn-divisi { transition: all 0.2s; border: 1px solid #222; background: #111; }
-        .btn-divisi:hover { border-color: #555; background: #1a1a1a; transform: translateY(-2px); }
-        .hide { display: none; }
-        .animate-fade { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #eee;
+            scroll-behavior: smooth;
+        }
 
-        .field-error { border-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,0.25) !important; }
-        .error-msg { color: #ef4444; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; display: flex; align-items: center; gap: 5px; }
-        .rating-error-box { border: 2px solid #ef4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,0.25); border-radius: 1rem; }
+        .dark-card {
+            background: #141414;
+            border: 1px solid #222;
+        }
+
+        .btn-divisi {
+            transition: all 0.2s;
+            border: 1px solid #222;
+            background: #111;
+        }
+
+        .btn-divisi:hover {
+            border-color: #555;
+            background: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .field-error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25) !important;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating-error-box {
+            border: 2px solid #ef4444 !important;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+            border-radius: 1rem;
+        }
     </style>
 </head>
+
 <body class="pb-10">
 
-    <header class="sticky top-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-900 py-4 px-6 flex items-center justify-between">
+    <header
+        class="sticky top-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-900 py-4 px-6 flex items-center justify-between">
         <div class="cursor-pointer" onclick="goToScreen('screenDivisions')">
-            <h1 class="text-xl font-black tracking-tighter uppercase italic text-white leading-none">SHC RECRUIT 2026</h1>
+            <h1 class="text-xl font-black tracking-tighter uppercase italic text-white leading-none">SHC RECRUIT 2026
+            </h1>
             <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Interview Management System</p>
         </div>
-        <button id="btnBack" class="hide text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors flex items-center gap-1">
+        <button id="btnBack"
+            class="hide text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors flex items-center gap-1">
             <i data-lucide="chevron-left" class="w-4 h-4"></i> Kembali
         </button>
     </header>
@@ -46,7 +106,8 @@
         <!-- SCREEN 2: DAFTAR KANDIDAT -->
         <div id="screenCandidates" class="hide space-y-6 animate-fade">
             <div class="space-y-1">
-                <div id="currentDivName" class="text-rose-500 font-bold uppercase tracking-widest text-[10px]">DIVISI</div>
+                <div id="currentDivName" class="text-rose-500 font-bold uppercase tracking-widest text-[10px]">DIVISI
+                </div>
                 <h2 class="text-3xl font-bold">Kandidat</h2>
                 <p class="text-gray-500">Klik nama untuk memulai wawancara.</p>
             </div>
@@ -56,47 +117,65 @@
         <!-- SCREEN 3: FORM INTERVIEW -->
         <div id="screenForm" class="hide space-y-8 max-w-2xl mx-auto animate-fade">
             <div class="flex items-center gap-6 p-6 bg-[#111] rounded-3xl border border-gray-800 shadow-2xl">
-                <div class="w-32 h-40 flex-shrink-0 bg-[#1e1e1e] rounded-2xl overflow-hidden border-2 border-gray-800 shadow-xl">
+                <div
+                    class="w-32 h-40 flex-shrink-0 bg-[#1e1e1e] rounded-2xl overflow-hidden border-2 border-gray-800 shadow-xl">
                     <img id="formFoto" src="" class="w-full h-full object-cover" alt="Foto Kandidat">
                 </div>
                 <div class="space-y-2">
-                    <h2 id="formNama" class="text-3xl font-black italic uppercase tracking-tighter leading-none text-white">Nama</h2>
+                    <h2 id="formNama"
+                        class="text-3xl font-black italic uppercase tracking-tighter leading-none text-white">Nama</h2>
                     <!-- FIX: Tampilkan DIVISI dari Master Kandidat kolom C -->
-                    <div id="formDivisiText" class="text-rose-400 font-bold uppercase tracking-wider text-sm">DIVISI</div>
+                    <div id="formDivisiText" class="text-rose-400 font-bold uppercase tracking-wider text-sm">DIVISI
+                    </div>
                     <div id="formKelasText" class="text-gray-500 text-xs">Kelas</div>
-                    <div id="formDivisiBadge" class="inline-block px-4 py-1.5 mt-2 bg-rose-600 text-white text-[11px] font-black uppercase rounded-full shadow-lg shadow-rose-900/40">DIVISI</div>
+                    <div id="formDivisiBadge"
+                        class="inline-block px-4 py-1.5 mt-2 bg-rose-600 text-white text-[11px] font-black uppercase rounded-full shadow-lg shadow-rose-900/40">
+                        DIVISI</div>
                 </div>
             </div>
 
             <form id="interviewForm" class="space-y-8">
                 <div class="space-y-3">
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-[0.2em]">Hasil Review Keseluruhan <span class="text-red-500">*</span></label>
-                    <textarea id="overallReview" class="w-full bg-[#161616] border border-gray-800 rounded-3xl p-6 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[250px] text-lg leading-relaxed shadow-inner placeholder:text-gray-700" placeholder="Tuliskan hasil wawancara, kelebihan, kekurangan..."></textarea>
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-[0.2em]">Hasil Review
+                        Keseluruhan <span class="text-red-500">*</span></label>
+                    <textarea id="overallReview"
+                        class="w-full bg-[#161616] border border-gray-800 rounded-3xl p-6 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-700 min-h-[250px] text-lg leading-relaxed shadow-inner placeholder:text-gray-700"
+                        placeholder="Tuliskan hasil wawancara, kelebihan, kekurangan..."></textarea>
                     <div id="reviewError" class="error-msg hide">⚠ Review wajib diisi sebelum menyimpan</div>
                 </div>
 
                 <div id="ratingBox" class="bg-[#111] p-8 rounded-[2rem] border border-gray-800 space-y-6 shadow-2xl">
-                    <h3 class="text-center font-black italic uppercase tracking-widest text-[10px] text-gray-500">Rekomendasi Akhir <span class="text-red-500">*</span></h3>
+                    <h3 class="text-center font-black italic uppercase tracking-widest text-[10px] text-gray-500">
+                        Rekomendasi Akhir <span class="text-red-500">*</span></h3>
                     <div class="flex gap-4">
                         <label class="flex-1 cursor-pointer group">
                             <input type="radio" name="rating" value="S" class="sr-only peer">
-                            <div class="h-20 flex items-center justify-center font-black text-[11px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-emerald-500 peer-checked:text-black border-emerald-900/20 bg-[#1a1a1a] group-hover:bg-[#222]">SETUJU</div>
+                            <div
+                                class="h-20 flex items-center justify-center font-black text-[11px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-emerald-500 peer-checked:text-black border-emerald-900/20 bg-[#1a1a1a] group-hover:bg-[#222]">
+                                SETUJU</div>
                         </label>
                         <label class="flex-1 cursor-pointer group">
                             <input type="radio" name="rating" value="RR" class="sr-only peer">
-                            <div class="h-20 flex items-center justify-center font-black text-[11px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-yellow-500 peer-checked:text-black border-yellow-900/20 bg-[#1a1a1a] group-hover:bg-[#222]">RAGU-RAGU</div>
+                            <div
+                                class="h-20 flex items-center justify-center font-black text-[11px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-yellow-500 peer-checked:text-black border-yellow-900/20 bg-[#1a1a1a] group-hover:bg-[#222]">
+                                RAGU-RAGU</div>
                         </label>
                         <label class="flex-1 cursor-pointer group">
                             <input type="radio" name="rating" value="TS" class="sr-only peer">
-                            <div class="h-20 flex items-center justify-center font-black text-[11px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-red-500 peer-checked:text-black border-red-900/20 bg-[#1a1a1a] group-hover:bg-[#222]">TDK SETUJU</div>
+                            <div
+                                class="h-20 flex items-center justify-center font-black text-[11px] tracking-tighter border rounded-2xl transition-all peer-checked:bg-red-500 peer-checked:text-black border-red-900/20 bg-[#1a1a1a] group-hover:bg-[#222]">
+                                TDK SETUJU</div>
                         </label>
                     </div>
                     <div id="ratingError" class="error-msg hide">⚠ Pilih salah satu rekomendasi akhir</div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 pb-12">
-                    <button type="button" id="btnCancel" class="p-6 bg-[#181818] border border-gray-800 rounded-3xl font-black text-[11px] uppercase tracking-widest text-gray-500 hover:bg-gray-800 transition-colors">BATAL</button>
-                    <button type="submit" id="btnSubmit" class="p-6 bg-white text-black rounded-3xl font-black text-[11px] uppercase tracking-widest hover:bg-gray-100 shadow-xl transition-all active:scale-[0.97]">SIMPAN DATA</button>
+                    <button type="button" id="btnCancel"
+                        class="p-6 bg-[#181818] border border-gray-800 rounded-3xl font-black text-[11px] uppercase tracking-widest text-gray-500 hover:bg-gray-800 transition-colors">BATAL</button>
+                    <button type="submit" id="btnSubmit"
+                        class="p-6 bg-white text-black rounded-3xl font-black text-[11px] uppercase tracking-widest hover:bg-gray-100 shadow-xl transition-all active:scale-[0.97]">SIMPAN
+                        DATA</button>
                 </div>
             </form>
         </div>
@@ -111,7 +190,8 @@
         let selectedCand = null;
 
         // Daftar divisi sesuai Master Kandidat kolom C
-        const DIVISIONS = ["DANA USAHA", "KEAMANAN", "PERLENGKAPAN", "ART GALLERY" "EDITOR"];
+        // Daftar divisi sesuai Master Kandidat kolom C
+        const DIVISIONS = ["KEAMANAN", "DANA USAHA", "PERLENGKAPAN", "EDITOR", "ART GALLERY"];
 
         async function init() {
             renderDivisionButtons();
@@ -158,9 +238,9 @@
                 const candDiv = String(c.divisi || "").toUpperCase().trim();
                 return candDiv === div.toUpperCase().trim();
             });
-            
+
             console.log("Mencari divisi:", div, "Ditemukan:", filtered.length);
-            
+
             document.getElementById('currentDivName').innerText = div;
             const list = document.getElementById('candidateList');
             list.innerHTML = "";
@@ -173,12 +253,12 @@
                 filtered.forEach(c => {
                     const btn = document.createElement('button');
                     btn.className = "w-full flex items-center gap-4 p-4 dark-card rounded-2xl hover:border-gray-500 transition-all text-left group animate-fade";
-                    
+
                     // FIX: Tampilkan DIVISI (bukan kelas) sesuai permintaan
                     const divisiDisplay = c.divisi || '-';
                     const kelasDisplay = c.kelas || '-';
                     const ruanganDisplay = c.ruangan || '-';
-                    
+
                     btn.innerHTML = `
                         <div class="w-12 h-16 flex-shrink-0 bg-[#1e1e1e] rounded-lg overflow-hidden border border-gray-800">
                             <img src="${c.foto || PLACEHOLDER}" class="w-full h-full object-cover" onerror="this.src='${PLACEHOLDER}'">
@@ -201,18 +281,18 @@
             selectedCand = c;
             document.getElementById('formFoto').src = c.foto || PLACEHOLDER;
             document.getElementById('formNama').innerText = c.nama;
-            
+
             // FIX: Pisahkan tampilan DIVISI dan KELAS dengan jelas
             const divisi = String(c.divisi || c.kelas || '-').trim();
             const kelas = String(c.kelas || '-').trim();
-            
+
             // Tampilkan DIVISI di teks utama (warna rose sesuai badge)
             document.getElementById('formDivisiText').innerText = divisi.toUpperCase();
             // Tampilkan KELAS di teks secondary
             document.getElementById('formKelasText').innerText = kelas ? 'Kelas ' + kelas : '';
             // Badge divisi
             document.getElementById('formDivisiBadge').innerText = divisi.toUpperCase();
-            
+
             // Reset form
             document.getElementById('overallReview').value = "";
             document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
@@ -224,7 +304,7 @@
                 document.getElementById(id).classList.add('hide');
             });
             document.getElementById(screenId).classList.remove('hide');
-            
+
             const btnBack = document.getElementById('btnBack');
             if (screenId === 'screenDivisions') {
                 btnBack.classList.add('hide');
@@ -235,7 +315,7 @@
                     else goToScreen('screenDivisions');
                 };
             }
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         }
 
         document.getElementById('interviewForm').onsubmit = async (e) => {
@@ -243,7 +323,7 @@
 
             const reviewEl = document.getElementById('overallReview');
             const reviewVal = reviewEl.value.trim();
-            const ratingEl  = document.querySelector('input[name="rating"]:checked');
+            const ratingEl = document.querySelector('input[name="rating"]:checked');
             const reviewErr = document.getElementById('reviewError');
             const ratingErr = document.getElementById('ratingError');
             const ratingBox = document.getElementById('ratingBox');
@@ -265,7 +345,7 @@
             if (!ratingEl) {
                 ratingBox.classList.add('rating-error-box');
                 ratingErr.classList.remove('hide');
-                if (valid) ratingBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (valid) ratingBox.scrollIntoView({behavior: 'smooth', block: 'center'});
                 valid = false;
             }
 
@@ -281,22 +361,22 @@
                 action: 'saveInterview',
                 data: {
                     // Data kandidat dari selectedCand
-                    nama:    selectedCand.nama,
-                    
+                    nama: selectedCand.nama,
+
                     // ⚠️ PENTING: Kirim DIVISI (bukan kelas akademik) ke field 'kelas'
                     // Karena di sheet "Rekap Wawancara", kolom [2] = "Kelas" akan kita pakai untuk filter divisi
-                    kelas:   selectedCand.divisi || selectedCand.kelas || '-',
-                    
+                    kelas: selectedCand.divisi || selectedCand.kelas || '-',
+
                     // Backup: kirim juga field 'divisi' terpisah (untuk keamanan)
-                    divisi:  selectedCand.divisi || selectedCand.kelas || '-',
-                    
+                    divisi: selectedCand.divisi || selectedCand.kelas || '-',
+
                     // Status interview: S / RR / TS (dari radio button name="rating")
-                    status:  ratingEl.value,
-                    
+                    status: ratingEl.value,
+
                     // Review wajib diisi
-                    review:  reviewVal,
+                    review: reviewVal,
                     catatan: reviewVal,  // fallback field
-                    
+
                     // Optional fields (jika ada)
                     umum1: '',
                     umum2: '',
@@ -349,10 +429,11 @@
         }));
 
         document.getElementById('btnCancel').onclick = () => {
-            if(confirm("Batalkan pengisian?")) showCandidates(selectedDiv);
+            if (confirm("Batalkan pengisian?")) showCandidates(selectedDiv);
         };
 
         init();
     </script>
 </body>
+
 </html>
